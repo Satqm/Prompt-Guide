@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Audit AI Prompt Library – Gamified Training Manual</title>
+    <style>
+        :root {
+            --dark-teal: #003946;
+            --secondary-teal: #005F75;
+            --accent-gold: #FEBE10;
+            --background: #F0F4F5;
+            --success-green: #28A745;
+            --alert-red: #E63946;
+            --card-white: #FFFFFF;
+            --text: #1A2E35;
+            --text-light: #2d4a54;
+            --shadow-sm: 0 2px 8px rgba(0, 35, 45, 0.06);
+            --shadow-md: 0 6px 20px rgba(0, 35, 45, 0.10);
+            --shadow-lg: 0 12px 32px rgba(0, 35, 45, 0.14);
+            --radius-sm: 8px;
+            --radius: 14px;
+            --radius-lg: 20px;
+            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Scroll Progress Bar ── */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: var(--accent-gold);
+            z-index: 10000;
+            transition: width 0.1s linear;
+            border-radius: 0 3px 3px 0;
+            box-shadow: 0 0 14px rgba(254, 190, 16, 0.5);
+        }
+
+        /* ── Floating Nav ── */
+        #floating-nav {
+            position: fixed;
+            top: 50%;
+            right: 16px;
+            transform: translateY(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--card-white);
+            padding: 10px 8px;
+            border-radius: 24px;
+            box-shadow: var(--shadow-lg);
+        }
+        #floating-nav a {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #c5d4d9;
+            transition: var(--transition);
+            display: block;
+            cursor: pointer;
+            text-indent: -9999px;
+            overflow: hidden;
+        }
+        #floating-nav a.active,
+        #floating-nav a:hover {
+            background: var(--accent-gold);
+            transform: scale(1.5);
+            box-shadow: 0 0 10px rgba(254, 190, 16, 0.6);
+        }
+        @media (max-width: 768px) {
+            #floating-nav {
+                right: 4px;
+                padding: 6px 4px;
+                gap: 4px;
+            }
+            #floating-nav a {
+                width: 8px;
+                height: 8px;
+            }
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(145deg, var(--dark-teal) 0%, #002530 60%, var(--secondary-teal) 100%);
+            color: #fff;
+            padding: 50px 24px 70px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -60%;
+            left: -20%;
+            width: 140%;
+            height: 200%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(254, 190, 16, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(0, 95, 117, 0.25) 0%, transparent 55%);
+            animation: headerPulse 8s ease-in-out infinite;
+        }
+        @keyframes headerPulse {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.06);
+            }
+        }
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .header .badge {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+            font-weight: 800;
+            font-size: 0.85rem;
+            letter-spacing: 0.06em;
+            padding: 6px 18px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+            animation: floatBadge 3s ease-in-out infinite;
+        }
+        @keyframes floatBadge {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-6px);
+            }
+        }
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        .header h1 span {
+            color: var(--accent-gold);
+        }
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 8px;
+        }
+        .header .meta {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            letter-spacing: 0.03em;
+        }
+        .header .version-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 4px 14px;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            margin-top: 8px;
+        }
+
+        /* ── Stats Strip ── */
+        .stats-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: -30px;
+            position: relative;
+            z-index: 2;
+            padding: 0 20px;
+        }
+        .stat-card {
+            background: var(--card-white);
+            border-radius: var(--radius);
+            padding: 18px 24px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            min-width: 120px;
+            transition: var(--transition);
+            cursor: default;
+        }
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-card .stat-num {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+        }
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: #5a7079;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .stat-card.accent .stat-num {
+            color: var(--accent-gold);
+        }
+
+        /* ── Main Container ── */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px 60px;
+        }
+
+        /* ── Achievement Bar ── */
+        .achievement-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0 30px;
+        }
+        .achievement {
+            background: var(--card-white);
+            border: 2px solid #e0e8eb;
+            border-radius: 24px;
+            padding: 8px 16px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            transition: var(--transition);
+            opacity: 0.5;
+            cursor: pointer;
+            user-select: none;
+        }
+        .achievement.unlocked {
+            opacity: 1;
+            border-color: var(--accent-gold);
+            background: #fffdf5;
+            box-shadow: 0 0 14px rgba(254, 190, 16, 0.2);
+            animation: unlockPop 0.5s ease-out;
+        }
+        @keyframes unlockPop {
+            0% {
+                transform: scale(1);
+            }
+            40% {
+                transform: scale(1.12);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .achievement .icon {
+            font-size: 1.3rem;
+        }
+
+        /* ── Section Title ── */
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+            margin: 40px 0 16px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .section-title .num {
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, #d0dde2, transparent);
+            margin-left: 8px;
+            border-radius: 2px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 28px 30px;
+            margin: 16px 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e4ecef;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #d0dde2;
+        }
+        .card.accent-left {
+            border-left: 5px solid var(--accent-gold);
+        }
+        .card.teal-left {
+            border-left: 5px solid var(--secondary-teal);
+        }
+        .card h3 {
+            color: var(--dark-teal);
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        .card h4 {
+            color: var(--secondary-teal);
+            font-weight: 700;
+            margin: 12px 0 6px;
+        }
+
+        /* ── Accordion ── */
+        .accordion {
+            margin: 8px 0;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid #e4ecef;
+            background: var(--card-white);
+        }
+        .accordion-header {
+            padding: 16px 20px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: var(--dark-teal);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            background: #fafcfc;
+            user-select: none;
+        }
+        .accordion-header:hover {
+            background: #f2f7f8;
+        }
+        .accordion-header .arrow {
+            transition: var(--transition);
+            font-size: 1.3rem;
+            color: var(--secondary-teal);
+        }
+        .accordion.open .accordion-header .arrow {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.45s ease, padding 0.45s ease;
+            padding: 0 20px;
+        }
+        .accordion.open .accordion-body {
+            max-height: 3000px;
+            padding: 16px 20px;
+        }
+
+        /* ── Table ── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 12px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid #e4ecef;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            min-width: 600px;
+        }
+        th {
+            background: var(--dark-teal);
+            color: #fff;
+            padding: 12px 14px;
+            text-align: left;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+        }
+        td {
+            padding: 10px 14px;
+            border-bottom: 1px solid #eef3f5;
+            vertical-align: top;
+        }
+        tr:nth-child(even) td {
+            background: #f9fbfc;
+        }
+
+        /* ── CRAFT Interactive ── */
+        .craft-builder {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin: 16px 0;
+        }
+        @media (max-width: 700px) {
+            .craft-builder {
+                grid-template-columns: 1fr;
+            }
+        }
+        .craft-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .craft-field label {
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--secondary-teal);
+            letter-spacing: 0.03em;
+        }
+        .craft-field input,
+        .craft-field textarea {
+            padding: 10px 14px;
+            border: 2px solid #dde6e9;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background: #fafcfc;
+            resize: vertical;
+            color: var(--text);
+        }
+        .craft-field input:focus,
+        .craft-field textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.08);
+            background: #fff;
+        }
+        .craft-output {
+            grid-column: 1 / -1;
+            background: #f9fbfc;
+            border: 2px dashed #d0dde2;
+            border-radius: var(--radius);
+            padding: 18px;
+            font-family: 'SF Mono', 'Consolas', monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            min-height: 80px;
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .craft-output.active {
+            border-color: var(--success-green);
+            background: #f8fdf9;
+        }
+
+        /* ── Tags ── */
+        .tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            margin: 2px 4px;
+        }
+        .tag.beginner {
+            background: #d4f0d9;
+            color: #1a5c28;
+        }
+        .tag.intermediate {
+            background: #fef3c7;
+            color: #7a5e00;
+        }
+        .tag.advanced {
+            background: #fde0e3;
+            color: #8b1a24;
+        }
+        .tag.assurance {
+            background: #d6eaf8;
+            color: #1a3f5c;
+        }
+        .tag.advisory {
+            background: #e8daef;
+            color: #4a1d6b;
+        }
+
+        /* ── Checklist ── */
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            background: #fafcfc;
+            border-radius: var(--radius-sm);
+            border: 1px solid #eef3f5;
+            cursor: pointer;
+            transition: var(--transition);
+            user-select: none;
+        }
+        .checklist-item:hover {
+            background: #f2f8f9;
+        }
+        .checklist-item.checked {
+            background: #f0faf3;
+            border-color: #c3e6cd;
+        }
+        .checklist-item .checkbox {
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            border: 2px solid #c5d4d9;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 0.8rem;
+        }
+        .checklist-item.checked .checkbox {
+            background: var(--success-green);
+            border-color: var(--success-green);
+            color: #fff;
+        }
+
+        /* ── Flashcard ── */
+        .flashcard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+            margin: 16px 0;
+        }
+        .flashcard {
+            perspective: 800px;
+            height: 180px;
+            cursor: pointer;
+        }
+        .flashcard-inner {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            position: relative;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front,
+        .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--radius);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #e4ecef;
+        }
+        .flashcard-front {
+            background: var(--dark-teal);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        .flashcard-back {
+            background: var(--card-white);
+            color: var(--text);
+            transform: rotateY(180deg);
+            font-size: 0.9rem;
+        }
+        .flashcard .hint {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 8px;
+        }
+
+        /* ── Quiz Block ── */
+        .quiz-block {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 22px;
+            margin: 16px 0;
+            border: 2px solid #e4ecef;
+            box-shadow: var(--shadow-sm);
+        }
+        .quiz-block .question {
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--dark-teal);
+        }
+        .quiz-block .option {
+            display: block;
+            padding: 10px 16px;
+            margin: 6px 0;
+            border-radius: 10px;
+            border: 2px solid #e4ecef;
+            cursor: pointer;
+            transition: var(--transition);
+            background: #fafcfc;
+        }
+        .quiz-block .option:hover {
+            border-color: var(--secondary-teal);
+            background: #f2f8f9;
+        }
+        .quiz-block .option.correct {
+            border-color: var(--success-green);
+            background: #e6f7ea;
+            font-weight: 700;
+        }
+        .quiz-block .option.wrong {
+            border-color: var(--alert-red);
+            background: #fde8ea;
+        }
+        .quiz-feedback {
+            margin-top: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            min-height: 24px;
+        }
+
+        /* ── Timeline ── */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+            margin: 16px 0;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent-gold), var(--secondary-teal), var(--dark-teal));
+            border-radius: 3px;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -22px;
+            top: 6px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent-gold);
+            box-shadow: 0 0 8px rgba(254, 190, 16, 0.5);
+            border: 3px solid #fff;
+        }
+
+        /* ── Button ── */
+        .btn {
+            display: inline-block;
+            padding: 10px 22px;
+            border-radius: 24px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9rem;
+            letter-spacing: 0.03em;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        .btn-gold {
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+        }
+        .btn-gold:hover {
+            background: #e5ab0a;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(254, 190, 16, 0.35);
+        }
+        .btn-teal {
+            background: var(--secondary-teal);
+            color: #fff;
+        }
+        .btn-teal:hover {
+            background: #004d5e;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 95, 117, 0.35);
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-teal);
+            color: #fff;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: 700;
+            z-index: 10001;
+            opacity: 0;
+            transition: opacity 0.4s;
+            pointer-events: none;
+            box-shadow: var(--shadow-lg);
+            letter-spacing: 0.03em;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── Pulse Dot ── */
+        .pulse-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 14px rgba(40, 167, 69, 0);
+            }
+        }
+
+        /* ── Footer ── */
+        .footer {
+            background: var(--dark-teal);
+            color: #fff;
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            letter-spacing: 0.03em;
+        }
+
+        /* ── Animations ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .card {
+                padding: 18px 16px;
+            }
+            .section-title {
+                font-size: 1.3rem;
+            }
+            .stats-strip {
+                gap: 10px;
+                margin-top: -20px;
+            }
+            .stat-card {
+                padding: 12px 16px;
+                min-width: 80px;
+            }
+            .stat-card .stat-num {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress"></div>
+
+    <!-- Floating Nav -->
+    <nav id="floating-nav" aria-label="Section navigation">
+        <a href="#hero" title="Top" class="active"></a>
+        <a href="#ch1" title="Chapter 1"></a>
+        <a href="#ch2" title="Chapter 2"></a>
+        <a href="#ch3" title="Chapter 3"></a>
+        <a href="#ch4" title="Chapter 4"></a>
+        <a href="#ch5" title="Chapter 5"></a>
+        <a href="#ch6" title="Chapter 6"></a>
+        <a href="#ch7" title="Chapter 7"></a>
+        <a href="#craft-tool" title="CRAFT"></a>
+        <a href="#quiz-section" title="Quiz"></a>
+        <a href="#appendix" title="Appendix"></a>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Header / Hero -->
+    <header class="header" id="hero">
+        <div class="header-content">
+            <div class="badge">🎯 AI Prompt Library</div>
+            <h1>Internal Audit <span>AI Prompt Library</span></h1>
+            <p class="subtitle">Training Manual · Gamified Edition</p>
+            <p class="meta">A Comprehensive Guide to Large Language Models, Prompt Engineering & AI-Assisted Internal Auditing</p>
+            <p class="meta">Aligned with IIA Global Internal Audit Standards (2025) · Internal Audit Department · January 2026</p>
+            <span class="version-pill">Version 1.1</span>
+        </div>
+    </header>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip reveal">
+        <div class="stat-card">
+            <div class="stat-num">8</div>
+            <div class="stat-label">Chapters</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">38</div>
+            <div class="stat-label">Prompts</div>
+        </div>
+        <div class="stat-card accent">
+            <div class="stat-num">5</div>
+            <div class="stat-label">CRAFT Elements</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Skill Levels</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num" id="xp-counter">0</div>
+            <div class="stat-label">XP Earned</div>
+        </div>
+    </div>
+
+    <!-- Achievement Bar -->
+    <div class="container">
+        <div class="achievement-bar reveal" id="achievement-bar">
+            <div class="achievement" data-ach="reader" title="Read 3+ chapters">
+                <span class="icon">📖</span> Avid Reader
+            </div>
+            <div class="achievement" data-ach="crafter" title="Used CRAFT builder">
+                <span class="icon">🔨</span> Prompt Crafter
+            </div>
+            <div class="achievement" data-ach="quizzer" title="Answered quiz correctly">
+                <span class="icon">🧠</span> Knowledge Seeker
+            </div>
+            <div class="achievement" data-ach="checker" title="Completed quality checklist">
+                <span class="icon">✅</span> Quality Champion
+            </div>
+            <div class="achievement" data-ach="flashmaster" title="Flipped 4+ flashcards">
+                <span class="icon">🃏</span> Flash Master
+            </div>
+            <div class="achievement" data-ach="explorer" title="Visited all sections">
+                <span class="icon">🗺️</span> Full Explorer
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Chapter 1 -->
+        <section id="ch1" class="reveal">
+            <div class="section-title"><span class="num">1</span> Introduction to AI in Internal Audit</div>
+            <div class="card accent-left">
+                <h3>1.1 Purpose of This Manual</h3>
+                <p>This training manual provides internal auditors with comprehensive guidance on using <strong>Large Language Models (LLMs)</strong> to enhance audit efficiency and effectiveness. It accompanies the <strong>Internal Audit AI Prompt Library</strong> — a structured collection of pre-built prompts aligned with <strong>IIA Global Internal Audit Standards (2025)</strong>.</p>
+                <p style="margin-top:8px;"><span class="pulse-dot"></span> <em>By the end, you'll master prompt engineering and confidently use the library while maintaining professional standards.</em></p>
+            </div>
+            <div class="card teal-left">
+                <h3>1.2 The Evolution of AI in Auditing</h3>
+                <div class="timeline">
+                    <div class="timeline-item"><strong>1980s:</strong> Spreadsheets introduced</div>
+                    <div class="timeline-item"><strong>1990s:</strong> Computer-Assisted Audit Techniques (CAATs)</div>
+                    <div class="timeline-item"><strong>2010s:</strong> Data analytics become mainstream</div>
+                    <div class="timeline-item"><strong>2020s:</strong> <span style="color:var(--accent-gold);font-weight:700;">Generative AI & LLMs</span> — the next transformational shift</div>
+                </div>
+                <p>LLMs understand natural language, analyze unstructured text, generate content, and assist with complex reasoning — invaluable for judgment-intensive audit work.</p>
+            </div>
+            <div class="card">
+                <h3>1.3 Benefits of AI-Assisted Auditing</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Benefit Category</th><th>Traditional Approach</th><th>AI-Enhanced Approach</th></tr></thead>
+                        <tbody>
+                            <tr><td>Document Analysis</td><td>Manual review</td><td>Rapid summarization, key clause ID</td></tr>
+                            <tr><td>Risk Assessment</td><td>Brainstorming, checklists</td><td>Comprehensive, industry-specific risks</td></tr>
+                            <tr><td>Work Program Dev</td><td>Templates from prior audits</td><td>Customized procedures per engagement</td></tr>
+                            <tr><td>Finding Documentation</td><td>Writing from scratch</td><td>Structured five-attribute drafts</td></tr>
+                            <tr><td>Report Writing</td><td>Time-intensive drafting</td><td>Draft generation, consistency checks</td></tr>
+                            <tr><td>Knowledge Transfer</td><td>Shadowing, mentoring</td><td>Embedded methodology guidance</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card teal-left">
+                <h3>1.4 Professional Standards Alignment</h3>
+                <p>Aligned with <strong>IIA Global Internal Audit Standards</strong> (effective Jan 9, 2025). Key standards referenced:</p>
+                <p>
+                    <span class="tag assurance">Standard 4.3</span> Professional Skepticism ·
+                    <span class="tag assurance">Standard 13</span> Engagement Planning (13.1–13.6) ·
+                    <span class="tag assurance">Standard 14</span> Performing Engagement Work (14.1–14.6) ·
+                    <span class="tag assurance">Standard 15</span> Communicating Results (15.1–15.2)
+                </p>
+                <p style="margin-top:8px;"><em>Each prompt in the library references its applicable IIA Standard.</em></p>
+            </div>
+        </section>
+
+        <!-- Chapter 2 -->
+        <section id="ch2" class="reveal">
+            <div class="section-title"><span class="num">2</span> Understanding Large Language Models</div>
+            <div class="card accent-left">
+                <h3>2.1 What Is a Large Language Model?</h3>
+                <p>An <strong>LLM</strong> is an AI system trained on vast text data to understand and generate human-like language. Think of it as an <em>extremely well-read assistant</em> that has studied billions of documents. It generates responses based on patterns — it does <strong>not</strong> search the internet in real-time (unless enabled) or access your systems.</p>
+            </div>
+            <div class="flashcard-grid reveal">
+                <div class="flashcard" onclick="this.classList.toggle('flipped'); trackFlashcard(this)">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">Probabilistic Output<span class="hint">Tap to reveal</span></div>
+                        <div class="flashcard-back">Responses are generated word-by-word based on probability. Same prompt may yield slightly different outputs. <strong>Always review.</strong></div>
+                    </div>
+                </div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped'); trackFlashcard(this)">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">Context Window<span class="hint">Tap to reveal</span></div>
+                        <div class="flashcard-back">Limited memory per conversation (measured in tokens). Very long documents may need to be processed in sections.</div>
+                    </div>
+                </div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped'); trackFlashcard(this)">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">Knowledge Cutoff<span class="hint">Tap to reveal</span></div>
+                        <div class="flashcard-back">Training data has an end date; no real-time info. <strong>Verify</strong> current policies, regulations & org changes.</div>
+                    </div>
+                </div>
+                <div class="flashcard" onclick="this.classList.toggle('flipped'); trackFlashcard(this)">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">No True Understanding<span class="hint">Tap to reveal</span></div>
+                        <div class="flashcard-back">Pattern matching, not genuine comprehension. May produce plausible-sounding but <strong>incorrect</strong> information.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>2.2 Capabilities & Limitations</h3>
+                <p><strong>✅ What LLMs Do Well:</strong> Drafting/editing, summarizing, brainstorming risks/controls, explaining concepts, structuring info, generating interview questions, comparing documents.</p>
+                <p style="margin-top:8px;"><strong>❌ What LLMs Cannot Do:</strong> Access your systems, guaranteed-accurate math, replace professional judgment, guarantee factual accuracy (may <em>hallucinate</em>), understand unprovided context, exercise professional skepticism.</p>
+                <div style="background:#fef8f5;border:2px solid var(--alert-red);border-radius:var(--radius);padding:16px;margin-top:12px;">
+                    <strong style="color:var(--alert-red);">⚠️ CRITICAL — Hallucinations:</strong> LLMs can generate confident-sounding but <strong>completely false</strong> information. Always verify factual claims, especially policy/regulation citations.
+                </div>
+            </div>
+            <div class="card teal-left">
+                <h3>2.3 Common LLM Platforms</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Platform</th><th>Provider</th><th>Key Features</th><th>Best For</th></tr></thead>
+                        <tbody>
+                            <tr><td>ChatGPT</td><td>OpenAI</td><td>Plugins, web browsing, Code Interpreter</td><td>General use, data analysis</td></tr>
+                            <tr><td>Claude</td><td>Anthropic</td><td>Long context window, careful reasoning</td><td>Complex documents, nuanced writing</td></tr>
+                            <tr><td>Copilot</td><td>Microsoft</td><td>Microsoft 365 integration</td><td>MS ecosystem users</td></tr>
+                            <tr><td>Gemini</td><td>Google</td><td>Google Workspace, multimodal</td><td>Google Workspace users</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p><em>The prompt library is platform-agnostic — works across all major LLMs.</em></p>
+            </div>
+            <div class="card accent-left">
+                <h3>2.4 Security & Confidentiality</h3>
+                <p><strong>DATA PROTECTION REQUIREMENTS:</strong> Before using AI with audit info, understand your org's policies on: data entry, enterprise vs. consumer versions, data retention, and handling of PII. <strong>When in doubt, anonymize.</strong></p>
+                <p style="margin-top:8px;">Best practices: Remove names/IDs, use enterprise versions, never enter passwords/SSNs, consider legal discoverability, document AI use per policy.</p>
+            </div>
+        </section>
+
+        <!-- Chapter 3 -->
+        <section id="ch3" class="reveal">
+            <div class="section-title"><span class="num">3</span> Prompt Engineering Fundamentals</div>
+            <div class="card accent-left">
+                <h3>3.1 What Is Prompt Engineering?</h3>
+                <p>The skill of crafting effective instructions to get useful AI outputs. Think of it as giving instructions to a <strong>highly capable but literal-minded assistant</strong>. The more specific and clear, the better the results.</p>
+            </div>
+            <div class="card">
+                <h3>3.2 The Anatomy of an Effective Prompt</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Component</th><th>Purpose</th><th>Example</th></tr></thead>
+                        <tbody>
+                            <tr><td>Role/Persona</td><td>Sets expertise level</td><td>"Act as an experienced internal auditor..."</td></tr>
+                            <tr><td>Context</td><td>Background info</td><td>"I am planning an audit of AP at a public university..."</td></tr>
+                            <tr><td>Task</td><td>What you need</td><td>"Identify 8–10 inherent risks organized by category..."</td></tr>
+                            <tr><td>Format</td><td>Output structure</td><td>"Numbered list with risk descriptions and ratings..."</td></tr>
+                            <tr><td>Constraints</td><td>Boundaries</td><td>"Focus on higher education. Max 500 words."</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card teal-left" id="craft-tool">
+                <h3>3.3 The CRAFT Framework <span style="font-size:0.8rem;background:var(--accent-gold);color:var(--dark-teal);padding:3px 10px;border-radius:12px;">Interactive Builder</span></h3>
+                <p>Fill in each element below to build your prompt in real-time:</p>
+                <div class="craft-builder">
+                    <div class="craft-field"><label>C — Context</label><textarea rows="2" placeholder="e.g., I am a staff auditor at a public university conducting an assurance engagement on P-Card controls. The university has ~500 cardholders with $8M annual spend." oninput="updateCraft()" id="craft-c"></textarea></div>
+                    <div class="craft-field"><label>R — Role</label><input type="text" placeholder="e.g., Act as an experienced internal auditor with expertise in higher education." oninput="updateCraft()" id="craft-r"></div>
+                    <div class="craft-field"><label>A — Action</label><input type="text" placeholder="e.g., Develop five testing procedures to evaluate P-Card transaction compliance." oninput="updateCraft()" id="craft-a"></div>
+                    <div class="craft-field"><label>F — Format</label><input type="text" placeholder="e.g., For each: objective, population, sample size, steps, pass/fail criteria." oninput="updateCraft()" id="craft-f"></div>
+                    <div class="craft-field"><label>T — Tone</label><input type="text" placeholder="e.g., Professional audit language suitable for a formal audit report." oninput="updateCraft()" id="craft-t"></div>
+                    <div class="craft-output" id="craft-output">Your crafted prompt will appear here...</div>
+                </div>
+                <button class="btn btn-gold" onclick="copyCraft()" style="margin-top:8px;">📋 Copy Prompt</button>
+                <span id="craft-copied" style="display:none;color:var(--success-green);font-weight:700;margin-left:10px;">Copied!</span>
+            </div>
+            <div class="card">
+                <h3>3.4 Prompting Techniques</h3>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Zero-Shot Prompting <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Ask directly without examples. Works for straightforward tasks.<br><em>Example: "List five common fraud risks in accounts payable."</em></p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Few-Shot Prompting <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Provide examples of desired output to guide format and quality.<br><em>Example: "Write a finding title following these examples: 'Incomplete Vendor Due Diligence...' Now write one for: 15% of POs approved after goods receipt."</em></p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Chain-of-Thought Prompting <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Ask AI to work step-by-step, showing reasoning. Great for complex analysis.<br><em>Example: "Analyze this control. Step 1: Identify the risk. Step 2: Assess design adequacy. Step 3: Identify failure points. Step 4: Conclude."</em></p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Iterative Refinement <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Start basic, review output, refine with follow-ups. Often the most effective approach.<br><em>Initial → "Good start. Add quantification." → "Strengthen recommendation."</em></p></div>
+                </div>
+            </div>
+            <div class="card accent-left">
+                <h3>3.5 Common Prompting Mistakes</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Mistake</th><th>Problem</th><th>Better Approach</th></tr></thead>
+                        <tbody>
+                            <tr><td>Too vague</td><td>"Write something about controls"</td><td>"Write a control description for the three-way match process in AP"</td></tr>
+                            <tr><td>No context</td><td>"Is this a good control?"</td><td>"Given this control [desc] designed to prevent [risk], evaluate its design adequacy"</td></tr>
+                            <tr><td>Too many tasks</td><td>Finding + recommendation + risk rating</td><td>Break into separate prompts</td></tr>
+                            <tr><td>Assuming knowledge</td><td>"Update per our discussion"</td><td>Provide specific changes; AI has no memory of your discussion</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card teal-left">
+                <h3>3.6 Variables & Placeholders</h3>
+                <p>The library uses <code style="background:#f0f4f5;padding:2px 8px;border-radius:4px;">{{double_curly_braces}}</code> to indicate where you insert engagement-specific info.</p>
+                <p>
+                    <code>{{audit_area}}</code> · <code>{{process_name}}</code> · <code>{{organization_type}}</code> ·
+                    <code>{{risk_description}}</code> · <code>{{control_description}}</code> · <code>{{audit_period}}</code>
+                </p>
+                <p style="margin-top:8px;"><strong>💡 TIP:</strong> Be specific! Instead of <code>{{audit_area}} = "payroll"</code>, try <em>"payroll processing for 2,500 employees including faculty, staff, and student workers with bi-weekly and monthly pay cycles."</em></p>
+            </div>
+        </section>
+
+        <!-- Chapter 4 -->
+        <section id="ch4" class="reveal">
+            <div class="section-title"><span class="num">4</span> Using the Internal Audit Prompt Library</div>
+            <div class="card accent-left">
+                <h3>4.1 Library Structure Overview</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Tab</th><th>Contents</th><th>When to Use</th></tr></thead>
+                        <tbody>
+                            <tr><td>Dashboard</td><td>Navigation, stats, instructions</td><td>Starting point</td></tr>
+                            <tr><td>Settings</td><td>Dropdown values, IIA Standards ref</td><td>Reference</td></tr>
+                            <tr><td>Planning Phase</td><td>10 prompts (PLAN-001 to PLAN-010)</td><td>Engagement planning</td></tr>
+                            <tr><td>Fieldwork Phase</td><td>12 prompts (FIELD-001 to FIELD-012)</td><td>Testing & documentation</td></tr>
+                            <tr><td>Reporting Phase</td><td>10 prompts (RPT-001 to RPT-010)</td><td>Findings & reports</td></tr>
+                            <tr><td>Follow-up Phase</td><td>6 prompts (FU-001 to FU-006)</td><td>Validation & status</td></tr>
+                            <tr><td>General</td><td>6 prompts (GEN-001 to GEN-006)</td><td>Cross-phase activities</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card teal-left">
+                <h3>4.3 Step-by-Step: Using a Prompt</h3>
+                <ol style="padding-left:20px;">
+                    <li><strong>Identify Your Task</strong> — Which phase? What do you need?</li>
+                    <li><strong>Navigate to the Tab</strong> — Planning, Fieldwork, Reporting, or Follow-up</li>
+                    <li><strong>Select a Prompt</strong> — Review titles, purposes, skill level & engagement type</li>
+                    <li><strong>Read Methodology Notes</strong> — Understand the professional context</li>
+                    <li><strong>Copy the Full Prompt Text</strong></li>
+                    <li><strong>Replace Variables</strong> — Substitute all <code>{{placeholders}}</code></li>
+                    <li><strong>Paste into AI Tool</strong> — Claude, ChatGPT, Copilot, etc.</li>
+                    <li><strong>Review & Refine</strong> — Compare against Example Output; iterate</li>
+                    <li><strong>Apply Professional Judgment</strong> — Edit for accuracy & fit</li>
+                </ol>
+            </div>
+            <div class="card">
+                <h3>4.4 Skill Level Progression</h3>
+                <p><span class="tag beginner">Beginner</span> Highly structured, embedded explanations. Document requests, workpaper documentation, basic interviews.</p>
+                <p><span class="tag intermediate">Intermediate</span> Requires some judgment. Control design evaluation, sampling, finding development.</p>
+                <p><span class="tag advanced">Advanced</span> Complex, judgment-intensive. Fraud risk assessment, root cause analysis, systemic issues.</p>
+                <p style="margin-top:8px;"><strong>💡 PROGRESSION TIP:</strong> Start with Beginner prompts even if experienced — it helps you understand the library structure.</p>
+            </div>
+            <div class="card teal-left">
+                <h3>4.5 Assurance vs. Advisory Engagement Prompts</h3>
+                <p><span class="tag assurance">Assurance</span> Auditor-determined scope, risk assessment required, formal five-attribute findings.</p>
+                <p><span class="tag advisory">Advisory</span> Jointly agreed scope, flexible output format, recommendations and advice.</p>
+            </div>
+        </section>
+
+        <!-- Chapter 5 -->
+        <section id="ch5" class="reveal">
+            <div class="section-title"><span class="num">5</span> Phase-Specific Prompt Guidance</div>
+            <div class="card accent-left">
+                <h3>5.1 Planning Phase</h3>
+                <p>Key prompts: PLAN-001 (Risk Assessment), PLAN-002 (Objectives), PLAN-003 (Work Program), PLAN-004 (Info Request), PLAN-006 (Process Narrative).</p>
+                <p><strong>Example:</strong> For travel reimbursement audit → use PLAN-001 with <code>{{process_name}} = "travel reimbursement"</code> and <code>{{organization_type}} = "public university with 3,000 traveling employees"</code>.</p>
+            </div>
+            <div class="card teal-left">
+                <h3>5.2 Fieldwork Phase</h3>
+                <p>Key prompts: FIELD-001 (Control Design), FIELD-002 (Operating Effectiveness), FIELD-003 (Interview Questions), FIELD-004 (Data Analysis), FIELD-006 (Root Cause).</p>
+                <div style="background:#fff8f5;border-left:4px solid var(--alert-red);padding:12px;border-radius:0 8px 8px 0;margin-top:8px;">
+                    <strong>⚠️ FIELDWORK CAUTION:</strong> AI-generated procedures are <em>starting points</em>. Apply professional judgment to adjust for your environment, sample sizes, and policy alignment.
+                </div>
+            </div>
+            <div class="card accent-left">
+                <h3>5.3 Reporting Phase</h3>
+                <p>RPT-001 (Finding Development — five-attribute format), RPT-002 (Executive Summary), RPT-003 (Recommendations), RPT-005 (Quality Review), RPT-007 (Risk Rating Justification).</p>
+            </div>
+            <div class="card teal-left">
+                <h3>5.4 Follow-up Phase</h3>
+                <p>FU-001 (Validation Testing), FU-002 (Remediation Status), FU-003 (Audit Committee Report), FU-004 (Escalation), FU-006 (Recurring Issue Analysis).</p>
+            </div>
+        </section>
+
+        <!-- Chapter 6 -->
+        <section id="ch6" class="reveal">
+            <div class="section-title"><span class="num">6</span> Quality Assurance & Professional Judgment</div>
+            <div class="card accent-left">
+                <h3>6.1 The Human-AI Partnership</h3>
+                <p>AI augments — <strong>does not replace</strong> — professional judgment. The internal auditor remains responsible for all work product quality. Think of AI as a capable research assistant that needs your expert review.</p>
+                <p><strong>Auditor Responsibilities:</strong> Verify facts, ensure org-specific accuracy, apply professional skepticism, maintain independence, document AI use.</p>
+            </div>
+            <div class="card teal-left">
+                <h3>6.2 Quality Review Checklist</h3>
+                <p style="margin-bottom:8px;"><em>Tap each item to check it off:</em></p>
+                <div id="quality-checklist">
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Accuracy:</strong> All facts, policy references & standards citations are correct</span></div>
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Completeness:</strong> Output addresses all aspects of the request</span></div>
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Relevance:</strong> Content is specific to my organization & engagement</span></div>
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Objectivity:</strong> Language is neutral and free from bias</span></div>
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Clarity:</strong> Intended audience will understand this</span></div>
+                    <div class="checklist-item" onclick="toggleCheck(this)"><span class="checkbox">✓</span> <span><strong>Consistency:</strong> Aligns with other engagement documentation</span></div>
+                </div>
+                <p id="checklist-status" style="margin-top:8px;font-weight:700;color:var(--secondary-teal);">0 of 6 checked</p>
+            </div>
+            <div class="card">
+                <h3>6.4 Avoiding Over-Reliance on AI</h3>
+                <p>New auditors should: understand methodology before using prompts, attempt tasks manually occasionally, use methodology notes as learning opportunities, and discuss AI outputs with supervisors to calibrate judgment.</p>
+            </div>
+        </section>
+
+        <!-- Chapter 7 -->
+        <section id="ch7" class="reveal">
+            <div class="section-title"><span class="num">7</span> Advanced Prompting Techniques</div>
+            <div class="card accent-left">
+                <h3>7.1 Prompt Chaining</h3>
+                <p>Break complex tasks into sequential prompts where each output feeds the next:</p>
+                <p><em>Step 1: Analyze → Step 2: Quantify → Step 3: Research → Step 4: Draft</em></p>
+            </div>
+            <div class="card teal-left">
+                <h3>7.2 Using AI for Data Analysis</h3>
+                <p>LLMs can suggest anomalies to look for, write SQL/Excel queries, interpret results, and recommend visualizations.</p>
+                <p style="color:var(--alert-red);"><strong>⚠️ Never paste sensitive raw data</strong> unless permitted. Use anonymized samples or summary statistics.</p>
+            </div>
+            <div class="card">
+                <h3>7.3 Customizing Library Prompts</h3>
+                <p>Add organization-specific context (terminology, policy references), incorporate industry knowledge (FERPA, Title IV, NCAA for higher ed), and adjust complexity based on engagement scope.</p>
+            </div>
+        </section>
+
+        <!-- Chapter 8 / Exercises -->
+        <section id="quiz-section" class="reveal">
+            <div class="section-title"><span class="num">8</span> Practice Exercises & Knowledge Check</div>
+            <div class="quiz-block" id="quiz1">
+                <p class="question">🧠 <strong>Quiz:</strong> What does the "C" in the CRAFT framework stand for?</p>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Clarity</div>
+                <div class="option" onclick="answerQuiz(this, 'correct')">Context</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Completeness</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Criteria</div>
+                <p class="quiz-feedback" id="quiz1-fb"></p>
+            </div>
+            <div class="quiz-block" id="quiz2">
+                <p class="question">🧠 <strong>Quiz:</strong> What is an LLM "hallucination"?</p>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">When the AI runs out of tokens</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">When the AI refuses to answer</div>
+                <div class="option" onclick="answerQuiz(this, 'correct')">Confident-sounding but factually incorrect information</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">A visual glitch in the interface</div>
+                <p class="quiz-feedback" id="quiz2-fb"></p>
+            </div>
+            <div class="quiz-block" id="quiz3">
+                <p class="question">🧠 <strong>Quiz:</strong> Which IIA Standard covers "Communicating Engagement Results"?</p>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Standard 13</div>
+                <div class="option" onclick="answerQuiz(this, 'correct')">Standard 15</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Standard 14</div>
+                <div class="option" onclick="answerQuiz(this, 'wrong')">Standard 4.3</div>
+                <p class="quiz-feedback" id="quiz3-fb"></p>
+            </div>
+            <div class="card accent-left">
+                <h3>Practice Exercises</h3>
+                <p><strong>Exercise 1 (Planning):</strong> Using PLAN-001, generate a risk assessment for petty cash controls at an org with 15 funds totaling $7,500.</p>
+                <p><strong>Exercise 2 (Fieldwork):</strong> Evaluate the control: "Monthly reconciliations performed by custodians, reviewed by supervisors." Use FIELD-001.</p>
+                <p><strong>Exercise 3 (Reporting):</strong> 4 of 15 funds unreconciled for 3 months; $340 in shortages. Draft a finding using RPT-001.</p>
+                <p><strong>Exercise 4 (Prompt Engineering):</strong> Write a custom prompt using CRAFT to identify segregation of duties conflicts in user access rights.</p>
+            </div>
+        </section>
+
+        <!-- Appendix -->
+        <section id="appendix" class="reveal">
+            <div class="section-title"><span class="num">A</span> Quick Reference Card & Glossary</div>
+            <div class="card accent-left">
+                <h3>CRAFT Framework</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Letter</th><th>Component</th><th>Key Question</th></tr></thead>
+                        <tbody>
+                            <tr><td><strong>C</strong></td><td>Context</td><td>What background does the AI need?</td></tr>
+                            <tr><td><strong>R</strong></td><td>Role</td><td>What expertise should guide the response?</td></tr>
+                            <tr><td><strong>A</strong></td><td>Action</td><td>What specific task should be performed?</td></tr>
+                            <tr><td><strong>F</strong></td><td>Format</td><td>How should the output be structured?</td></tr>
+                            <tr><td><strong>T</strong></td><td>Tone</td><td>What style is appropriate for the audience?</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="card teal-left">
+                <h3>Glossary of Key Terms</h3>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Chain-of-Thought Prompting <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Technique where AI shows step-by-step reasoning, improving accuracy for complex tasks.</p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Context Window <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>The amount of text an LLM can process at once, measured in tokens.</p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Hallucination <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>When AI generates confident-sounding but factually incorrect information, including fake citations.</p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Prompt Engineering <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>The skill of crafting effective prompts to achieve desired AI outputs.</p></div>
+                </div>
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">Token <span class="arrow">▼</span></div>
+                    <div class="accordion-body"><p>Basic unit of text processing for LLMs; roughly equivalent to a word or word fragment.</p></div>
+                </div>
+            </div>
+            <div class="card">
+                <h3>IIA Standards Quick Reference</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Standard</th><th>Title</th><th>Key Requirement</th></tr></thead>
+                        <tbody>
+                            <tr><td>13.1</td><td>Engagement Communication</td><td>Communicate nature, timing & extent</td></tr>
+                            <tr><td>13.2</td><td>Risk Assessment</td><td>Assess risks relevant to activity</td></tr>
+                            <tr><td>13.6</td><td>Work Program</td><td>Develop to achieve objectives</td></tr>
+                            <tr><td>14.1</td><td>Gathering Information</td><td>Sufficient, reliable, relevant info</td></tr>
+                            <tr><td>15.1</td><td>Final Communication</td><td>Objectives, scope, findings, conclusions</td></tr>
+                            <tr><td>15.2</td><td>Monitoring Progress</td><td>Monitor disposition of results</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>Internal Audit Department · AI Prompt Library Training Manual · Version 1.1 · January 2026</p>
+        <p style="margin-top:4px;">Aligned with IIA Global Internal Audit Standards (2025) · Gamified Edition for Interactive Learning</p>
+    </footer>
+
+    <script>
+        // ── Scroll Progress ──
+        const progressBar = document.getElementById('scroll-progress');
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            progressBar.style.width = progress + '%';
+        });
+
+        // ── Intersection Observer for Reveal Animations ──
+        const revealEls = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Track chapter views for XP
+                    if (entry.target.tagName === 'SECTION') {
+                        addXP(15, 'Section viewed');
+                        markSectionViewed(entry.target.id);
+                    }
+                }
+            });
+        }, { threshold: 0.2 });
+        revealEls.forEach(el => observer.observe(el));
+
+        // Also observe all sections
+        document.querySelectorAll('section').forEach(sec => {
+            if (!sec.classList.contains('reveal')) sec.classList.add('reveal');
+            observer.observe(sec);
+        });
+
+        // ── XP System ──
+        let totalXP = 0;
+        const xpCounter = document.getElementById('xp-counter');
+        const viewedSections = new Set();
+        const unlockedAchievements = new Set();
+
+        function addXP(amount, reason) {
+            totalXP += amount;
+            xpCounter.textContent = totalXP;
+            xpCounter.style.transform = 'scale(1.3)';
+            setTimeout(() => xpCounter.style.transform = 'scale(1)', 200);
+            if (reason) showToast(`+${amount} XP — ${reason}`);
+            checkAchievements();
+        }
+
+        function markSectionViewed(id) {
+            if (!viewedSections.has(id) && id) {
+                viewedSections.add(id);
+                addXP(10, 'New section explored');
+            }
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        // ── Achievements ──
+        function unlockAchievement(achId) {
+            if (!unlockedAchievements.has(achId)) {
+                unlockedAchievements.add(achId);
+                const el = document.querySelector(`.achievement[data-ach="${achId}"]`);
+                if (el) {
+                    el.classList.add('unlocked');
+                    addXP(50, '🏆 Achievement Unlocked!');
+                    showToast('🏆 Achievement Unlocked: ' + el.textContent.trim());
+                }
+            }
+        }
+
+        function checkAchievements() {
+            if (viewedSections.size >= 4) unlockAchievement('reader');
+            if (viewedSections.size >= 10) unlockAchievement('explorer');
+            const allChecked = document.querySelectorAll('#quality-checklist .checklist-item.checked').length;
+            if (allChecked >= 6) unlockAchievement('checker');
+        }
+
+        // ── Accordion ──
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('open');
+            if (accordion.classList.contains('open')) addXP(5, 'Accordion expanded');
+        }
+
+        // ── Flashcard tracking ──
+        let flashcardFlips = 0;
+        function trackFlashcard(card) {
+            if (!card.dataset.flipped) {
+                card.dataset.flipped = '1';
+                flashcardFlips++;
+                addXP(3, 'Flashcard flipped');
+                if (flashcardFlips >= 4) unlockAchievement('flashmaster');
+            }
+        }
+
+        // ── CRAFT Builder ──
+        function updateCraft() {
+            const c = document.getElementById('craft-c').value.trim();
+            const r = document.getElementById('craft-r').value.trim();
+            const a = document.getElementById('craft-a').value.trim();
+            const f = document.getElementById('craft-f').value.trim();
+            const t = document.getElementById('craft-t').value.trim();
+            const output = document.getElementById('craft-output');
+            const parts = [];
+            if (r) parts.push(`Role: ${r}`);
+            if (c) parts.push(`Context: ${c}`);
+            if (a) parts.push(`Task: ${a}`);
+            if (f) parts.push(`Format: ${f}`);
+            if (t) parts.push(`Tone: ${t}`);
+            if (parts.length > 0) {
+                output.textContent = parts.join('\n\n');
+                output.classList.add('active');
+                if (parts.length >= 3 && !unlockedAchievements.has('crafter')) unlockAchievement('crafter');
+            } else {
+                output.textContent = 'Your crafted prompt will appear here...';
+                output.classList.remove('active');
+            }
+        }
+
+        function copyCraft() {
+            const output = document.getElementById('craft-output').textContent;
+            if (output.includes('will appear here')) return;
+            navigator.clipboard.writeText(output).then(() => {
+                document.getElementById('craft-copied').style.display = 'inline';
+                addXP(10, 'Prompt copied!');
+                setTimeout(() => document.getElementById('craft-copied').style.display = 'none', 2000);
+            });
+        }
+
+        // ── Quality Checklist ──
+        function toggleCheck(item) {
+            item.classList.toggle('checked');
+            const total = document.querySelectorAll('#quality-checklist .checklist-item').length;
+            const checked = document.querySelectorAll('#quality-checklist .checklist-item.checked').length;
+            document.getElementById('checklist-status').textContent = `${checked} of ${total} checked`;
+            if (checked === total) {
+                addXP(25, 'Quality checklist complete!');
+                unlockAchievement('checker');
+            }
+            if (checked > 0 && !item.dataset.xpGiven) {
+                item.dataset.xpGiven = '1';
+                addXP(5, 'Checklist item reviewed');
+            }
+        }
+
+        // ── Quiz ──
+        const answeredQuizzes = new Set();
+
+        function answerQuiz(optionEl, type) {
+            const quizBlock = optionEl.closest('.quiz-block');
+            const quizId = quizBlock.id;
+            if (answeredQuizzes.has(quizId)) return; // already answered
+            answeredQuizzes.add(quizId);
+
+            // Mark all options
+            const allOptions = quizBlock.querySelectorAll('.option');
+            allOptions.forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if (opt === optionEl) {
+                    opt.classList.add(type);
+                }
+                // Highlight correct one
+                if (opt.onclick && opt.onclick.toString().includes('correct')) {
+                    opt.classList.add('correct');
+                }
+            });
+
+            const fbEl = quizBlock.querySelector('.quiz-feedback');
+            if (type === 'correct') {
+                fbEl.textContent = '✅ Correct! Great job.';
+                fbEl.style.color = 'var(--success-green)';
+                addXP(30, 'Quiz answered correctly!');
+                unlockAchievement('quizzer');
+            } else {
+                fbEl.textContent = '❌ Not quite. The correct answer is highlighted in green.';
+                fbEl.style.color = 'var(--alert-red)';
+                addXP(5, 'Quiz attempted');
+            }
+        }
+
+        // ── Floating Nav Active State ──
+        const navLinks = document.querySelectorAll('#floating-nav a');
+        const sectionIds = Array.from(navLinks).map(a => a.getAttribute('href').replace('#', ''));
+        window.addEventListener('scroll', () => {
+            let current = sectionIds[0];
+            sectionIds.forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.getBoundingClientRect().top <= 120) {
+                    current = id;
+                }
+            });
+            navLinks.forEach(a => {
+                a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+            });
+        });
+
+        // ── Initial: mark hero as viewed ──
+        setTimeout(() => {
+            markSectionViewed('hero');
+            addXP(10, 'Welcome! Start exploring.');
+        }, 500);
+
+        // ── Keyboard shortcut for CRAFT copy ──
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('craft-tool').scrollIntoView({ behavior: 'smooth' });
+                showToast('Jumped to CRAFT Builder');
+            }
+        });
+
+        console.log('%c🔍 Internal Audit AI Prompt Library — Gamified Manual Ready %c| %cIIA Standards 2025 Aligned',
+            'color:#FEBE10;font-weight:bold;font-size:1.1em;',
+            '',
+            'color:#005F75;');
+        console.log('%c💡 Tip: Press Ctrl+K to jump to the CRAFT builder!', 'color:#28A745;');
+        console.log('%c📖 Scroll through chapters, flip flashcards, take quizzes, and earn achievements!',
+        'color:#003946;');
+    </script>
+</body>
+</html>
