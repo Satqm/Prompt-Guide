@@ -1,0 +1,1651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internal Audit AI Prompt Library – Interactive Dashboard</title>
+    <style>
+        :root {
+            --dark-teal: #003946;
+            --secondary-teal: #005F75;
+            --accent-gold: #FEBE10;
+            --background: #F0F4F5;
+            --success-green: #28A745;
+            --alert-red: #E63946;
+            --card-white: #FFFFFF;
+            --text: #1A2E35;
+            --text-light: #2d4a54;
+            --border: #dde6ea;
+            --shadow-sm: 0 2px 8px rgba(0, 35, 45, 0.05);
+            --shadow-md: 0 6px 20px rgba(0, 35, 45, 0.09);
+            --shadow-lg: 0 12px 32px rgba(0, 35, 45, 0.12);
+            --radius-sm: 8px;
+            --radius: 14px;
+            --radius-lg: 18px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 140px;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Header ── */
+        .header {
+            background: linear-gradient(150deg, var(--dark-teal) 0%, #00232e 55%, var(--secondary-teal) 100%);
+            color: #fff;
+            padding: 28px 20px 32px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+        .header h1 span {
+            color: var(--accent-gold);
+        }
+        .header .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.85;
+            margin-top: 2px;
+            letter-spacing: 0.03em;
+        }
+        .header .badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .header .pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-size: 0.72rem;
+            letter-spacing: 0.03em;
+        }
+        .header .pill.gold {
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+            border: none;
+            font-weight: 700;
+        }
+
+        /* ── Tab Navigation ── */
+        .tab-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 14px 16px;
+            background: var(--card-white);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .tab-nav button {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid var(--border);
+            background: #fff;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.82rem;
+            letter-spacing: 0.02em;
+            transition: var(--transition);
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .tab-nav button:hover {
+            border-color: var(--secondary-teal);
+            background: #f5f9fa;
+        }
+        .tab-nav button.active {
+            background: var(--dark-teal);
+            color: #fff;
+            border-color: var(--dark-teal);
+            box-shadow: 0 3px 12px rgba(0, 57, 70, 0.25);
+        }
+        .tab-nav button .count {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-left: 4px;
+        }
+
+        /* ── Container ── */
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 18px 16px 40px;
+        }
+
+        /* ── Search & Controls ── */
+        .controls-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 18px;
+            background: var(--card-white);
+            padding: 14px 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px 16px;
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            background: #fafcfc;
+            color: var(--text);
+        }
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.07);
+            background: #fff;
+        }
+        .filter-select {
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 600;
+            background: #fafcfc;
+            cursor: pointer;
+            color: var(--text);
+            min-width: 130px;
+            transition: var(--transition);
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: var(--secondary-teal);
+        }
+        .btn {
+            padding: 10px 18px;
+            border-radius: 22px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+        .btn-gold {
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+        }
+        .btn-gold:hover {
+            background: #e5a800;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(254, 190, 16, 0.3);
+        }
+        .btn-teal {
+            background: var(--secondary-teal);
+            color: #fff;
+        }
+        .btn-teal:hover {
+            background: #004a5c;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(0, 95, 117, 0.3);
+        }
+        .btn-outline {
+            background: #fff;
+            border: 2px solid var(--border);
+            color: var(--text);
+        }
+        .btn-outline:hover {
+            border-color: var(--secondary-teal);
+            background: #f5f9fa;
+        }
+        .results-count {
+            font-weight: 700;
+            color: var(--secondary-teal);
+            font-size: 0.9rem;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        /* ── Stats Bar ── */
+        .stats-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+        .stat-mini {
+            background: var(--card-white);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            text-align: center;
+            flex: 1;
+            min-width: 70px;
+        }
+        .stat-mini .num {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+        }
+        .stat-mini .lbl {
+            font-size: 0.68rem;
+            color: #5a7079;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .stat-mini.gold .num {
+            color: #c48f00;
+        }
+
+        /* ── Prompt Card ── */
+        .prompt-card {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 22px 24px;
+            margin: 12px 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            animation: fadeSlide 0.4s ease-out;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .prompt-card:hover {
+            box-shadow: var(--shadow-md);
+            border-color: #c8d8dd;
+        }
+        .prompt-card .card-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .prompt-card .prompt-id {
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: var(--secondary-teal);
+            letter-spacing: 0.04em;
+            background: #eaf3f5;
+            padding: 3px 10px;
+            border-radius: 12px;
+            white-space: nowrap;
+        }
+        .prompt-card .prompt-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--dark-teal);
+            flex: 1;
+            min-width: 200px;
+        }
+        .prompt-card .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+        .tag.beginner {
+            background: #d4f0d9;
+            color: #1a5c28;
+        }
+        .tag.intermediate {
+            background: #fef3c7;
+            color: #7a5e00;
+        }
+        .tag.advanced {
+            background: #fde0e3;
+            color: #8b1a24;
+        }
+        .tag.assurance {
+            background: #d6eaf8;
+            color: #1a3f5c;
+        }
+        .tag.advisory {
+            background: #e8daef;
+            color: #4a1d6b;
+        }
+        .tag.both-eng {
+            background: #dceef5;
+            color: #1a4055;
+        }
+        .prompt-card .purpose {
+            color: var(--text-light);
+            font-size: 0.88rem;
+            margin: 6px 0 10px;
+            font-style: italic;
+        }
+        .prompt-card .prompt-text-box {
+            background: #f8fafb;
+            border: 2px solid #e4ecef;
+            border-radius: var(--radius-sm);
+            padding: 14px 16px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 0.82rem;
+            white-space: pre-wrap;
+            max-height: 180px;
+            overflow-y: auto;
+            position: relative;
+            line-height: 1.5;
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .prompt-text-box::-webkit-scrollbar {
+            width: 5px;
+        }
+        .prompt-text-box::-webkit-scrollbar-thumb {
+            background: #c5d4d9;
+            border-radius: 3px;
+        }
+        .prompt-card .card-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+            align-items: center;
+        }
+        .copy-btn {
+            background: var(--secondary-teal);
+            color: #fff;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .copy-btn:hover {
+            background: #004a5c;
+            transform: scale(1.03);
+        }
+        .copy-btn.copied {
+            background: var(--success-green);
+        }
+        .star-rating {
+            display: flex;
+            gap: 2px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .star-rating .star {
+            font-size: 1.3rem;
+            color: #d0dde2;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        .star-rating .star.filled {
+            color: var(--accent-gold);
+        }
+        .star-rating .star:hover {
+            transform: scale(1.2);
+        }
+        .avg-rating {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #7a5e00;
+            margin-left: 4px;
+        }
+        .prompt-card .meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: #5a7079;
+            margin-top: 6px;
+        }
+        .prompt-card .meta-row span {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        /* ── Methodology Callout ── */
+        .methodology-callout {
+            background: #fefdf6;
+            border-left: 4px solid var(--accent-gold);
+            padding: 10px 14px;
+            margin-top: 8px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.82rem;
+            color: #5a4a1a;
+            line-height: 1.5;
+        }
+        .methodology-callout strong {
+            color: var(--dark-teal);
+        }
+
+        /* ── Submit Form Modal ── */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 30, 38, 0.7);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .modal-overlay.open {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+        }
+        .modal h2 {
+            color: var(--dark-teal);
+            margin-bottom: 16px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .modal .form-group {
+            margin-bottom: 12px;
+        }
+        .modal label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.82rem;
+            color: var(--secondary-teal);
+            margin-bottom: 4px;
+            letter-spacing: 0.02em;
+        }
+        .modal input,
+        .modal textarea,
+        .modal select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.88rem;
+            transition: var(--transition);
+            background: #fafcfc;
+            color: var(--text);
+            resize: vertical;
+        }
+        .modal input:focus,
+        .modal textarea:focus,
+        .modal select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.06);
+            background: #fff;
+        }
+        .modal .btn-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 1.6rem;
+            cursor: pointer;
+            color: #8899a0;
+            transition: var(--transition);
+            font-weight: 700;
+        }
+        .modal .btn-close:hover {
+            color: var(--alert-red);
+        }
+        .modal .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 500px) {
+            .modal .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Toast ── */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark-teal);
+            color: #fff;
+            padding: 12px 22px;
+            border-radius: 28px;
+            font-weight: 700;
+            z-index: 10001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s;
+            box-shadow: var(--shadow-lg);
+            font-size: 0.85rem;
+            letter-spacing: 0.03em;
+        }
+        .toast.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8899a0;
+        }
+        .empty-state .icon {
+            font-size: 3rem;
+            margin-bottom: 10px;
+        }
+        .empty-state p {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        /* ── Dashboard Card ── */
+        .dash-card {
+            background: var(--card-white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 12px 0;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+        .dash-card h3 {
+            color: var(--dark-teal);
+            margin-bottom: 10px;
+        }
+        .dash-card ul {
+            padding-left: 20px;
+            color: var(--text-light);
+        }
+        .dash-card ul li {
+            margin: 4px 0;
+            font-size: 0.9rem;
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.3rem;
+            }
+            .tab-nav button {
+                padding: 6px 10px;
+                font-size: 0.7rem;
+            }
+            .prompt-card {
+                padding: 16px;
+            }
+            .prompt-card .prompt-text-box {
+                font-size: 0.75rem;
+                max-height: 140px;
+            }
+            .controls-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        /* ── Highlight animation ── */
+        .highlight-flash {
+            animation: highlightFlash 1.5s ease-out;
+        }
+        @keyframes highlightFlash {
+            0% {
+                box-shadow: 0 0 0 8px rgba(254, 190, 16, 0.4);
+            }
+            100% {
+                box-shadow: 0 0 0 0px rgba(254, 190, 16, 0);
+            }
+        }
+
+        /* ── No results ── */
+        .no-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: #8899a0;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+        .no-results .big-icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>🔍 Internal Audit <span>AI Prompt Library</span></h1>
+        <p class="subtitle">Interactive Dashboard · IIA Global Standards 2025 Aligned · 44 Prompts</p>
+        <div class="badge-row">
+            <span class="pill gold">Version 1.1</span>
+            <span class="pill">Planning: 10</span>
+            <span class="pill">Fieldwork: 12</span>
+            <span class="pill">Reporting: 10</span>
+            <span class="pill">Follow-up: 6</span>
+            <span class="pill">General: 6</span>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-nav" id="tabNav">
+        <button data-tab="dashboard" class="active">📊 Dashboard</button>
+        <button data-tab="planning">📋 Planning<span class="count">10</span></button>
+        <button data-tab="fieldwork">🔬 Fieldwork<span class="count">12</span></button>
+        <button data-tab="reporting">📝 Reporting<span class="count">10</span></button>
+        <button data-tab="followup">✅ Follow-up<span class="count">6</span></button>
+        <button data-tab="general">🔧 General<span class="count">6</span></button>
+        <button data-tab="settings">⚙️ Settings</button>
+        <button data-tab="changelog">📜 Change Log</button>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container" id="mainContainer">
+        <!-- Dynamic content renders here -->
+    </div>
+
+    <!-- Submit Prompt Modal -->
+    <div class="modal-overlay" id="submitModal">
+        <div class="modal">
+            <button class="btn-close" onclick="closeSubmitModal()">✕</button>
+            <h2>📝 Submit a New Prompt</h2>
+            <form id="submitForm" onsubmit="handleSubmit(event)">
+                <div class="form-row">
+                    <div class="form-group"><label>Prompt ID *</label><input type="text" id="sID" placeholder="e.g., PLAN-011" required></div>
+                    <div class="form-group"><label>Title *</label><input type="text" id="sTitle" placeholder="e.g., New Risk Assessment" required></div>
+                </div>
+                <div class="form-group"><label>Purpose</label><input type="text" id="sPurpose" placeholder="Brief purpose of this prompt"></div>
+                <div class="form-group"><label>Full Prompt Text *</label><textarea id="sPromptText" rows="5" placeholder="Paste the full prompt with {{variables}}..." required></textarea></div>
+                <div class="form-group"><label>Variables</label><input type="text" id="sVars" placeholder="e.g., {{audit_area}}, {{process_name}}"></div>
+                <div class="form-row">
+                    <div class="form-group"><label>Phase *</label><select id="sPhase" required><option value="">Select...</option><option value="planning">Planning</option><option value="fieldwork">Fieldwork</option><option value="reporting">Reporting</option><option value="followup">Follow-up</option><option value="general">General</option></select></div>
+                    <div class="form-group"><label>Skill Level</label><select id="sSkill"><option value="Beginner">Beginner</option><option value="Intermediate">Intermediate</option><option value="Advanced">Advanced</option></select></div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group"><label>Engagement Type</label><select id="sEngType"><option value="Both">Both</option><option value="Assurance">Assurance</option><option value="Advisory">Advisory</option></select></div>
+                    <div class="form-group"><label>Related IIA Standard</label><input type="text" id="sStandard" placeholder="e.g., Standard 13.2"></div>
+                </div>
+                <div class="form-group"><label>Methodology Notes</label><textarea id="sMethodology" rows="2" placeholder="Explain WHY this audit step matters..."></textarea></div>
+                <div class="form-group"><label>Tips for Customization</label><textarea id="sTips" rows="2" placeholder="Guidance on adapting the prompt..."></textarea></div>
+                <button type="submit" class="btn btn-gold" style="width:100%;margin-top:6px;">✅ Submit Prompt</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ── EMBEDDED PROMPT LIBRARY DATA ──
+        const LIBRARY_DATA = {
+            "Dashboard": {
+                "Title": "INTERNAL AUDIT AI PROMPT LIBRARY",
+                "Template_Overview": "This prompt library provides AI prompts aligned with IIA Global Internal Audit Standards (effective January 2025) for both assurance and advisory engagements. Prompts are organized by audit phase with embedded methodology guidance for staff development.",
+                "Quick_Navigation": {
+                    "Planning_Phase": "PLAN-001 through PLAN-010",
+                    "Fieldwork_Phase": "FIELD-001 through FIELD-012",
+                    "Reporting_Phase": "RPT-001 through RPT-010",
+                    "Follow_up_Phase": "FU-001 through FU-006",
+                    "General_Cross_Phase": "GEN-001 through GEN-006",
+                    "Settings": "Dropdown values and standards reference",
+                    "Change_Log": "Version history and approvals"
+                },
+                "Template_Statistics": { "Total_Prompts": 44, "Planning_Prompts": 10, "Fieldwork_Prompts": 12,
+                    "Reporting_Prompts": 10, "Follow_up_Prompts": 6, "General_Prompts": 6 },
+                "How_to_Use_This_Library": [
+                    "1. Navigate to the appropriate phase tab based on your current audit activity",
+                    "2. Identify prompts matching your task - use Skill Level to find appropriate complexity",
+                    "3. Copy the Full Prompt Text and replace {{variables}} with your specific information",
+                    "4. Review Methodology Notes to understand the \"why\" behind the audit step",
+                    "5. Compare your output against Example Output for quality benchmarking",
+                    "6. Customize using Tips column guidance for engagement-specific needs"
+                ]
+            },
+            "Settings": {
+                "Skill_Levels": ["Beginner", "Intermediate", "Advanced"],
+                "IIA_Standards_Reference_2025": { "Domain_I": "Purpose of Internal Auditing",
+                    "Domain_II": "Ethics and Professionalism", "Domain_III": "Governing the Internal Audit Function",
+                    "Domain_IV": "Managing the Internal Audit Function", "Domain_V": "Performing Internal Audit Services" },
+                "Status_Values": ["Draft", "Active", "Under Review", "Archived"],
+                "Engagement_Types": ["Assurance", "Advisory", "Both"],
+                "Standards_Reference": [
+                    { "Standard": "Standard 13", "Description": "Engagement Planning" },
+                    { "Standard": "Standard 13.1", "Description": "Engagement Communication" },
+                    { "Standard": "Standard 13.2", "Description": "Engagement Risk Assessment" },
+                    { "Standard": "Standard 13.3", "Description": "Engagement Objectives and Scope" },
+                    { "Standard": "Standard 13.4", "Description": "Engagement Evaluation Criteria" },
+                    { "Standard": "Standard 13.5", "Description": "Engagement Resources" },
+                    { "Standard": "Standard 13.6", "Description": "Engagement Work Program" },
+                    { "Standard": "Standard 14", "Description": "Performing Engagement Work" },
+                    { "Standard": "Standard 14.1", "Description": "Gathering Information" },
+                    { "Standard": "Standard 14.2", "Description": "Evaluating Information" },
+                    { "Standard": "Standard 14.3", "Description": "Evaluating Significance" },
+                    { "Standard": "Standard 14.4", "Description": "Developing Recommendations" },
+                    { "Standard": "Standard 14.5", "Description": "Developing Conclusions" },
+                    { "Standard": "Standard 14.6", "Description": "Documenting Engagement Information" },
+                    { "Standard": "Standard 15", "Description": "Communicating Engagement Results" },
+                    { "Standard": "Standard 15.1", "Description": "Final Engagement Communication" },
+                    { "Standard": "Standard 15.2", "Description": "Monitoring Progress and Disposition" },
+                    { "Standard": "Principle 4.3", "Description": "Professional Skepticism" }
+                ]
+            },
+            "Planning_Phase": [
+                { "Prompt_ID": "PLAN-001", "Title": "Engagement Risk Assessment",
+                    "Purpose": "Identify and document risks specific to the engagement per IIA Standard 13.2",
+                    "Full_Prompt_Text": "Act as an experienced internal auditor. I am planning an audit of {{process_name}} at {{organization_type}}. Based on IIA Standard 13.2, identify inherent risks organized by category (financial, operational, compliance, strategic, reputational). For each risk, provide: (1) Risk description, (2) Likelihood (High/Medium/Low), (3) Impact (High/Medium/Low), (4) Key controls that should mitigate this risk, (5) Suggested audit procedures to test the risk area. Consider changes since the annual audit plan was developed that may affect risk assessment.",
+                    "Variables": "{{process_name}}, {{organization_type}}", "Related_IIA_Standard": "Standard 13.2 - Engagement Risk Assessment",
+                    "Methodology_Notes": "Engagement risk assessment differs from annual risk assessment - here we assess specific risks within this engagement's scope. Per Standard 13.2, consider: inherent risk of the activity, effectiveness of governance/risk management/controls, and changes since planning.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Adjust risk categories based on industry. For higher education, add research compliance and Title IV risks. For healthcare, add HIPAA and patient safety.",
+                    "Example_Input": "process_name: Accounts Payable; organization_type: Public University",
+                    "Example_Output": "Categorized risk listing with 8-12 risks, each rated and linked to control expectations",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-002", "Title": "Engagement Objectives Development",
+                    "Purpose": "Develop clear, measurable audit objectives per IIA Standard 13.3",
+                    "Full_Prompt_Text": "Based on the following engagement scope: {{scope_description}}, and identified risks: {{key_risks}}, develop 3-5 SMART audit objectives (Specific, Measurable, Achievable, Relevant, Time-bound). For each objective, specify: (1) What will be evaluated, (2) The criteria against which it will be measured, (3) The type of conclusion expected (opinion, finding, or recommendation). Ensure objectives address the highest-priority risks identified.",
+                    "Variables": "{{scope_description}}, {{key_risks}}", "Related_IIA_Standard": "Standard 13.3 - Engagement Objectives and Scope",
+                    "Methodology_Notes": "Objectives should be preliminary - they may be refined during fieldwork. Per Standard 13.3, objectives must be sufficiently precise to allow engagement success to be assessed. Advisory engagement objectives focus on agreed-upon deliverables rather than providing opinions.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "For advisory engagements, frame objectives around the client's stated needs rather than auditor-determined scope.",
+                    "Example_Input": "scope_description: Review P-Card controls for compliance with university policy; key_risks: unauthorized purchases, missing receipts, policy violations",
+                    "Example_Output": "3-5 numbered objectives with measurement criteria and expected conclusion type", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-003", "Title": "Work Program Development",
+                    "Purpose": "Create detailed testing procedures linked to objectives per IIA Standard 13.6",
+                    "Full_Prompt_Text": "Given the following audit objective: {{objective}} and related risk: {{risk_description}}, develop 5-7 detailed testing procedures. For each procedure specify: (1) Nature of test (Inquiry/Observation/Inspection/Reperformance/Analytical Procedure), (2) Population definition and sampling approach, (3) Specific steps to perform, (4) Evaluation criteria for pass/fail, (5) Documentation requirements. Reference applicable policies or regulations as criteria.",
+                    "Variables": "{{objective}}, {{risk_description}}", "Related_IIA_Standard": "Standard 13.6 - Engagement Work Program",
+                    "Methodology_Notes": "The work program operationalizes objectives into executable steps. Per Standard 13.6, it must be sufficient to achieve engagement objectives. Include a mix of test types - inquiry alone is rarely sufficient for assurance engagements.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Adjust sample sizes based on population and risk. Consider 100% testing for high-risk, low-volume populations. Include compensating procedures if primary test cannot be performed.",
+                    "Example_Input": "objective: Determine if P-Card transactions comply with spending limits; risk: Unauthorized purchases exceeding cardholder limits",
+                    "Example_Output": "Numbered procedure list with specific steps, sample sizes, and pass/fail criteria", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-004", "Title": "Pre-Audit Information Request",
+                    "Purpose": "Generate comprehensive document request list for engagement planning",
+                    "Full_Prompt_Text": "I am planning an audit of {{audit_area}} covering the period {{audit_period}}. Generate a categorized information request list including: (1) Policies and procedures governing the area, (2) Organizational charts and job descriptions, (3) Prior audit reports and management responses, (4) Relevant system access for testing, (5) Transaction listings and reports for the audit period, (6) Key metrics and KPIs, (7) Any recent changes to processes or personnel. Format as a professional request memo suitable for sending to the auditee.",
+                    "Variables": "{{audit_area}}, {{audit_period}}", "Related_IIA_Standard": "Standard 13.1 - Engagement Communication",
+                    "Methodology_Notes": "Initial communication sets the tone for the engagement. Per Standard 13.1, coordinate timing, explain the engagement process, and establish lines of communication. Request documents 2-3 weeks before fieldwork begins.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Customize based on prior engagement experience with the area. Remove items you already have access to. Add area-specific documentation needs.",
+                    "Example_Input": "audit_area: Travel and Expense Reimbursement; audit_period: July 1, 2024 - December 31, 2024",
+                    "Example_Output": "Formatted memo with categorized document request list and requested deadline", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-005", "Title": "Resource and Timeline Planning",
+                    "Purpose": "Estimate engagement resources and develop timeline per IIA Standard 13.5",
+                    "Full_Prompt_Text": "For an audit of {{audit_area}} with the following scope: {{scope_summary}} and complexity factors: {{complexity_factors}}, estimate required resources and develop a project timeline. Include: (1) Staff hours by phase (planning, fieldwork, reporting), (2) Skill requirements and team composition, (3) Key milestones with target dates, (4) Dependencies and constraints, (5) Buffer time for unexpected issues. Assume {{available_staff}} staff members are available.",
+                    "Variables": "{{audit_area}}, {{scope_summary}}, {{complexity_factors}}, {{available_staff}}",
+                    "Related_IIA_Standard": "Standard 13.5 - Engagement Resources",
+                    "Methodology_Notes": "Resource estimation should consider staff competencies needed. Per Standard 13.5, CAE must ensure resources are appropriate for engagement objectives. Include time for supervision and review.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Add contingency of 15-20% for first-time audits of an area. Reduce for recurring engagements with stable processes.",
+                    "Example_Input": "audit_area: NCAA Compliance; scope_summary: Review athlete eligibility verification; complexity_factors: Multiple sports, new regulations; available_staff: 2",
+                    "Example_Output": "Resource budget table and Gantt-style milestone chart", "Version": "1.0", "Author": "Assistant Director",
+                    "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-006", "Title": "Process Understanding - Narrative Development",
+                    "Purpose": "Document process understanding through narrative walkthrough",
+                    "Full_Prompt_Text": "Based on my interview notes about the {{process_name}} process: {{interview_notes}}, create a structured process narrative that includes: (1) Process objectives and why it exists, (2) Key participants and their roles, (3) Inputs and outputs, (4) Sequential steps from initiation to completion, (5) Key controls at each decision point, (6) Systems and tools used, (7) Exception handling procedures. Identify any gaps in understanding that require follow-up questions.",
+                    "Variables": "{{process_name}}, {{interview_notes}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Process understanding is foundational for risk-based auditing. Document enough detail to identify control points but avoid excessive documentation of routine steps. Narratives complement flowcharts.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Focus narrative on high-risk process segments. Use bullet points for routine steps. Highlight segregation of duties and approval authorities.",
+                    "Example_Input": "process_name: Purchase Requisition to Payment; interview_notes: [summary of department interview]",
+                    "Example_Output": "Structured narrative with numbered steps, control points highlighted, and follow-up questions listed",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-007", "Title": "Control Environment Assessment",
+                    "Purpose": "Evaluate control environment factors affecting engagement scope",
+                    "Full_Prompt_Text": "For the {{department_name}} department I am auditing, assess the control environment based on the following information: {{background_info}}. Evaluate using COSO's five control environment principles: (1) Commitment to integrity and ethical values, (2) Board oversight responsibility, (3) Organizational structure and authorities, (4) Commitment to competence, (5) Accountability. Identify control environment strengths and weaknesses that should influence audit scope and testing.",
+                    "Variables": "{{department_name}}, {{background_info}}", "Related_IIA_Standard": "Standard 13.2 - Engagement Risk Assessment",
+                    "Methodology_Notes": "Control environment affects the reliability of other controls. Weak tone at the top or unclear accountability structures increase inherent risk and may require expanded testing. Document specific observations, not just assessments.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Look for red flags: high turnover, unclear reporting lines, pressure to meet targets, history of issues. Adjust planned reliance on controls accordingly.",
+                    "Example_Input": "department_name: Athletics; background_info: Recent coaching changes, increased media scrutiny, new compliance officer hired",
+                    "Example_Output": "Assessment matrix rating each COSO principle with supporting observations and audit implications",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-008", "Title": "Advisory Engagement Scope Agreement",
+                    "Purpose": "Draft scope agreement for advisory/consulting engagement",
+                    "Full_Prompt_Text": "[ADVISORY] I am providing advisory services to {{client_department}} on {{advisory_topic}}. Draft a scope agreement that includes: (1) Engagement objectives and deliverables, (2) Specific questions to be addressed, (3) Methodology and approach, (4) Timeline and key milestones, (5) Resource requirements from the client, (6) Boundaries and exclusions, (7) Distribution of final deliverable. Note: Unlike assurance engagements, advisory scope should be jointly agreed with the client.",
+                    "Variables": "{{client_department}}, {{advisory_topic}}", "Related_IIA_Standard": "Standard 13.3 - Engagement Objectives and Scope",
+                    "Methodology_Notes": "Advisory engagements require agreed-upon scope per Standards. We provide recommendations without assuming management responsibility. Scope should be documented before work begins to prevent scope creep.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Advisory",
+                    "Tips_for_Customization": "Include statement that advisory services do not constitute an audit opinion. Clarify that recommendations are advisory and implementation decisions rest with management.",
+                    "Example_Input": "client_department: Human Resources; advisory_topic: Improving new employee onboarding process",
+                    "Example_Output": "Formal scope agreement document with all required elements and signature blocks", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-009", "Title": "Prior Audit Issue Analysis",
+                    "Purpose": "Analyze prior audit findings to inform current engagement planning",
+                    "Full_Prompt_Text": "Review the following prior audit findings from the {{audit_area}} area: {{prior_findings}}. For each finding, analyze: (1) Root cause identified in prior audit, (2) Management's corrective action and implementation date, (3) Whether the issue could recur based on control changes, (4) Recommended follow-up testing for current engagement, (5) Risk level if issue has not been adequately addressed. Summarize implications for current engagement scope and emphasis areas.",
+                    "Variables": "{{audit_area}}, {{prior_findings}}", "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Prior issues inform current risk assessment. Recurring findings indicate systemic control weaknesses requiring deeper analysis. Consider whether management addressed root cause or just symptoms.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Weight analysis toward high and medium risk prior findings. Low-risk findings may be excluded from current scope if resources are limited.",
+                    "Example_Input": "audit_area: Grants Management; prior_findings: [list of 3 prior findings with management responses]",
+                    "Example_Output": "Analysis table with follow-up recommendations and scope implications summary", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "PLAN-010", "Title": "Engagement Opening Meeting Agenda",
+                    "Purpose": "Prepare agenda and talking points for engagement kickoff meeting",
+                    "Full_Prompt_Text": "Prepare an opening meeting agenda for an audit of {{audit_area}} with {{department_leadership}}. Include: (1) Introduction of audit team and roles, (2) Engagement objectives and scope overview, (3) Timeline and key milestones, (4) Information and access requirements, (5) Communication protocols during fieldwork, (6) Draft report review process, (7) Questions and concerns. Also prepare talking points addressing potential auditee concerns about the audit process.",
+                    "Variables": "{{audit_area}}, {{department_leadership}}", "Related_IIA_Standard": "Standard 13.1 - Engagement Communication",
+                    "Methodology_Notes": "The opening meeting establishes rapport and sets expectations. Per Standard 13.1, communicate the nature, timing, and extent of engagement work. Address questions professionally and maintain independence.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Customize tone based on relationship history. First-time audits require more explanation of process. Emphasize collaborative approach while maintaining independence.",
+                    "Example_Input": "audit_area: Research Compliance; department_leadership: VP for Research, Compliance Director",
+                    "Example_Output": "Structured agenda with time allocations and bullet-point talking points for each section", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" }
+            ],
+            "Fieldwork_Phase": [
+                { "Prompt_ID": "FIELD-001", "Title": "Control Design Evaluation",
+                    "Purpose": "Assess whether control is properly designed to address identified risk",
+                    "Full_Prompt_Text": "Evaluate the design of this control: \"{{control_description}}\" which is intended to mitigate the risk of {{risk_description}}. Analyze: (1) Design adequacy - does the control address the risk if operating effectively? (2) Control type classification (preventive/detective/corrective), (3) Timing (before/during/after the activity), (4) Manual vs. automated characteristics, (5) Potential failure points or circumvention methods, (6) Dependencies on other controls. Conclude on design effectiveness and identify any design gaps.",
+                    "Variables": "{{control_description}}, {{risk_description}}", "Related_IIA_Standard": "Standard 14.2 - Evaluating Information",
+                    "Methodology_Notes": "Design evaluation precedes operating effectiveness testing. A well-designed control may still fail in operation. Focus on whether the control COULD work, not whether it IS working.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Consider compensating controls if primary control has design weaknesses. Note key-person dependencies in manual controls.",
+                    "Example_Input": "control_description: Manager reviews and approves all purchase orders over $1,000; risk_description: Unauthorized purchases",
+                    "Example_Output": "Structured design assessment with conclusion (Adequate/Inadequate) and supporting rationale",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-002", "Title": "Control Operating Effectiveness Testing",
+                    "Purpose": "Design test of operating effectiveness for identified control",
+                    "Full_Prompt_Text": "For the control: \"{{control_description}}\", design a test of operating effectiveness. Specify: (1) Test objective, (2) Population definition (what transactions/events does this control cover?), (3) Sample size with rationale (consider frequency: daily=25, weekly=5, monthly=2, quarterly=1, annual=1), (4) Sample selection method (random/haphazard/judgmental), (5) Specific attributes to test, (6) Evidence to obtain, (7) Pass/fail criteria for each sample item, (8) Criteria for concluding on overall operating effectiveness.",
+                    "Variables": "{{control_description}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Operating effectiveness testing determines if the control worked consistently during the audit period. Sample sizes for controls testing differ from substantive testing - focus is on consistent operation, not detecting all errors.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Increase sample size for controls with prior failures. Consider 100% testing for high-risk, low-volume controls. Document any scope limitations.",
+                    "Example_Input": "control_description: Monthly bank reconciliation prepared by Accountant and reviewed by Controller",
+                    "Example_Output": "Test design document with all specified elements ready for execution", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-003", "Title": "Interview Question Development",
+                    "Purpose": "Generate effective interview questions applying professional skepticism",
+                    "Full_Prompt_Text": "I am interviewing {{interviewee_role}} to understand and validate controls over {{process_area}}. Per IIA Standard 4.3 (Professional Skepticism), generate 10 interview questions that: (1) Assess actual process execution versus documented procedures (3 questions), (2) Probe exception handling and override scenarios (2 questions), (3) Explore segregation of duties and system access (2 questions), (4) Test knowledge of fraud indicators and escalation procedures (2 questions), (5) Identify recent process changes or challenges (1 question). Include follow-up questions for inconsistent or vague responses.",
+                    "Variables": "{{interviewee_role}}, {{process_area}}", "Related_IIA_Standard": "Principle 4.3 - Professional Skepticism",
+                    "Methodology_Notes": "Effective interviews use open-ended questions and follow-up probes. Professional skepticism means questioning critically, not assuming information is correct. Corroborate interview responses with documentation.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Start with rapport-building questions. Progress from general to specific. Save sensitive questions for after trust is established. Take notes but maintain eye contact.",
+                    "Example_Input": "interviewee_role: Accounts Payable Supervisor; process_area: Invoice Processing and Payment",
+                    "Example_Output": "10 numbered questions with 2-3 follow-up probes each, organized by category", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-004", "Title": "Data Analysis - Anomaly Detection",
+                    "Purpose": "Identify anomalies and exceptions in transaction data",
+                    "Full_Prompt_Text": "Analyze the {{data_type}} dataset I will provide for: (1) Transactions exceeding policy limits or approval thresholds, (2) Segregation of duties violations (same person initiating and approving), (3) Unusual timing patterns (weekend/holiday entries, period-end clustering, after-hours processing), (4) Round-number anomalies suggesting estimation rather than actual amounts, (5) Duplicate transactions (same vendor, amount, date), (6) Gaps or sequences in transaction numbering, (7) Transactions just below approval thresholds. Output an exception listing formatted for workpaper inclusion.",
+                    "Variables": "{{data_type}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Data analytics enables population testing rather than sampling. Prioritize exceptions for follow-up based on risk and materiality. Not all anomalies are errors - investigate before concluding.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Customize thresholds based on organizational policies. Document data source, extraction date, and any data quality issues. Maintain audit trail of analytics performed.",
+                    "Example_Input": "data_type: Purchase Card Transactions for FY24",
+                    "Example_Output": "Exception listing with columns: Transaction ID, Exception Type, Amount, Risk Indicator, Recommended Follow-up",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-005", "Title": "Evidence Sufficiency Evaluation",
+                    "Purpose": "Assess whether evidence gathered is sufficient to support conclusions",
+                    "Full_Prompt_Text": "For audit objective: {{audit_objective}}, I have gathered the following evidence: {{evidence_summary}}. Evaluate whether this evidence is: (1) Sufficient - enough evidence to support conclusions? (2) Reliable - is the source trustworthy? Is evidence original or copied? Internal or external? (3) Relevant - does it directly address the audit objective? (4) Useful - does it help achieve engagement objectives? Identify any evidence gaps and recommend additional procedures if needed to support a conclusion.",
+                    "Variables": "{{audit_objective}}, {{evidence_summary}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Evidence evaluation uses the SIRU criteria (Sufficient, Reliable, Relevant, Useful). External evidence is generally more reliable than internal. Original documents are more reliable than copies. Consider whether management could manipulate the evidence.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "When in doubt, gather more evidence. Document why evidence is considered reliable. Consider corroborating evidence from multiple sources for high-risk areas.",
+                    "Example_Input": "audit_objective: Determine if travel expenses are properly approved; evidence_summary: Sample of 25 expense reports with approval signatures, travel policy, delegation of authority matrix",
+                    "Example_Output": "SIRU assessment table with gap analysis and additional procedure recommendations", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-006", "Title": "Root Cause Analysis",
+                    "Purpose": "Identify root cause of control failure or process breakdown",
+                    "Full_Prompt_Text": "A control failure has been identified: {{control_failure_description}}. Using the \"5 Whys\" technique and considering the categories of People, Process, Technology, and External Factors, perform root cause analysis. For each potential root cause identified: (1) Explain the causal chain from root cause to observed failure, (2) Assess likelihood this is the true root cause, (3) Identify evidence that would confirm or refute this cause, (4) Consider whether addressing this cause would prevent recurrence. Recommend the most likely root cause(s) based on available evidence.",
+                    "Variables": "{{control_failure_description}}", "Related_IIA_Standard": "Standard 14.3 - Evaluating Significance",
+                    "Methodology_Notes": "Root cause analysis is required per Standard 14.3 to evaluate significance. Addressing symptoms rather than root causes leads to recurring findings. Root cause informs both the recommendation and risk rating.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Look for systemic causes (training, resources, unclear policies) rather than blaming individuals. Consider whether multiple root causes contributed. Validate root cause with process owner.",
+                    "Example_Input": "control_failure_description: 3 of 25 purchase orders lacked required supervisor approval before processing",
+                    "Example_Output": "5 Whys analysis diagram with root cause conclusion and supporting rationale", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-007", "Title": "Workpaper Documentation",
+                    "Purpose": "Document testing results in standard workpaper format",
+                    "Full_Prompt_Text": "Document the following test results in professional workpaper format: Test Objective: {{test_objective}}, Procedure Performed: {{procedure_description}}, Results: {{test_results}}. Create workpaper documentation that includes: (1) Clear heading with engagement name, workpaper reference, prepared by, date, (2) Objective statement, (3) Procedure description with population and sample details, (4) Results summary with exception details, (5) Conclusion tied to objective, (6) Cross-references to supporting evidence, (7) Reviewer sign-off section. Documentation should allow a knowledgeable third party to understand work performed.",
+                    "Variables": "{{test_objective}}, {{procedure_description}}, {{test_results}}",
+                    "Related_IIA_Standard": "Standard 14.6 - Documenting Engagement Information",
+                    "Methodology_Notes": "Workpapers must support conclusions and recommendations. Per Standard 14.6, documentation should be sufficient for a knowledgeable person not connected to the engagement to understand the work performed and conclusions reached.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Use consistent formatting across engagements. Include enough detail to recreate the test. Mark exceptions clearly. Reference evidence by exhibit number.",
+                    "Example_Input": "test_objective: Verify approved vendor list is current; procedure_description: Compared active vendors to approved list; test_results: 5 of 100 vendors not on approved list",
+                    "Example_Output": "Formatted workpaper ready for inclusion in engagement file", "Version": "1.0", "Author": "Assistant Director",
+                    "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-008", "Title": "Compliance Testing Analysis",
+                    "Purpose": "Analyze compliance test results against regulatory requirements",
+                    "Full_Prompt_Text": "Analyze compliance testing results for {{regulation_requirement}} based on: Population: {{population_description}}, Sample Size: {{sample_size}}, Exceptions Found: {{exceptions_description}}. Determine: (1) Exception rate and statistical significance, (2) Whether exceptions represent isolated incidents or systemic issues, (3) Potential regulatory exposure (fines, sanctions, reporting requirements), (4) Comparison to prior period results if available, (5) Recommended remediation priority based on risk. Format analysis suitable for regulatory response if needed.",
+                    "Variables": "{{regulation_requirement}}, {{population_description}}, {{sample_size}}, {{exceptions_description}}",
+                    "Related_IIA_Standard": "Standard 14.2 - Evaluating Information",
+                    "Methodology_Notes": "Compliance testing requires clear criteria (the regulation) and objective evaluation. Consider both the letter and spirit of requirements. Distinguish between technical violations and substantive non-compliance.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Know escalation requirements for compliance failures. Some regulations require immediate notification. Document timing of when issues were identified and reported.",
+                    "Example_Input": "regulation_requirement: FERPA student record access restrictions; population_description: 500 student record access logs; sample_size: 50; exceptions_description: 2 accesses without documented need",
+                    "Example_Output": "Compliance analysis memo with exception rate, risk assessment, and recommended actions", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-009", "Title": "Fraud Risk Indicator Assessment",
+                    "Purpose": "Evaluate indicators of potential fraud during fieldwork",
+                    "Full_Prompt_Text": "During fieldwork for {{audit_area}}, I have observed the following: {{observations}}. Evaluate these observations against common fraud indicators including: (1) Pressure factors (financial difficulties, unrealistic targets), (2) Opportunity factors (weak controls, override capability, lack of oversight), (3) Rationalization indicators (attitude, behavioral changes), (4) Segregation of duties gaps. For each potential indicator identified, recommend: additional procedures to investigate, evidence to gather, and escalation considerations per internal audit fraud policy.",
+                    "Variables": "{{audit_area}}, {{observations}}", "Related_IIA_Standard": "Principle 4.3 - Professional Skepticism",
+                    "Methodology_Notes": "Internal auditors are not fraud investigators but must maintain professional skepticism. Per the fraud triangle, fraud requires pressure, opportunity, and rationalization. Report suspected fraud through proper channels - do not investigate independently.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Document observations objectively without accusations. Consult with CAE before expanding fraud-related procedures. Maintain confidentiality. Know your organization's fraud reporting requirements.",
+                    "Example_Input": "audit_area: Cash Handling; observations: Supervisor always works alone, reluctant to take vacation, defensive about questions, cash shortages attributed to \"counting errors\"",
+                    "Example_Output": "Fraud indicator assessment with recommended procedures and escalation considerations", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-010", "Title": "Analytical Procedure Execution",
+                    "Purpose": "Perform analytical procedures to identify unusual trends or relationships",
+                    "Full_Prompt_Text": "For the {{financial_or_operational_area}} with data: {{data_periods}}, perform analytical procedures including: (1) Trend analysis comparing current to prior periods with variance explanations, (2) Ratio analysis for relevant metrics with benchmarking, (3) Reasonableness testing of reported amounts, (4) Correlation analysis between related accounts, (5) Comparison to budgets/expectations with variance investigation thresholds. For each procedure, document: expectation, actual result, variance, and whether follow-up is required. Flag variances exceeding {{threshold}} for investigation.",
+                    "Variables": "{{financial_or_operational_area}}, {{data_periods}}, {{threshold}}",
+                    "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Analytical procedures can be highly efficient for identifying risk areas. Develop independent expectations before reviewing actual results. Investigate unexpected results - both favorable and unfavorable variances may indicate issues.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Use industry benchmarks where available. Consider non-financial metrics (headcount, transactions processed) as analytical inputs. Document your expectation development methodology.",
+                    "Example_Input": "financial_or_operational_area: Tuition Revenue; data_periods: FY22, FY23, FY24; threshold: 10%",
+                    "Example_Output": "Analytical procedures workpaper with trend analysis, ratios, and investigation follow-up list",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-011", "Title": "IT General Controls Testing",
+                    "Purpose": "Evaluate IT general controls supporting application controls",
+                    "Full_Prompt_Text": "Evaluate IT general controls for {{system_name}} covering: (1) Access Controls - user provisioning, authentication, periodic access reviews, privileged access, (2) Change Management - change request process, testing, approvals, emergency changes, (3) Computer Operations - job scheduling, backup and recovery, incident management, (4) Program Development - SDLC methodology, security requirements, testing standards. For each area, identify: key controls, evidence to test, and common weaknesses to probe. Consider impact on application controls if ITGCs are weak.",
+                    "Variables": "{{system_name}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "ITGCs underpin the reliability of automated controls and data. Weak ITGCs may require expanded substantive testing. Focus on controls over financially significant systems and sensitive data.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Coordinate with IT audit specialists if available. Request system-generated reports rather than management-prepared listings. Consider using data analytics for access review testing.",
+                    "Example_Input": "system_name: Banner ERP (Finance and HR modules)",
+                    "Example_Output": "ITGC testing program organized by control category with evidence requirements", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FIELD-012", "Title": "Sampling Methodology Documentation",
+                    "Purpose": "Document and justify sampling approach for testing",
+                    "Full_Prompt_Text": "For testing population: {{population_description}} with size: {{population_size}}, document sampling methodology including: (1) Sampling objective (controls testing vs. substantive testing), (2) Sampling method selected (statistical vs. non-statistical, random vs. haphazard vs. judgmental) with justification, (3) Sample size determination with factors considered (risk level, tolerable error, expected error rate), (4) Sample selection procedure ensuring representativeness, (5) Evaluation criteria for sample results, (6) Projection methodology if applicable. Justify why this approach is appropriate for the engagement objectives.",
+                    "Variables": "{{population_description}}, {{population_size}}", "Related_IIA_Standard": "Standard 14.1 - Gathering Information",
+                    "Methodology_Notes": "Sampling must be defensible. Document methodology before selecting samples. For controls testing, sample size relates to desired confidence level. For substantive testing, consider materiality and expected error rate.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Use statistical sampling for quantifiable populations when possible. Document any items excluded from population (with justification). Consider stratification for heterogeneous populations.",
+                    "Example_Input": "population_description: Vendor payments over $10,000; population_size: 847 transactions totaling $15.2M",
+                    "Example_Output": "Sampling methodology memo with size calculation, selection method, and evaluation criteria",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" }
+            ],
+            "Reporting_Phase": [
+                { "Prompt_ID": "RPT-001", "Title": "Finding Development - Five Attributes",
+                    "Purpose": "Structure finding using IIA-compliant five-attribute format",
+                    "Full_Prompt_Text": "Draft an audit finding using the five-attribute format for: {{observation_summary}}. Structure as: CONDITION (current state - what did we find?), CRITERIA (what should be - reference {{applicable_policy_or_standard}}), CAUSE (root cause analysis - why did this occur?), EFFECT (actual and potential impact - why does this matter?), RECOMMENDATION (actionable steps addressing root cause, not just condition). Use professional, objective language suitable for {{audience_level}} audience. Assign risk rating: {{rating_level}} based on impact and likelihood.",
+                    "Variables": "{{observation_summary}}, {{applicable_policy_or_standard}}, {{audience_level}}, {{rating_level}}",
+                    "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "The five attributes provide complete finding documentation. Per Standard 15.1, findings must include condition, criteria, cause, effect, and recommendations. Effect should quantify impact where possible.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Lead with impact to capture reader attention. Make recommendations specific and actionable with clear ownership. Avoid accusatory language - focus on process, not people.",
+                    "Example_Input": "observation_summary: 15% of sampled expense reports lacked required receipts; applicable_policy_or_standard: University Travel Policy Section 4.2; audience_level: Board Audit Committee; rating_level: Medium",
+                    "Example_Output": "Complete finding write-up with all five attributes, risk rating, and management action plan template",
+                    "Version": "1.0", "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-002", "Title": "Executive Summary Development",
+                    "Purpose": "Create concise executive summary for leadership audience",
+                    "Full_Prompt_Text": "Generate an executive summary for an audit of {{audit_area}} covering period {{audit_period}} with overall conclusion: {{overall_conclusion}}. Include: (1) Purpose and scope in 2-3 sentences, (2) Overall opinion/conclusion with clear rating, (3) 3-5 key takeaways in priority order, (4) Summary of findings by risk level (High/Medium/Low counts), (5) Notable positive observations (good practices identified), (6) Management commitment to remediation with timeline. Maximum 400 words. Audience: Board Audit Committee members who need to understand significance without technical detail.",
+                    "Variables": "{{audit_area}}, {{audit_period}}, {{overall_conclusion}}",
+                    "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Executive summaries determine whether leadership reads the full report. Lead with conclusions, not methodology. Per Standard 15.1, final communication must include objectives, scope, conclusions, and recommendations.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Use consistent rating terminology across reports. Include both areas needing improvement and areas performing well. Avoid jargon - write for educated non-specialists.",
+                    "Example_Input": "audit_area: Procurement Card Program; audit_period: FY24; overall_conclusion: Needs Improvement - controls generally effective with opportunities for enhancement",
+                    "Example_Output": "Formatted executive summary ready for report inclusion, under 400 words", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-003", "Title": "Recommendation Writing",
+                    "Purpose": "Develop actionable, specific recommendations addressing root cause",
+                    "Full_Prompt_Text": "For the following finding: {{finding_summary}} with root cause: {{root_cause}}, develop 2-3 specific recommendations that: (1) Address the root cause, not just symptoms, (2) Are specific and actionable (who, what, when), (3) Are feasible given organizational constraints, (4) Include measurable success criteria, (5) Consider cost-benefit of implementation. For each recommendation, suggest an appropriate implementation timeframe based on complexity and risk. Avoid overly prescriptive recommendations that dictate exact solution - allow management flexibility in implementation approach.",
+                    "Variables": "{{finding_summary}}, {{root_cause}}", "Related_IIA_Standard": "Standard 14.4 - Developing Recommendations",
+                    "Methodology_Notes": "Recommendations should enhance operations while being practical. Per Standard 14.4, recommendations must address root cause and be agreed with management. Management may propose alternative actions achieving the same objective.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Balance ideal solution with practical implementation. Consider phased implementation for complex changes. Link recommendations to organizational objectives where possible.",
+                    "Example_Input": "finding_summary: Vendor master file changes lack independent review; root_cause: No secondary approval workflow configured in system",
+                    "Example_Output": "2-3 specific recommendations with implementation timeframes and success criteria", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-004", "Title": "Management Response Facilitation",
+                    "Purpose": "Help management develop appropriate response to findings",
+                    "Full_Prompt_Text": "[COLLABORATIVE] Help management develop their response to finding: {{finding_title}} with recommendation: {{recommendation}}. Their response should include: (1) Concurrence or partial concurrence with explanation, (2) Planned corrective action with specific steps, (3) Responsible party with title/role, (4) Target completion date, (5) How implementation will be evidenced. If management disagrees with finding or recommendation, help them articulate their position professionally while noting internal audit's assessment of residual risk.",
+                    "Variables": "{{finding_title}}, {{recommendation}}", "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Management responses are required for all findings. We can help management articulate responses but cannot write them. If management declines to respond or implement recommendations, this must be documented and may require escalation.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Encourage specific dates rather than \"ongoing.\" Ensure responsible party has authority to implement. If management disagrees, document the disagreement and residual risk in report.",
+                    "Example_Input": "finding_title: Incomplete Background Checks; recommendation: Implement pre-employment verification for all positions with financial access",
+                    "Example_Output": "Draft management response template with all required elements for their completion", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-005", "Title": "Report Quality Review Checklist",
+                    "Purpose": "Quality assurance review of draft audit report",
+                    "Full_Prompt_Text": "Review the following draft audit report section: {{draft_section}} against quality standards: (1) Accuracy - are facts correct and supported by workpapers? (2) Objectivity - is language balanced and free of bias? (3) Clarity - is writing clear and understandable to intended audience? (4) Conciseness - is content necessary and non-repetitive? (5) Constructiveness - do recommendations add value? (6) Completeness - are all required elements per Standard 15.1 present? (7) Timeliness - will report be issued within expected timeframe? Provide specific feedback on each criterion and identify any changes needed before issuance.",
+                    "Variables": "{{draft_section}}", "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Quality review is required before report issuance. Per Standard 15.1, communications must be accurate, objective, clear, concise, constructive, complete, and timely. Reviewer should be independent of fieldwork.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Focus on substantive issues first, then editorial. Verify findings trace to workpaper evidence. Check that ratings are consistent with similar findings in other reports.",
+                    "Example_Input": "draft_section: [paste draft finding or section]",
+                    "Example_Output": "Quality review feedback organized by criterion with specific improvement suggestions", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-006", "Title": "Positive Observation Documentation",
+                    "Purpose": "Document noteworthy practices and effective controls",
+                    "Full_Prompt_Text": "Document the following positive observation in a format suitable for report inclusion: {{positive_observation}}. Include: (1) Description of the good practice or effective control, (2) Why this practice is noteworthy (efficiency, risk mitigation, innovation), (3) Business impact or value added, (4) Potential for adoption by other departments if applicable. Frame positively without implying other areas are deficient. Length: 1-2 paragraphs.",
+                    "Variables": "{{positive_observation}}", "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Positive observations build relationships and recognize good work. They also provide balance to reports with negative findings. Identify practices that could be shared as best practices across the organization.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Be specific about what makes the practice effective. Avoid generic praise. Consider whether the practice could be a benchmark for other areas.",
+                    "Example_Input": "positive_observation: Research Compliance office maintains comprehensive training database with automated recertification reminders resulting in 98% on-time completion",
+                    "Example_Output": "Formatted positive observation paragraph(s) ready for report inclusion", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-007", "Title": "Risk Rating Justification",
+                    "Purpose": "Justify risk rating assignment for audit finding",
+                    "Full_Prompt_Text": "Justify the {{risk_rating}} risk rating for finding: {{finding_summary}}. Analyze using impact factors: (1) Financial impact (quantified or estimated), (2) Operational disruption potential, (3) Regulatory/compliance implications, (4) Reputational risk, (5) Safety considerations if applicable. Also consider likelihood factors: (6) Frequency of occurrence, (7) Control environment strength, (8) Historical issues in this area. Compare to similar findings rated previously for consistency. Document the justification suitable for inclusion in workpapers or discussion with management.",
+                    "Variables": "{{risk_rating}}, {{finding_summary}}", "Related_IIA_Standard": "Standard 14.3 - Evaluating Significance",
+                    "Methodology_Notes": "Risk ratings must be defensible and consistent. Per Standard 14.3, significance evaluation considers magnitude of impact and likelihood. Ratings drive remediation priority and committee reporting.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "Use your organization's rating definitions consistently. When in doubt, lean toward higher rating - can be lowered based on management input. Document factors considered.",
+                    "Example_Input": "risk_rating: High; finding_summary: System administrator has ability to create vendors and approve payments with no independent review",
+                    "Example_Output": "Risk rating justification memo with impact/likelihood analysis and comparables", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-008", "Title": "Advisory Engagement Deliverable",
+                    "Purpose": "Structure deliverable for advisory/consulting engagement",
+                    "Full_Prompt_Text": "[ADVISORY] Structure a deliverable for advisory engagement on {{advisory_topic}} with client {{client_department}}. Include: (1) Executive summary with key insights, (2) Background and methodology used, (3) Observations and analysis organized by theme, (4) Recommendations prioritized by impact and feasibility, (5) Implementation considerations and success factors, (6) Limitations of the engagement. Note: Advisory deliverables do not include opinions or ratings - focus on providing value-added recommendations. Format for {{deliverable_format}}.",
+                    "Variables": "{{advisory_topic}}, {{client_department}}, {{deliverable_format}}",
+                    "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Advisory deliverables differ from assurance reports. We provide analysis and recommendations without opinions. Scope and deliverable format should match what was agreed in the engagement scope.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Advisory",
+                    "Tips_for_Customization": "Tailor format to client preference - may be memo, presentation, or workshop facilitation. Include implementation support offer if appropriate.",
+                    "Example_Input": "advisory_topic: Process improvement for grant closeout; client_department: Office of Research; deliverable_format: PowerPoint presentation",
+                    "Example_Output": "Outline/template for advisory deliverable with all required sections", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-009", "Title": "Closing Meeting Preparation",
+                    "Purpose": "Prepare for audit closing meeting with management",
+                    "Full_Prompt_Text": "Prepare materials for the closing meeting for audit of {{audit_area}} with {{meeting_attendees}}. Include: (1) Meeting agenda with time allocations, (2) Summary of findings and ratings for discussion, (3) Talking points for each finding including evidence highlights, (4) Anticipated management questions and suggested responses, (5) Next steps timeline (draft report, response period, final issuance), (6) Parking lot items deferred from scope. Prepare for both agreement and pushback scenarios.",
+                    "Variables": "{{audit_area}}, {{meeting_attendees}}", "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Closing meetings should have no surprises - significant issues should be communicated during fieldwork. The meeting confirms findings and obtains preliminary management responses. Be prepared to discuss findings in detail.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Send draft findings before the meeting so management can prepare. Listen to management perspective - they may have information affecting conclusions. Maintain professional demeanor even if meeting becomes contentious.",
+                    "Example_Input": "audit_area: Fleet Management; meeting_attendees: Director of Facilities, Fleet Manager, VP for Administration",
+                    "Example_Output": "Closing meeting package with agenda, summary materials, and Q&A preparation", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "RPT-010", "Title": "Report Distribution and Communication",
+                    "Purpose": "Determine appropriate report distribution and communication approach",
+                    "Full_Prompt_Text": "For the completed audit of {{audit_area}} with overall rating {{overall_rating}} and findings summary: {{findings_summary}}, determine appropriate: (1) Report distribution list based on organizational structure and need-to-know, (2) Board/Audit Committee reporting requirements based on severity, (3) Timing considerations for distribution, (4) Communication approach (formal distribution vs. discussion meeting), (5) Follow-up communication schedule, (6) Confidentiality considerations. Reference internal audit charter for distribution requirements.",
+                    "Variables": "{{audit_area}}, {{overall_rating}}, {{findings_summary}}",
+                    "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Distribution should follow charter requirements and organizational protocols. High-risk findings typically require Audit Committee notification. Consider who needs the information to take appropriate action.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Err on side of appropriate transparency while respecting confidentiality. Consider whether verbal briefing should precede written distribution for sensitive matters.",
+                    "Example_Input": "audit_area: Athletics Compliance; overall_rating: Needs Improvement with Concerns; findings_summary: 2 High, 3 Medium findings including NCAA violation",
+                    "Example_Output": "Distribution matrix and communication plan with timeline", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" }
+            ],
+            "Follow_up_Phase": [
+                { "Prompt_ID": "FU-001", "Title": "Validation Testing Design",
+                    "Purpose": "Design follow-up testing to validate corrective action implementation",
+                    "Full_Prompt_Text": "For finding: {{finding_title}} with management action: {{management_action}}, design validation testing appropriate for risk level: {{risk_level}}. Per IIA Standard 15.2, determine: (1) Validation approach - inquiry sufficient for lower risk, testing required for higher risk, (2) Specific evidence to obtain proving implementation, (3) Testing procedures if applicable, (4) Criteria for closure vs. reopening, (5) Timeline for validation based on implementation date. Document testing approach that will provide reasonable assurance the corrective action addresses the original root cause.",
+                    "Variables": "{{finding_title}}, {{management_action}}, {{risk_level}}",
+                    "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Validation approach should be risk-based. Per Standard 15.2, inquiry may be appropriate for lower-risk findings, while higher-risk findings require evidence of implementation. Verify root cause was addressed, not just symptoms.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Assurance",
+                    "Tips_for_Customization": "For High-risk findings, perform testing comparable to original engagement. Consider whether environment has changed since original finding. Document any scope limitations.",
+                    "Example_Input": "finding_title: Segregation of Duties in AP; management_action: Implemented system workflow preventing same user from entering and approving invoices; risk_level: High",
+                    "Example_Output": "Validation test program with procedures, evidence requirements, and closure criteria", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FU-002", "Title": "Remediation Status Assessment",
+                    "Purpose": "Evaluate current status of open audit findings",
+                    "Full_Prompt_Text": "Assess remediation status for finding: {{finding_title}} based on management update: {{management_update}} and evidence provided: {{evidence_summary}}. Determine: (1) Implementation status (Implemented/In Progress/Not Started/Revised), (2) Whether evidence supports claimed status, (3) If In Progress, is progress reasonable given timeline? (4) Any scope changes or revised approaches since original commitment, (5) Residual risk if implementation is partial, (6) Recommendation for status (Close/Extend/Escalate). Provide rationale for your assessment.",
+                    "Variables": "{{finding_title}}, {{management_update}}, {{evidence_summary}}",
+                    "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Follow-up is ongoing responsibility. Per Standard 15.2, CAE must establish a system to monitor disposition of results. Escalate past-due items per established protocols.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Be objective - accept reasonable explanations for delays but don't allow indefinite extensions. Verify evidence actually supports the action claimed. Document your assessment reasoning.",
+                    "Example_Input": "finding_title: Missing IT Access Reviews; management_update: Quarterly reviews implemented as of Q2; evidence_summary: Q2 and Q3 access review reports with approvals",
+                    "Example_Output": "Status assessment memo with implementation determination and recommendation", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FU-003", "Title": "Audit Committee Status Report",
+                    "Purpose": "Generate status report on open findings for Audit Committee",
+                    "Full_Prompt_Text": "Generate a comprehensive status report on open audit findings for Audit Committee presentation. Include: (1) Summary dashboard - total open findings by risk level and age, (2) Trend analysis comparing to prior period, (3) Past-due items requiring attention with aging (0-30, 31-60, 61-90, 90+ days), (4) Findings closed since last report, (5) New findings added, (6) Risk distribution of outstanding items, (7) Escalation recommendations for significantly past-due high-risk items. Use data: {{findings_data}}. Format as executive-level presentation.",
+                    "Variables": "{{findings_data}}", "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Audit Committee oversight includes monitoring management's corrective actions. Reports should highlight items requiring Committee attention without overwhelming with detail. Use visual summaries (charts, heat maps) where possible.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Consistent reporting format allows Committee to identify trends. Highlight improvements as well as concerns. Be prepared to discuss specific past-due items if asked.",
+                    "Example_Input": "findings_data: [listing of open findings with dates, ratings, status, responsible parties]",
+                    "Example_Output": "Audit Committee-ready status report with dashboard and detailed listing", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FU-004", "Title": "Escalation Recommendation",
+                    "Purpose": "Prepare escalation recommendation for past-due high-risk finding",
+                    "Full_Prompt_Text": "Prepare escalation recommendation for past-due finding: {{finding_title}} with details: Original due date: {{original_due_date}}, Risk level: {{risk_level}}, Management explanation for delay: {{delay_explanation}}, Extensions previously granted: {{prior_extensions}}. Include: (1) Background and original issue summary, (2) Timeline of commitments and extensions, (3) Assessment of current residual risk, (4) Evaluation of management explanation, (5) Escalation options (VP notification, Audit Committee reporting, other), (6) Recommended action with rationale. Maintain objective tone while clearly communicating the risk.",
+                    "Variables": "{{finding_title}}, {{original_due_date}}, {{risk_level}}, {{delay_explanation}}, {{prior_extensions}}",
+                    "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Escalation protects the organization from unaddressed risks. Document the decision process objectively. CAE authority to escalate should be defined in charter. Escalation is not punitive - it ensures appropriate visibility.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Give management opportunity to respond before escalating. Consider organizational factors (budget cycles, personnel changes) that may legitimately affect timing. Document all communications.",
+                    "Example_Input": "finding_title: IT Disaster Recovery Testing; original_due_date: 6 months ago; risk_level: High; delay_explanation: Budget constraints; prior_extensions: 2",
+                    "Example_Output": "Escalation memo with complete background, risk assessment, and recommendation", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FU-005", "Title": "Finding Closure Documentation",
+                    "Purpose": "Document finding closure with supporting evidence",
+                    "Full_Prompt_Text": "Document closure of finding: {{finding_title}} with closure evidence: {{closure_evidence}}. Create closure documentation that includes: (1) Original finding summary and root cause, (2) Management's corrective action taken, (3) Validation approach used (inquiry/testing), (4) Evidence obtained and evaluation, (5) Conclusion that root cause has been addressed, (6) Any caveats or ongoing monitoring recommendations, (7) Closure approval. Format suitable for workpaper file and status reporting.",
+                    "Variables": "{{finding_title}}, {{closure_evidence}}", "Related_IIA_Standard": "Standard 15.2 - Monitoring Progress and Disposition",
+                    "Methodology_Notes": "Closure documentation creates audit trail for future reference. Ensure closure addresses root cause, not just symptoms. If partial implementation, consider whether to close finding or keep open for remaining items.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Maintain evidence of implementation in engagement file. Consider whether finding could recur and note any ongoing monitoring. Obtain supervisor approval before closing high-risk findings.",
+                    "Example_Input": "finding_title: Incomplete Vendor W-9 Documentation; closure_evidence: Updated procedures, system controls, sample testing of recent vendors showing 100% compliance",
+                    "Example_Output": "Closure memorandum with all required elements for file documentation", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "FU-006", "Title": "Recurring Issue Analysis",
+                    "Purpose": "Analyze pattern of recurring findings to identify systemic issues",
+                    "Full_Prompt_Text": "Analyze the following recurring findings across multiple audits: {{recurring_findings}}. Identify: (1) Common themes or patterns across findings, (2) Potential systemic root causes (governance, resources, training, technology, culture), (3) Why prior corrective actions may not have been effective, (4) Organizational units or processes with highest recurrence, (5) Recommended enterprise-level actions beyond individual finding remediation, (6) Suggested Audit Committee or leadership discussion points. Present analysis suitable for driving strategic improvement discussions.",
+                    "Variables": "{{recurring_findings}}", "Related_IIA_Standard": "Standard 14.3 - Evaluating Significance",
+                    "Methodology_Notes": "Recurring findings indicate control environment or cultural issues. Individual finding remediation won't solve systemic problems. This analysis supports internal audit's strategic advisory role.",
+                    "Skill_Level": "Advanced", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Look beyond surface symptoms to organizational factors. Consider whether internal audit recommendations have been consistently appropriate. Present analysis constructively - focus on improvement, not blame.",
+                    "Example_Input": "recurring_findings: [listing of similar findings from multiple audits over 2-3 year period]",
+                    "Example_Output": "Systemic issue analysis with root cause themes and strategic recommendations", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" }
+            ],
+            "General": [
+                { "Prompt_ID": "GEN-001", "Title": "Professional Email Communication",
+                    "Purpose": "Draft professional audit-related emails for various purposes",
+                    "Full_Prompt_Text": "Draft a professional email for the following audit communication purpose: {{email_purpose}}. Context: {{context_details}}. Recipient: {{recipient_role}}. Tone should be professional, clear, and appropriate for internal audit communications. Include: (1) Clear subject line, (2) Purpose statement in opening, (3) Key information or request, (4) Specific next steps or call to action, (5) Professional closing. Maintain independence and objectivity while being collaborative.",
+                    "Variables": "{{email_purpose}}, {{context_details}}, {{recipient_role}}",
+                    "Related_IIA_Standard": "Standard 13.1 - Engagement Communication",
+                    "Methodology_Notes": "Written communications represent internal audit professionally. Be clear about requests and deadlines. Avoid audit jargon when communicating with non-auditors. Keep emails concise.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Adjust formality based on recipient and organizational culture. For sensitive matters, consider whether email is appropriate or if verbal communication is better.",
+                    "Example_Input": "email_purpose: Request meeting to discuss preliminary findings; context_details: Completing procurement audit, 2 medium findings identified; recipient_role: Director of Purchasing",
+                    "Example_Output": "Complete professional email ready to send with subject line", "Version": "1.0", "Author": "Assistant Director",
+                    "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "GEN-002", "Title": "Audit Terminology Explanation",
+                    "Purpose": "Explain audit concepts to non-auditor stakeholders",
+                    "Full_Prompt_Text": "Explain the following audit concept to a non-auditor: {{audit_concept}}. The audience is {{audience_description}}. Provide: (1) Simple, jargon-free definition, (2) Why it matters to the organization, (3) Practical example relevant to their work, (4) How it relates to their responsibilities, (5) Common misconceptions to avoid. Use analogies where helpful. Avoid condescending tone while making the concept accessible.",
+                    "Variables": "{{audit_concept}}, {{audience_description}}", "Related_IIA_Standard": "Standard 15.1 - Final Engagement Communication",
+                    "Methodology_Notes": "Effective communication requires adapting to your audience. Many stakeholders have limited audit exposure. Clear explanations build trust and improve engagement cooperation.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Avoid terms like \"materiality,\" \"inherent risk,\" and \"control environment\" without explanation. Use concrete examples from their area. Invite questions.",
+                    "Example_Input": "audit_concept: Control testing vs. substantive testing; audience_description: Department managers unfamiliar with audit methodology",
+                    "Example_Output": "Plain-language explanation suitable for stakeholder education", "Version": "1.0", "Author": "Assistant Director",
+                    "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "GEN-003", "Title": "Time and Budget Tracking Analysis",
+                    "Purpose": "Analyze engagement time and budget for reporting and planning",
+                    "Full_Prompt_Text": "Analyze time and budget data for engagement: {{engagement_name}} with budgeted hours: {{budgeted_hours}} and actual hours: {{actual_hours}} by phase: {{hours_by_phase}}. Provide: (1) Variance analysis by phase (planning, fieldwork, reporting), (2) Productivity metrics (findings per hour, areas tested per day), (3) Factors contributing to variances, (4) Lessons learned for future engagements, (5) Recommendations for improving estimates, (6) Comparison to similar prior engagements if applicable. Format for inclusion in engagement wrap-up documentation.",
+                    "Variables": "{{engagement_name}}, {{budgeted_hours}}, {{actual_hours}}, {{hours_by_phase}}",
+                    "Related_IIA_Standard": "Standard 13.5 - Engagement Resources",
+                    "Methodology_Notes": "Time analysis improves future planning and demonstrates audit efficiency. Track variances to understand estimation accuracy. Consider quality alongside efficiency - fast audits with missed findings aren't efficient.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Be honest about variance causes including auditor productivity issues. Consider complexity factors when comparing engagements. Use data to improve, not punish.",
+                    "Example_Input": "engagement_name: IT Access Controls Audit; budgeted_hours: 200; actual_hours: 245; hours_by_phase: Planning 30/25, Fieldwork 150/180, Reporting 40/40",
+                    "Example_Output": "Budget analysis memo with variances explained and improvement recommendations", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "GEN-004", "Title": "Continuing Education Summary",
+                    "Purpose": "Summarize continuing education content for team knowledge sharing",
+                    "Full_Prompt_Text": "Summarize the following continuing education content for team knowledge sharing: Topic: {{ce_topic}}, Source: {{ce_source}}. Create a summary that includes: (1) Key takeaways (3-5 main points), (2) Relevance to our internal audit practice, (3) Specific application opportunities in upcoming audits, (4) Changes to standards or regulations if applicable, (5) Discussion questions for team meeting. Format for 10-minute team presentation.",
+                    "Variables": "{{ce_topic}}, {{ce_source}}", "Related_IIA_Standard": "Domain II - Ethics and Professionalism",
+                    "Methodology_Notes": "Knowledge sharing multiplies the value of individual CPE. Summarizing content reinforces learning. Consider how emerging topics affect our audit approach and risk assessment.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Focus on practical application, not just theory. Identify which team members should do deep dives on specialized topics. Link to full content for those wanting more detail.",
+                    "Example_Input": "ce_topic: Data Analytics in Internal Audit; ce_source: IIA webinar on emerging technologies",
+                    "Example_Output": "10-minute presentation summary with key points and discussion questions", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "GEN-005", "Title": "Stakeholder Relationship Building",
+                    "Purpose": "Develop approach for building relationships with audit stakeholders",
+                    "Full_Prompt_Text": "Develop a relationship-building approach for stakeholder: {{stakeholder_role}} in {{department}}. Their perspective on internal audit: {{current_relationship}}. Create: (1) Stakeholder analysis (their priorities, pressures, concerns about audit), (2) Value proposition - how internal audit can help them, (3) Communication preferences to explore, (4) Specific relationship-building actions, (5) Topics for informal conversation, (6) Potential advisory opportunities to offer. Goal is to be seen as a trusted advisor, not just compliance checker.",
+                    "Variables": "{{stakeholder_role}}, {{department}}, {{current_relationship}}",
+                    "Related_IIA_Standard": "Domain I - Purpose of Internal Auditing",
+                    "Methodology_Notes": "Stakeholder relationships affect audit access and impact. Internal audit adds most value when seen as a partner. Build relationships outside of active engagements when possible.",
+                    "Skill_Level": "Intermediate", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Respect boundaries - be friendly but maintain independence. Look for ways to add value outside of traditional audits. Listen more than talk in relationship-building conversations.",
+                    "Example_Input": "stakeholder_role: Dean of College of Business; department: Academic Affairs; current_relationship: Neutral, limited prior interaction",
+                    "Example_Output": "Stakeholder relationship plan with specific actions and talking points", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" },
+                { "Prompt_ID": "GEN-006", "Title": "New Auditor Onboarding Checklist",
+                    "Purpose": "Create onboarding checklist for new internal audit team member",
+                    "Full_Prompt_Text": "Create a comprehensive onboarding checklist for a new internal auditor joining the team. Include: (1) First day/week orientation items, (2) Key policies and procedures to review, (3) System access and tools setup, (4) IIA Standards familiarization, (5) Department-specific training needs, (6) Shadowing and mentoring activities, (7) Initial assignments appropriate for learning, (8) 30-60-90 day milestones, (9) Key stakeholders to meet, (10) Resources and references for self-study. Customize for {{experience_level}} auditor joining {{organization_type}} internal audit.",
+                    "Variables": "{{experience_level}}, {{organization_type}}", "Related_IIA_Standard": "Domain IV - Managing the Internal Audit Function",
+                    "Methodology_Notes": "Effective onboarding accelerates productivity and retention. New auditors need both technical knowledge and organizational context. Pair formal training with experiential learning.",
+                    "Skill_Level": "Beginner", "Engagement_Type": "Both",
+                    "Tips_for_Customization": "Adjust pace based on experience - experienced hires need less on audit basics, more on organization. Include cultural onboarding, not just technical. Schedule regular check-ins during onboarding.",
+                    "Example_Input": "experience_level: Entry-level (recent graduate); organization_type: Public university",
+                    "Example_Output": "Comprehensive onboarding checklist with timeline and responsible parties", "Version": "1.0",
+                    "Author": "Assistant Director", "Status": "Active", "Last_Modified": "2026-01-09" }
+            ],
+            "Change_Log": [
+                { "Date": "2026-01-09", "Version": "1.0", "Prompt_ID": "ALL", "Change_Type": "Initial Release",
+                    "Description_of_Change": "Initial creation of Internal Audit AI Prompt Library template with 44 prompts across all phases",
+                    "Changed_By": "", "Approved_By": "", "Approval_Date": "" }
+            ]
+        };
+
+        // ── State ──
+        let currentTab = 'dashboard';
+        let searchQuery = '';
+        let filterSkill = 'all';
+        let filterEngType = 'all';
+        let userPrompts = JSON.parse(localStorage.getItem('userPrompts') || '[]');
+        let ratings = JSON.parse(localStorage.getItem('promptRatings') || '{}');
+
+        // ── Helpers ──
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 2500);
+        }
+
+        function getPhasePrompts(phase) {
+            const map = {
+                'planning': [...LIBRARY_DATA.Planning_Phase, ...userPrompts.filter(p => p.phase === 'planning')],
+                'fieldwork': [...LIBRARY_DATA.Fieldwork_Phase, ...userPrompts.filter(p => p.phase === 'fieldwork')],
+                'reporting': [...LIBRARY_DATA.Reporting_Phase, ...userPrompts.filter(p => p.phase === 'reporting')],
+                'followup': [...LIBRARY_DATA.Follow_up_Phase, ...userPrompts.filter(p => p.phase === 'followup')],
+                'general': [...LIBRARY_DATA.General, ...userPrompts.filter(p => p.phase === 'general')],
+            };
+            return map[phase] || [];
+        }
+
+        function getAllPrompts() {
+            return [
+                ...LIBRARY_DATA.Planning_Phase.map(p => ({ ...p, _phase: 'planning' })),
+                ...LIBRARY_DATA.Fieldwork_Phase.map(p => ({ ...p, _phase: 'fieldwork' })),
+                ...LIBRARY_DATA.Reporting_Phase.map(p => ({ ...p, _phase: 'reporting' })),
+                ...LIBRARY_DATA.Follow_up_Phase.map(p => ({ ...p, _phase: 'followup' })),
+                ...LIBRARY_DATA.General.map(p => ({ ...p, _phase: 'general' })),
+                ...userPrompts.map(p => ({ ...p, _phase: p.phase })),
+            ];
+        }
+
+        function filterPrompts(prompts) {
+            return prompts.filter(p => {
+                const q = searchQuery.toLowerCase();
+                const matchSearch = !q ||
+                    (p.Prompt_ID && p.Prompt_ID.toLowerCase().includes(q)) ||
+                    (p.Title && p.Title.toLowerCase().includes(q)) ||
+                    (p.Purpose && p.Purpose.toLowerCase().includes(q)) ||
+                    (p.Full_Prompt_Text && p.Full_Prompt_Text.toLowerCase().includes(q)) ||
+                    (p.Variables && p.Variables.toLowerCase().includes(q)) ||
+                    (p.Related_IIA_Standard && p.Related_IIA_Standard.toLowerCase().includes(q)) ||
+                    (p.Methodology_Notes && p.Methodology_Notes.toLowerCase().includes(q));
+                const matchSkill = filterSkill === 'all' || (p.Skill_Level && p.Skill_Level.toLowerCase() ===
+                    filterSkill);
+                const matchEng = filterEngType === 'all' || (p.Engagement_Type && p.Engagement_Type.toLowerCase() ===
+                    filterEngType);
+                return matchSearch && matchSkill && matchEng;
+            });
+        }
+
+        function getRating(promptId) {
+            const r = ratings[promptId];
+            if (!r || r.count === 0) return { avg: 0, count: 0 };
+            return { avg: Math.round(r.total / r.count), count: r.count };
+        }
+
+        function setRating(promptId, starVal) {
+            if (!ratings[promptId]) ratings[promptId] = { total: 0, count: 0, userVote: 0 };
+            const r = ratings[promptId];
+            if (r.userVote > 0) return; // already voted
+            r.total += starVal;
+            r.count += 1;
+            r.userVote = starVal;
+            localStorage.setItem('promptRatings', JSON.stringify(ratings));
+            showToast(`⭐ Rated ${starVal} star${starVal > 1 ? 's' : ''} for ${promptId}`);
+            renderContent();
+        }
+
+        // ── Render Functions ──
+        function renderStarRating(promptId, avg, count) {
+            const r = ratings[promptId];
+            const userVote = r ? r.userVote : 0;
+            let html = '<div class="star-rating" data-pid="' + promptId + '">';
+            for (let i = 1; i <= 5; i++) {
+                const filled = i <= (userVote || avg) ? ' filled' : '';
+                html += `<span class="star${filled}" data-star="${i}" onclick="event.stopPropagation();setRating('${promptId}',${i})">★</span>`;
+            }
+            html +=
+                `<span class="avg-rating">${avg > 0 ? avg.toFixed(1) : '—'} (${count})</span></div>`;
+            return html;
+        }
+
+        function renderPromptCard(p) {
+            const r = getRating(p.Prompt_ID);
+            const skillClass = (p.Skill_Level || 'Beginner').toLowerCase();
+            const engClass = (p.Engagement_Type || 'Both').toLowerCase().replace(/\s+/g, '-');
+            const engLabel = p.Engagement_Type || 'Both';
+            const isUser = p._isUser || false;
+            return `
+            <div class="prompt-card ${isUser ? 'highlight-flash' : ''}" id="card-${p.Prompt_ID}">
+              <div class="card-header">
+                <span class="prompt-id">${p.Prompt_ID || 'CUSTOM'}</span>
+                <span class="prompt-title">${p.Title || 'Untitled'}</span>
+                <span style="margin-left:auto;font-size:0.7rem;color:#8899a0;">${p._phase ? p._phase.toUpperCase() : ''}${isUser ? ' · USER' : ''}</span>
+              </div>
+              <p class="purpose">🎯 ${p.Purpose || 'No purpose specified'}</p>
+              <div class="tags">
+                <span class="tag ${skillClass}">📊 ${p.Skill_Level || 'Beginner'}</span>
+                <span class="tag ${engClass === 'both' ? 'both-eng' : engClass}">📋 ${engLabel}</span>
+                ${p.Related_IIA_Standard ? `<span class="tag" style="background:#e8f0f3;color:#1a3f55;">📜 ${p.Related_IIA_Standard}</span>` : ''}
+              </div>
+              <div class="prompt-text-box" id="ptext-${p.Prompt_ID}">${p.Full_Prompt_Text || 'No prompt text'}</div>
+              <div class="card-actions">
+                <button class="copy-btn" id="copybtn-${p.Prompt_ID}" onclick="event.stopPropagation();copyPrompt('${p.Prompt_ID}')">📋 Copy Prompt</button>
+                ${renderStarRating(p.Prompt_ID, r.avg, r.count)}
+              </div>
+              ${p.Variables ? `<div class="meta-row"><span>🔤 <strong>Variables:</strong> ${p.Variables}</span></div>` : ''}
+              ${p.Methodology_Notes ? `<div class="methodology-callout"><strong>💡 Methodology:</strong> ${p.Methodology_Notes}</div>` : ''}
+              ${p.Tips_for_Customization ? `<div class="meta-row" style="margin-top:6px;"><span>✏️ <strong>Tip:</strong> ${p.Tips_for_Customization}</span></div>` : ''}
+              ${p.Example_Input ? `<div class="meta-row"><span>📥 <strong>Example Input:</strong> ${p.Example_Input}</span></div>` : ''}
+              ${p.Example_Output ? `<div class="meta-row"><span>📤 <strong>Expected Output:</strong> ${p.Example_Output}</span></div>` : ''}
+            </div>`;
+        }
+
+        function copyPrompt(promptId) {
+            const all = getAllPrompts();
+            const p = all.find(x => x.Prompt_ID === promptId);
+            if (!p) return;
+            const text = p.Full_Prompt_Text || '';
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copybtn-' + promptId);
+                if (btn) {
+                    btn.textContent = '✅ Copied!';
+                    btn.classList.add('copied');
+                    setTimeout(() => {
+                        btn.textContent = '📋 Copy Prompt';
+                        btn.classList.remove('copied');
+                    }, 1800);
+                }
+                showToast('📋 Prompt copied to clipboard!');
+            }).catch(() => showToast('⚠️ Copy failed'));
+        }
+
+        function renderDashboard() {
+            const stats = LIBRARY_DATA.Dashboard.Template_Statistics;
+            const totalUser = userPrompts.length;
+            const totalAll = stats.Total_Prompts + totalUser;
+            const steps = LIBRARY_DATA.Dashboard.How_to_Use_This_Library;
+            const nav = LIBRARY_DATA.Dashboard.Quick_Navigation;
+            return `
+            <div class="dash-card">
+              <h2>📊 ${LIBRARY_DATA.Dashboard.Title}</h2>
+              <p style="color:var(--text-light);margin-bottom:8px;">${LIBRARY_DATA.Dashboard.Template_Overview}</p>
+            </div>
+            <div class="stats-bar">
+              <div class="stat-mini"><div class="num">${totalAll}</div><div class="lbl">Total Prompts</div></div>
+              <div class="stat-mini"><div class="num">${stats.Planning_Prompts}</div><div class="lbl">Planning</div></div>
+              <div class="stat-mini"><div class="num">${stats.Fieldwork_Prompts}</div><div class="lbl">Fieldwork</div></div>
+              <div class="stat-mini"><div class="num">${stats.Reporting_Prompts}</div><div class="lbl">Reporting</div></div>
+              <div class="stat-mini"><div class="num">${stats.Follow_up_Prompts}</div><div class="lbl">Follow-up</div></div>
+              <div class="stat-mini gold"><div class="num">${totalUser}</div><div class="lbl">User Submitted</div></div>
+            </div>
+            <div class="dash-card">
+              <h3>🚀 How to Use This Library</h3>
+              <ul>${steps.map(s => `<li>${s}</li>`).join('')}</ul>
+            </div>
+            <div class="dash-card">
+              <h3>🗂️ Quick Navigation</h3>
+              <ul>
+                <li><strong>Planning Phase:</strong> ${nav.Planning_Phase}</li>
+                <li><strong>Fieldwork Phase:</strong> ${nav.Fieldwork_Phase}</li>
+                <li><strong>Reporting Phase:</strong> ${nav.Reporting_Phase}</li>
+                <li><strong>Follow-up Phase:</strong> ${nav.Follow_up_Phase}</li>
+                <li><strong>General Cross-Phase:</strong> ${nav.General_Cross_Phase}</li>
+              </ul>
+              <button class="btn btn-gold" onclick="openSubmitModal()" style="margin-top:12px;">➕ Submit New Prompt</button>
+            </div>`;
+        }
+
+        function renderSettings() {
+            const s = LIBRARY_DATA.Settings;
+            return `
+            <div class="dash-card">
+              <h2>⚙️ Settings & Reference</h2>
+              <h3>Skill Levels</h3>
+              <p>${s.Skill_Levels.map(l => `<span class="tag ${l.toLowerCase()}">${l}</span>`).join(' ')}</p>
+              <h3 style="margin-top:12px;">Engagement Types</h3>
+              <p>${s.Engagement_Types.map(l => `<span class="tag ${l.toLowerCase() === 'both' ? 'both-eng' : l.toLowerCase()}">${l}</span>`).join(' ')}</p>
+              <h3 style="margin-top:12px;">Status Values</h3>
+              <p>${s.Status_Values.map(l => `<span class="tag" style="background:#e8f0f3;">${l}</span>`).join(' ')}</p>
+              <h3 style="margin-top:12px;">IIA Standards Reference (2025)</h3>
+              <div style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;">
+                ${s.Standards_Reference.map(r => `<p style="margin:3px 0;font-size:0.85rem;"><strong>${r.Standard}:</strong> ${r.Description}</p>`).join('')}
+              </div>
+            </div>`;
+        }
+
+        function renderChangeLog() {
+            const log = LIBRARY_DATA.Change_Log;
+            return `
+            <div class="dash-card">
+              <h2>📜 Change Log</h2>
+              ${log.map(c => `
+                <div style="border-bottom:1px solid var(--border);padding:10px 0;">
+                  <strong>${c.Date}</strong> — v${c.Version} · ${c.Change_Type} · ${c.Prompt_ID}<br>
+                  <span style="color:var(--text-light);font-size:0.85rem;">${c.Description_of_Change}</span>
+                </div>`).join('')}
+            </div>`;
+        }
+
+        function renderPhaseContent(phase) {
+            const prompts = getPhasePrompts(phase);
+            const filtered = filterPrompts(prompts);
+            if (filtered.length === 0) {
+                return `<div class="no-results"><span class="big-icon">🔍</span>No prompts match your search criteria.<br><span style="font-size:0.85rem;">Try adjusting filters or search terms.</span></div>`;
+            }
+            return filtered.map(p => renderPromptCard(p)).join('');
+        }
+
+        function renderContent() {
+            const container = document.getElementById('mainContainer');
+            let html = '';
+
+            // Always show controls (except dashboard)
+            if (currentTab !== 'dashboard' && currentTab !== 'settings' && currentTab !== 'changelog') {
+                const prompts = getPhasePrompts(currentTab);
+                const filtered = filterPrompts(prompts);
+                html += `
+              <div class="controls-row">
+                <input type="text" class="search-input" placeholder="🔍 Search prompts by title, ID, text, standard..." value="${searchQuery}" oninput="updateSearch(this.value)">
+                <select class="filter-select" onchange="updateSkillFilter(this.value)" value="${filterSkill}">
+                  <option value="all" ${filterSkill==='all'?'selected':''}>📊 All Skill Levels</option>
+                  <option value="beginner" ${filterSkill==='beginner'?'selected':''}>Beginner</option>
+                  <option value="intermediate" ${filterSkill==='intermediate'?'selected':''}>Intermediate</option>
+                  <option value="advanced" ${filterSkill==='advanced'?'selected':''}>Advanced</option>
+                </select>
+                <select class="filter-select" onchange="updateEngFilter(this.value)" value="${filterEngType}">
+                  <option value="all" ${filterEngType==='all'?'selected':''}>📋 All Engagement Types</option>
+                  <option value="assurance" ${filterEngType==='assurance'?'selected':''}>Assurance</option>
+                  <option value="advisory" ${filterEngType==='advisory'?'selected':''}>Advisory</option>
+                  <option value="both" ${filterEngType==='both'?'selected':''}>Both</option>
+                </select>
+                <span class="results-count">${filtered.length} prompt${filtered.length !== 1 ? 's' : ''}</span>
+                <button class="btn btn-gold" onclick="openSubmitModal()">➕ Submit</button>
+                <button class="btn btn-outline" onclick="clearFilters()">🔄 Clear</button>
+              </div>`;
+            }
+
+            // Render main content
+            if (currentTab === 'dashboard') {
+                html += renderDashboard();
+            } else if (currentTab === 'settings') {
+                html += renderSettings();
+            } else if (currentTab === 'changelog') {
+                html += renderChangeLog();
+            } else {
+                html += renderPhaseContent(currentTab);
+            }
+
+            container.innerHTML = html;
+
+            // Scroll to top of container
+            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function updateSearch(val) {
+            searchQuery = val;
+            renderContent();
+        }
+
+        function updateSkillFilter(val) {
+            filterSkill = val;
+            renderContent();
+        }
+
+        function updateEngFilter(val) {
+            filterEngType = val;
+            renderContent();
+        }
+
+        function clearFilters() {
+            searchQuery = '';
+            filterSkill = 'all';
+            filterEngType = 'all';
+            renderContent();
+            showToast('🔄 Filters cleared');
+        }
+
+        // ── Tab Switching ──
+        function switchTab(tab) {
+            currentTab = tab;
+            searchQuery = '';
+            filterSkill = 'all';
+            filterEngType = 'all';
+            document.querySelectorAll('.tab-nav button').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.querySelector(`.tab-nav button[data-tab="${tab}"]`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderContent();
+        }
+
+        // ── Submit Modal ──
+        function openSubmitModal() {
+            document.getElementById('submitModal').classList.add('open');
+            document.getElementById('sID').value = '';
+            document.getElementById('sTitle').value = '';
+            document.getElementById('sPurpose').value = '';
+            document.getElementById('sPromptText').value = '';
+            document.getElementById('sVars').value = '';
+            document.getElementById('sPhase').value = '';
+            document.getElementById('sSkill').value = 'Beginner';
+            document.getElementById('sEngType').value = 'Both';
+            document.getElementById('sStandard').value = '';
+            document.getElementById('sMethodology').value = '';
+            document.getElementById('sTips').value = '';
+        }
+
+        function closeSubmitModal() {
+            document.getElementById('submitModal').classList.remove('open');
+        }
+
+        function handleSubmit(e) {
+            e.preventDefault();
+            const newPrompt = {
+                Prompt_ID: document.getElementById('sID').value.trim(),
+                Title: document.getElementById('sTitle').value.trim(),
+                Purpose: document.getElementById('sPurpose').value.trim(),
+                Full_Prompt_Text: document.getElementById('sPromptText').value.trim(),
+                Variables: document.getElementById('sVars').value.trim(),
+                phase: document.getElementById('sPhase').value,
+                Skill_Level: document.getElementById('sSkill').value,
+                Engagement_Type: document.getElementById('sEngType').value,
+                Related_IIA_Standard: document.getElementById('sStandard').value.trim(),
+                Methodology_Notes: document.getElementById('sMethodology').value.trim(),
+                Tips_for_Customization: document.getElementById('sTips').value.trim(),
+                _isUser: true,
+                _phase: document.getElementById('sPhase').value,
+            };
+            userPrompts.push(newPrompt);
+            localStorage.setItem('userPrompts', JSON.stringify(userPrompts));
+            closeSubmitModal();
+            showToast('✅ Prompt submitted successfully!');
+            // Switch to the phase tab
+            switchTab(newPrompt.phase);
+            // Scroll to new card
+            setTimeout(() => {
+                const card = document.getElementById('card-' + newPrompt.Prompt_ID);
+                if (card) {
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    card.classList.add('highlight-flash');
+                }
+            }, 400);
+        }
+
+        // ── Event Listeners ──
+        document.querySelectorAll('.tab-nav button').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        // Close modal on overlay click
+        document.getElementById('submitModal').addEventListener('click', function(e) {
+            if (e.target === this) closeSubmitModal();
+        });
+
+        // Keyboard shortcut
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'f') {
+                e.preventDefault();
+                const searchInput = document.querySelector('.search-input');
+                if (searchInput) searchInput.focus();
+            }
+            if (e.key === 'Escape') closeSubmitModal();
+        });
+
+        // ── Initialize ──
+        switchTab('dashboard');
+
+        console.log('%c🔍 Internal Audit AI Prompt Library %cReady %c| %cIIA Standards 2025',
+            'color:#FEBE10;font-weight:bold;font-size:1.1em;',
+            'color:#28A745;',
+            '',
+            'color:#005F75;');
+        console.log('%c📋 44 built-in prompts + user submissions | 📊 Star ratings saved locally | 🔍 Ctrl+F to search',
+            'color:#003946;');
+    </script>
+</body>
+  </html>
