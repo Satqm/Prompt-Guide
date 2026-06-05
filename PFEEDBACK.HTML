@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Audit AI Prompt Engineering – Training Manual</title>
+    <title>Prompt Engineering for Internal Auditors – Training Manual</title>
     <style>
         :root {
             --dark-teal: #003946;
@@ -54,6 +54,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .header::before {
             content: '';
             position: absolute;
@@ -65,12 +66,14 @@
                 radial-gradient(ellipse at 70% 30%, rgba(0, 95, 117, 0.20) 0%, transparent 55%);
             pointer-events: none;
         }
+
         .header-content {
             position: relative;
             z-index: 1;
             max-width: 860px;
             margin: 0 auto;
         }
+
         .header .badge {
             display: inline-block;
             background: var(--accent-gold);
@@ -82,6 +85,7 @@
             border-radius: 20px;
             margin-bottom: 14px;
         }
+
         .header h1 {
             font-size: 2.4rem;
             font-weight: 800;
@@ -89,20 +93,24 @@
             line-height: 1.2;
             margin-bottom: 8px;
         }
+
         .header h1 span {
             color: var(--accent-gold);
         }
+
         .header .subtitle {
             font-size: 1.1rem;
             opacity: 0.9;
             font-weight: 400;
             margin-bottom: 6px;
         }
+
         .header .meta {
             font-size: 0.85rem;
             opacity: 0.7;
             letter-spacing: 0.03em;
         }
+
         .header .version-pill {
             display: inline-block;
             background: rgba(255, 255, 255, 0.10);
@@ -125,6 +133,7 @@
             z-index: 2;
             padding: 0 16px;
         }
+
         .stat-card {
             background: var(--card-white);
             border-radius: var(--radius);
@@ -137,16 +146,19 @@
             transition: var(--transition);
             border: 1px solid #e8eff1;
         }
+
         .stat-card:hover {
             transform: translateY(-3px);
             box-shadow: var(--shadow-lg);
         }
+
         .stat-card .stat-num {
             font-size: 1.7rem;
             font-weight: 800;
             color: var(--dark-teal);
             line-height: 1.1;
         }
+
         .stat-card .stat-label {
             font-size: 0.72rem;
             color: #5a7079;
@@ -154,6 +166,7 @@
             text-transform: uppercase;
             margin-top: 2px;
         }
+
         .stat-card.accent .stat-num {
             color: #b88600;
         }
@@ -176,6 +189,7 @@
             align-items: center;
             gap: 10px;
         }
+
         .section-title .num {
             background: var(--accent-gold);
             color: var(--dark-teal);
@@ -189,6 +203,7 @@
             font-weight: 800;
             flex-shrink: 0;
         }
+
         .section-title::after {
             content: '';
             flex: 1;
@@ -210,90 +225,55 @@
             position: relative;
             overflow: hidden;
         }
+
         .card:hover {
             box-shadow: var(--shadow-md);
             border-color: #d0dde2;
         }
+
         .card.accent-left {
             border-left: 5px solid var(--accent-gold);
         }
+
         .card.teal-left {
             border-left: 5px solid var(--secondary-teal);
         }
+
         .card.red-left {
             border-left: 5px solid var(--alert-red);
         }
+
         .card.green-left {
             border-left: 5px solid var(--success-green);
         }
+
         .card h3 {
             color: var(--dark-teal);
             font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 8px;
         }
+
         .card h4 {
             color: var(--secondary-teal);
             font-weight: 700;
             margin: 10px 0 5px;
         }
+
         .card p {
             margin: 5px 0;
             color: var(--text-light);
         }
+
         .card ul,
         .card ol {
             padding-left: 20px;
             color: var(--text-light);
         }
+
         .card ul li,
         .card ol li {
             margin: 4px 0;
-        }
-
-        /* ── Details (Native Accordion) ── */
-        details.accordion {
-            margin: 6px 0;
-            border-radius: var(--radius-sm);
-            border: 1px solid #e4ecef;
-            background: var(--card-white);
-            overflow: hidden;
-        }
-        details.accordion summary {
-            padding: 14px 18px;
-            cursor: pointer;
-            font-weight: 700;
-            font-size: 1rem;
-            color: var(--dark-teal);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: var(--transition);
-            background: #fafcfc;
-            user-select: none;
-            list-style: none;
-        }
-        details.accordion summary::-webkit-details-marker {
-            display: none;
-        }
-        details.accordion summary::after {
-            content: '▼';
-            font-size: 0.75rem;
-            color: var(--secondary-teal);
-            transition: var(--transition);
-        }
-        details.accordion[open] summary::after {
-            transform: rotate(180deg);
-        }
-        details.accordion summary:hover {
-            background: #f2f7f8;
-        }
-        details.accordion .accordion-body {
-            padding: 14px 18px;
-            border-top: 1px solid #eef3f5;
-            color: var(--text-light);
-            font-size: 0.9rem;
-            line-height: 1.6;
         }
 
         /* ── Table ── */
@@ -304,12 +284,14 @@
             border: 1px solid #e4ecef;
             -webkit-overflow-scrolling: touch;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.85rem;
             min-width: 560px;
         }
+
         th {
             background: var(--dark-teal);
             color: #fff;
@@ -320,26 +302,30 @@
             font-size: 0.76rem;
             text-transform: uppercase;
         }
+
         td {
             padding: 9px 13px;
             border-bottom: 1px solid #eef3f5;
             vertical-align: top;
             color: var(--text-light);
         }
+
         tr:nth-child(even) td {
             background: #f9fbfc;
         }
+
         tr:last-child td {
             border-bottom: none;
         }
 
-        /* ── CRAFT Framework Static ── */
+        /* ── CRAFT Framework ── */
         .craft-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 12px;
             margin: 12px 0;
         }
+
         .craft-item {
             background: #fafcfc;
             border: 2px solid #e4ecef;
@@ -347,10 +333,12 @@
             padding: 16px 18px;
             transition: var(--transition);
         }
+
         .craft-item:hover {
             border-color: var(--accent-gold);
             box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.05);
         }
+
         .craft-item .craft-letter {
             display: inline-block;
             background: var(--accent-gold);
@@ -364,17 +352,13 @@
             line-height: 34px;
             margin-bottom: 6px;
         }
+
         .craft-item h4 {
             color: var(--dark-teal);
             margin: 0 0 3px;
             font-size: 1rem;
         }
-        .craft-item .craft-question {
-            font-size: 0.8rem;
-            color: #5a7079;
-            font-style: italic;
-            margin-bottom: 4px;
-        }
+
         .craft-item .craft-example {
             font-size: 0.8rem;
             color: var(--secondary-teal);
@@ -397,94 +381,63 @@
             font-size: 1rem;
             line-height: 1.6;
         }
+
         .quote-box strong {
             color: var(--dark-teal);
             font-style: normal;
         }
 
-        /* ── Flow Diagram (CSS Only) ── */
-        .flow-diagram {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            align-items: center;
-            justify-content: center;
+        /* ── Comparison Cards ── */
+        .comparison-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 14px;
             margin: 14px 0;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-        .flow-step {
-            background: var(--card-white);
-            border: 2px solid #e4ecef;
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            text-align: center;
-            min-width: 120px;
-            box-shadow: var(--shadow-sm);
-        }
-        .flow-step.bad {
-            border-color: #f5c6cb;
-            background: #fff8f8;
-            color: #8b1a24;
-        }
-        .flow-step.good {
-            border-color: #c3e6cd;
-            background: #f8fdf9;
-            color: #1a5c28;
-        }
-        .flow-arrow {
-            font-size: 1.3rem;
-            color: #8899a0;
-            font-weight: 400;
-        }
-        .flow-label {
-            text-align: center;
-            font-weight: 800;
-            font-size: 0.9rem;
-            margin: 4px 0;
-            width: 100%;
-        }
-        .flow-label.bad-label {
-            color: var(--alert-red);
-        }
-        .flow-label.good-label {
-            color: var(--success-green);
-        }
-        .flow-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            align-items: center;
-            justify-content: center;
-            margin: 8px 0;
         }
 
-        /* ── Tags ── */
-        .tag {
-            display: inline-block;
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.7rem;
+        .comparison-card {
+            background: var(--card-white);
+            border-radius: var(--radius);
+            padding: 18px 20px;
+            border: 2px solid #e4ecef;
+        }
+
+        .comparison-card.copilot {
+            border-top: 4px solid #0078d4;
+        }
+
+        .comparison-card.sunlife {
+            border-top: 4px solid var(--secondary-teal);
+        }
+
+        .comparison-card h4 {
+            color: var(--text);
+            font-size: 1.1rem;
+            margin-bottom: 10px;
             font-weight: 700;
-            letter-spacing: 0.03em;
-            margin: 2px 3px;
-            white-space: nowrap;
         }
-        .tag.teal {
-            background: #d6eaf8;
-            color: #1a3f5c;
+
+        .comparison-card .feature-list {
+            list-style: none;
+            padding: 0;
+            margin: 6px 0;
         }
-        .tag.gold {
-            background: #fef3c7;
-            color: #7a5e00;
+
+        .comparison-card .feature-list li {
+            padding: 4px 0;
+            margin: 3px 0;
+            font-size: 0.88rem;
+            color: var(--text-light);
+            padding-left: 20px;
+            position: relative;
         }
-        .tag.red {
-            background: #fde0e3;
-            color: #8b1a24;
-        }
-        .tag.green {
-            background: #d4f0d9;
-            color: #1a5c28;
+
+        .comparison-card .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success-green);
+            font-weight: 800;
         }
 
         /* ── Highlight Box ── */
@@ -495,21 +448,24 @@
             padding: 16px 20px;
             margin: 12px 0;
         }
+
         .highlight-box h4 {
             color: var(--dark-teal);
             margin-bottom: 4px;
         }
+
         .highlight-box p {
             color: var(--text-light);
             margin: 3px 0;
         }
 
-        /* ── Checklist Static ── */
+        /* ── Checklist ── */
         .static-checklist {
             list-style: none;
             padding: 0;
             margin: 8px 0;
         }
+
         .static-checklist li {
             padding: 8px 12px;
             margin: 3px 0;
@@ -522,6 +478,7 @@
             font-size: 0.88rem;
             color: var(--text-light);
         }
+
         .static-checklist li .check-icon {
             color: var(--success-green);
             font-weight: 800;
@@ -529,7 +486,7 @@
             font-size: 1rem;
         }
 
-        /* ── Inline Code ── */
+        /* ── Code Blocks ── */
         code {
             background: #f0f4f5;
             padding: 2px 7px;
@@ -538,6 +495,46 @@
             font-size: 0.85em;
             color: var(--secondary-teal);
             letter-spacing: 0.01em;
+        }
+
+        .code-block {
+            background: #f0f4f5;
+            border-left: 4px solid var(--secondary-teal);
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            overflow-x: auto;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 0.82rem;
+            color: var(--text);
+            line-height: 1.5;
+            margin: 8px 0;
+        }
+
+        /* ── Callout ── */
+        .callout {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            margin: 10px 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .callout.warning {
+            background: #fff8f5;
+            border: 2px solid var(--alert-red);
+            color: #6b1a20;
+        }
+
+        .callout.info {
+            background: #f5fafb;
+            border: 2px solid var(--secondary-teal);
+            color: #1a3f55;
+        }
+
+        .callout.success {
+            background: #f8fdf9;
+            border: 2px solid var(--success-green);
+            color: #1a4a28;
         }
 
         /* ── Footer ── */
@@ -551,35 +548,9 @@
             letter-spacing: 0.03em;
             margin-top: 20px;
         }
+
         .footer p {
             margin: 2px 0;
-        }
-
-        /* ── Callout ── */
-        .callout {
-            padding: 14px 18px;
-            border-radius: var(--radius-sm);
-            margin: 10px 0;
-            font-size: 0.88rem;
-            line-height: 1.5;
-        }
-        .callout.warning {
-            background: #fff8f5;
-            border: 2px solid var(--alert-red);
-            color: #6b1a20;
-        }
-        .callout.info {
-            background: #f5fafb;
-            border: 2px solid var(--secondary-teal);
-            color: #1a3f55;
-        }
-        .callout.success {
-            background: #f8fdf9;
-            border: 2px solid var(--success-green);
-            color: #1a4a28;
-        }
-        .callout strong {
-            color: var(--dark-teal);
         }
 
         /* ── Responsive ── */
@@ -602,19 +573,11 @@
                 min-width: 70px;
                 max-width: 110px;
             }
-            .stat-card .stat-num {
-                font-size: 1.2rem;
-            }
             .craft-grid {
                 grid-template-columns: 1fr;
             }
-            .flow-diagram {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .flow-arrow {
-                transform: rotate(90deg);
-                text-align: center;
+            .comparison-container {
+                grid-template-columns: 1fr;
             }
             table {
                 font-size: 0.75rem;
@@ -653,9 +616,9 @@
         <div class="header-content">
             <div class="badge">📘 Internal Audit Training</div>
             <h1>Prompt Engineering <span>for Auditors</span></h1>
-            <p class="subtitle">How to Write Better Prompts for More Reliable AI Outputs</p>
-            <p class="meta">A Practical Guide to Large Language Models & Effective Prompting · Internal Audit Department</p>
-            <span class="version-pill">January 2026 · Version 1.1</span>
+            <p class="subtitle">Master AI Tools to Enhance Audit Quality & Efficiency</p>
+            <p class="meta">Practical Guide to Effective Prompting & AI-Assisted Audit Work · Internal Audit Department</p>
+            <span class="version-pill">June 2026 · Version 2.0</span>
         </div>
     </header>
 
@@ -666,20 +629,16 @@
             <div class="stat-label">CRAFT Elements</div>
         </div>
         <div class="stat-card">
-            <div class="stat-num">4</div>
-            <div class="stat-label">Key Prompt Factors</div>
-        </div>
-        <div class="stat-card accent">
             <div class="stat-num">8.4<span style="font-size:0.7em;">/10</span></div>
             <div class="stat-label">Quality Score (150+ words)</div>
         </div>
-        <div class="stat-card">
-            <div class="stat-num">44</div>
-            <div class="stat-label">Library Prompts</div>
+        <div class="stat-card accent">
+            <div class="stat-num">50+</div>
+            <div class="stat-label">Ready-to-Use Prompts</div>
         </div>
         <div class="stat-card">
-            <div class="stat-num">IIA 2025</div>
-            <div class="stat-label">Standards Aligned</div>
+            <div class="stat-num">2</div>
+            <div class="stat-label">AI Platforms Covered</div>
         </div>
     </div>
 
@@ -688,278 +647,270 @@
 
         <!-- SECTION 1: Why Prompt Quality Matters -->
         <section id="why-quality">
-            <div class="section-title"><span class="num">1</span> Why Prompt Quality Matters</div>
+            <div class="section-title"><span class="num">1</span> Why Prompt Quality Matters for Auditors</div>
 
             <div class="card accent-left">
-                <h3>The Same AI Can Produce Very Different Results</h3>
-                <p>One of the biggest misconceptions about AI is that output quality depends only on the model. In reality:</p>
+                <h3>The AI Output Isn't Fixed — Your Prompt Is</h3>
+                <p>A critical misconception: auditors often believe AI model quality determines output quality. The truth is different.</p>
                 <div class="quote-box">
-                    <strong>The same AI model can generate dramatically different outputs depending on the quality of the prompt.</strong>
+                    <strong>The same AI model produces drastically different results based on how you ask the question. Better prompts = Better audit work.</strong>
                 </div>
-                <p>A prompt acts like a set of instructions given to an employee. The clearer the instructions, the more useful the result. Ambiguity is the enemy of quality output.</p>
+                <p style="margin-top:8px;">Think of a prompt like writing instructions for an audit procedure. Vague procedures lead to inconsistent execution. Clear procedures with examples lead to consistent, reliable results. The AI functions similarly — it follows your instructions precisely.</p>
             </div>
 
             <div class="card teal-left">
-                <h3>What Research Consistently Shows</h3>
-                <p>Industry guidance from OpenAI, Anthropic, and other AI providers repeatedly highlights <strong>four factors</strong> that improve output quality:</p>
+                <h3>Four Factors That Drive Output Quality</h3>
+                <p>Research from leading AI providers reveals four consistent factors that improve AI outputs:</p>
                 <ol style="padding-left:20px;margin-top:6px;">
-                    <li><strong>Clear context</strong> — background information the AI needs</li>
-                    <li><strong>Specific instructions</strong> — precise task description</li>
-                    <li><strong>Defined output format</strong> — structure and length requirements</li>
-                    <li><strong>Examples of desired responses</strong> — models to follow</li>
+                    <li><strong>Context</strong> — Sufficient background information about your audit situation</li>
+                    <li><strong>Clarity</strong> — Precise, unambiguous task description without jargon</li>
+                    <li><strong>Structure</strong> — Defined output format and desired sections</li>
+                    <li><strong>Examples</strong> — Models of the quality level you expect</li>
                 </ol>
-                <p style="margin-top:8px;">Prompts containing these elements consistently outperform vague requests. The point is not that the AI becomes smarter — <strong>the point is that ambiguity decreases.</strong></p>
+                <p style="margin-top:8px;">Prompts including these elements consistently outperform generic requests. <strong>The gain comes from reducing ambiguity, not making the AI smarter.</strong></p>
             </div>
 
             <div class="card">
-                <h3>Enterprise Observation: Prompt Length vs. Quality</h3>
-                <p>A community experiment tracking over 200 prompt-output pairs found a clear correlation between prompt length and output quality. The biggest factor was not a fancy framework — <strong>it was providing enough business context.</strong></p>
+                <h3>Quality Improves with Prompt Maturity</h3>
+                <p>Analysis of 200+ audit-related prompts shows a clear correlation between prompt depth and output usability:</p>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr><th>Prompt Length</th><th>Average Quality Rating</th><th>Key Characteristic</th></tr>
+                            <tr>
+                                <th>Prompt Characteristics</th>
+                                <th>Avg. Quality Rating</th>
+                                <th>Typical Result</th>
+                            </tr>
                         </thead>
                         <tbody>
-                            <tr><td>Under 50 words</td><td><strong>5.2 / 10</strong></td><td>Vague, no context, generic output</td></tr>
-                            <tr><td>50 – 150 words</td><td><strong>7.1 / 10</strong></td><td>Some structure, partial context</td></tr>
-                            <tr><td>Over 150 words</td><td><strong>8.4 / 10</strong></td><td>Rich context, clear format, examples</td></tr>
+                            <tr>
+                                <td><strong>Vague</strong> (under 50 words, no context)</td>
+                                <td><strong>5.2 / 10</strong></td>
+                                <td>Generic, unusable, requires major rework</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Moderate</strong> (50–150 words, some structure)</td>
+                                <td><strong>7.1 / 10</strong></td>
+                                <td>Usable with editing, partially relevant</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Comprehensive</strong> (150+ words, CRAFT elements)</td>
+                                <td><strong>8.4 / 10</strong></td>
+                                <td>Production-ready, minimal revision needed</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="font-size:0.8rem;color:#8899a0;margin-top:4px;"><em>Note: This was a community experiment, not a peer-reviewed study, but it aligns with enterprise prompt-engineering guidance from major AI providers.</em></p>
+                <p style="font-size:0.82rem;color:#8899a0;margin-top:6px;"><em>Note: Quality rating based on community auditor feedback; results vary by AI platform and task complexity.</em></p>
             </div>
 
             <div class="card accent-left">
-                <h3>Weak Prompt vs. Strong Prompt: A Business Example</h3>
+                <h3>Real Example: Weak vs. Strong Audit Prompt</h3>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr><th style="background:var(--alert-red);">❌ Weak Prompt</th><th style="background:var(--success-green);">✅ Strong Prompt</th></tr>
+                            <tr>
+                                <th style="background:var(--alert-red);">❌ Weak Prompt</th>
+                                <th style="background:var(--success-green);">✅ Strong Prompt</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td style="background:#fff8f8;">
-                                    <code>Summarize this report.</code>
-                                    <p style="margin-top:6px;font-size:0.8rem;">The AI doesn't know:<br>• Who the audience is<br>• What information matters<br>• Desired output format<br>• Required level of detail</p>
+                                    <code>"List risks in vendor management"</code>
+                                    <p style="margin-top:6px;font-size:0.8rem;color:#5a4a1a;">The AI doesn't know:<br>
+                                    • Organization type or size<br>
+                                    • Which risks matter most<br>
+                                    • Desired output format<br>
+                                    • Audit scope or focus</p>
                                 </td>
                                 <td style="background:#f8fdf9;">
-                                    <code>You are supporting an Internal Audit Manager. Review the attached report and provide:<br><br>1. Executive Summary<br>2. Key Risks<br>3. Control Weaknesses<br>4. Recommended Actions<br><br>Audience: Senior Management<br>Format: Bullet Points<br>Length: Maximum 1 page</code>
+                                    <code>"As an internal auditor, identify 8–10 key inherent risks in the accounts payable vendor management process for a healthcare organization with 2,000+ vendors. Organize by category (fraud, compliance, operational). For each risk, provide: risk description, potential impact, and likelihood rating. Format as a table suitable for audit committee presentation."</code>
                                 </td>
+                            </tr>
+                            <tr>
+                                <td style="background:#fff8f8;">
+                                    <strong>Result:</strong> Generic list · Minimal relevance · Requires substantial rework</td>
+                                <td style="background:#f8fdf9;">
+                                    <strong>Result:</strong> Targeted risks · Audit-ready · Requires minimal editing</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="margin-top:8px;"><strong>Result:</strong> More relevant · More structured · Less rework required · Easier to use in business communication</p>
             </div>
 
             <div class="card teal-left">
-                <h3>The Cost of Poor Prompts</h3>
-                <p>Poor prompts often lead to:</p>
-                <ul style="padding-left:20px;margin-top:4px;">
-                    <li>Multiple re-prompts and iterations</li>
-                    <li>More review time and manual editing</li>
-                    <li>Missing information and gaps</li>
-                    <li>Inconsistent outputs across requests</li>
-                    <li>Increased risk of hallucination (fabricated information)</li>
+                <h3>The Cost of Weak Prompts</h3>
+                <p>Poor prompts typically result in:</p>
+                <ul style="padding-left:20px;margin-top:6px;">
+                    <li>Multiple re-prompts and iteration cycles</li>
+                    <li>Increased review and editing time</li>
+                    <li>Missing context-specific details</li>
+                    <li>Generic outputs not relevant to your audit scope</li>
+                    <li>Higher risk of hallucinated facts (fabricated information)</li>
                 </ul>
-                <p style="margin-top:8px;">A good prompt reduces iterations and helps the model focus on the task at hand.</p>
+                <p style="margin-top:8px;"><strong>Bottom line:</strong> A 5-minute investment in a better prompt saves 30+ minutes in review and revision.</p>
             </div>
 
             <div class="quote-box">
-                <strong>💡 Garbage In → Garbage Out</strong><br>
-                AI models are powerful, but they cannot infer business context that was never provided. Better prompts reduce ambiguity, improve consistency, and produce more actionable outputs.
-            </div>
-
-            <!-- Flow Diagram -->
-            <div class="card">
-                <h3>Prompt Quality Flow</h3>
-                <div class="flow-row">
-                    <span class="flow-label bad-label" style="width:100%;">❌ Poor Prompt Path</span>
-                    <div class="flow-step bad">Poor Prompt</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step bad">Unclear Instructions</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step bad">Generic Output</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step bad">More Rework</div>
-                </div>
-                <div class="flow-row" style="margin-top:14px;">
-                    <span class="flow-label good-label" style="width:100%;">✅ Good Prompt Path</span>
-                    <div class="flow-step good">Good Prompt</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step good">Clear Context + Role + Task + Format</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step good">Focused Output</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step good">Less Rework</div>
-                    <span class="flow-arrow">→</span>
-                    <div class="flow-step good" style="border-color:var(--accent-gold);background:#fffdf5;">Higher Productivity</div>
-                </div>
+                <strong>💡 Core Principle:</strong> The AI cannot infer context you haven't provided. Better prompts reduce guesswork, improve consistency, and produce actionable audit outputs on the first attempt.
             </div>
         </section>
 
-        <!-- SECTION 2: Understanding Large Language Models -->
-        <section id="understanding-llms">
-            <div class="section-title"><span class="num">2</span> Understanding Large Language Models</div>
-
-            <div class="card accent-left">
-                <h3>What Is a Large Language Model?</h3>
-                <p>A <strong>Large Language Model (LLM)</strong> is an AI system trained on vast amounts of text data to understand and generate human-like language. Popular LLMs include ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google), and Copilot (Microsoft).</p>
-                <p style="margin-top:6px;">Think of an LLM as an <em>extremely well-read assistant</em> who has studied billions of documents — including books, articles, websites, and professional literature. When you ask a question or give an instruction, the model draws on patterns learned from this training to generate a relevant response.</p>
-                <p style="margin-top:6px;">The model does <strong>not</strong> search the internet in real-time (unless specifically enabled) or access your organization's systems. It generates responses based on patterns in its training data, which has a knowledge cutoff date. <strong>This is why verification of facts remains important.</strong></p>
-            </div>
+        <!-- SECTION 2: Copilot vs. Sun Life Asks -->
+        <section id="ai-platforms">
+            <div class="section-title"><span class="num">2</span> Your AI Tools: Copilot vs. Sun Life Asks</div>
 
             <div class="card teal-left">
-                <h3>Key Characteristics of LLMs</h3>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>Characteristic</th><th>Description</th><th>Implication for Auditors</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Probabilistic Output</strong></td>
-                                <td>Responses are generated word-by-word based on probability</td>
-                                <td>Same prompt may yield slightly different outputs; always review results</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Context Window</strong></td>
-                                <td>Limited memory within a conversation (measured in tokens)</td>
-                                <td>Very long documents may need to be processed in sections</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Knowledge Cutoff</strong></td>
-                                <td>Training data has an end date; no real-time information</td>
-                                <td>Verify current policies, regulations, and organizational changes</td>
-                            </tr>
-                            <tr>
-                                <td><strong>No True Understanding</strong></td>
-                                <td>Pattern matching, not genuine comprehension</td>
-                                <td>May produce plausible-sounding but incorrect information</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Prompt Sensitivity</strong></td>
-                                <td>Output quality depends heavily on input quality</td>
-                                <td>Well-crafted prompts yield significantly better results</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <h3>Two Approved Platforms — Different Strengths</h3>
+                <p>Sun Life maintains two approved AI chatbots designed for employee use within our secure technology ecosystem. Both keep your information safe — neither trains on your input or shares conversations externally. Choose based on your task.</p>
+            </div>
+
+            <div class="comparison-container">
+                <div class="comparison-card copilot">
+                    <h4>🔵 Copilot (Microsoft)</h4>
+                    <p style="font-size:0.9rem;color:#5a7079;margin-bottom:10px;"><strong>Integration:</strong> Microsoft 365 ecosystem</p>
+
+                    <h5 style="color:var(--success-green);font-weight:700;font-size:0.9rem;margin-top:8px;margin-bottom:4px;">✓ Strengths</h5>
+                    <ul class="feature-list">
+                        <li>Works directly within Word, Excel, PowerPoint</li>
+                        <li>Creates and edits documents in Microsoft apps</li>
+                        <li>Analyzes single or multiple Office files</li>
+                        <li>Integrates with Microsoft 365 contacts and SharePoint</li>
+                        <li>Ideal for document drafting and editing</li>
+                    </ul>
+
+                    <h5 style="color:var(--alert-red);font-weight:700;font-size:0.9rem;margin-top:8px;margin-bottom:4px;">⚠ Limitations</h5>
+                    <ul style="list-style:none;padding:0;margin:0;">
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Low character limit (4,000 characters)
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Output may be skewed toward Microsoft solutions
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Access issues may prevent proper document retrieval
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Cannot send emails or take real-time actions
+                        </li>
+                    </ul>
+
+                    <p style="margin-top:10px;padding-top:10px;border-top:1px solid #e4ecef;font-size:0.85rem;color:#5a7079;"><strong>Best For:</strong> Quick document edits, drafting memos, light analysis within Microsoft apps</p>
+                </div>
+
+                <div class="comparison-card sunlife">
+                    <h4>🟦 Sun Life Asks</h4>
+                    <p style="font-size:0.9rem;color:#5a7079;margin-bottom:10px;"><strong>Integration:</strong> Secure Sun Life ecosystem · VPN required</p>
+
+                    <h5 style="color:var(--success-green);font-weight:700;font-size:0.9rem;margin-top:8px;margin-bottom:4px;">✓ Strengths</h5>
+                    <ul class="feature-list">
+                        <li>Designed specifically for Sun Life's secure environment</li>
+                        <li>Handles large prompts (up to 250,000 characters)</li>
+                        <li>Processes multiple large files (PDF, Word, Excel)</li>
+                        <li>Supports complex document analysis and comparison</li>
+                        <li>Perfect for detailed audit research and findings drafting</li>
+                        <li>Built-in knowledge of IA methodology and audit standards</li>
+                    </ul>
+
+                    <h5 style="color:var(--alert-red);font-weight:700;font-size:0.9rem;margin-top:8px;margin-bottom:4px;">⚠ Limitations</h5>
+                    <ul style="list-style:none;padding:0;margin:0;">
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Cannot create or edit files directly
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            Requires VPN connection to access
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            File must be uploaded (output provided as text)
+                        </li>
+                        <li style="padding:4px 0;margin:2px 0;font-size:0.88rem;color:var(--text-light);padding-left:20px;position:relative;">
+                            <span style="position:absolute;left:0;color:var(--alert-red);font-weight:800;">✕</span>
+                            No Microsoft 365 integration
+                        </li>
+                    </ul>
+
+                    <p style="margin-top:10px;padding-top:10px;border-top:1px solid #e4ecef;font-size:0.85rem;color:#5a7079;"><strong>Best For:</strong> Complex audit analysis, IA methodology research, multi-document comparisons, detailed findings drafting</p>
                 </div>
             </div>
 
-            <div class="card">
-                <h3>Capabilities & Limitations</h3>
-                <p><strong>✅ What LLMs Do Well:</strong></p>
+            <div class="card accent-left" style="margin-top:16px;">
+                <h3>Quick Decision Guide</h3>
+                <p><strong>Use Copilot when:</strong></p>
                 <ul style="padding-left:20px;">
-                    <li>Drafting and editing written content (reports, memos, findings)</li>
-                    <li>Summarizing lengthy documents and extracting key points</li>
-                    <li>Brainstorming and identifying risks, controls, and test procedures</li>
-                    <li>Explaining complex concepts in plain language</li>
-                    <li>Structuring information (converting notes to organized formats)</li>
-                    <li>Generating interview questions and discussion guides</li>
-                    <li>Comparing documents against criteria or policies</li>
+                    <li>Drafting or editing documents in Microsoft Word</li>
+                    <li>Working with smaller content (memos, emails, lists)</li>
+                    <li>Need direct integration with M365 apps</li>
+                    <li>Creating presentation slides or Excel analysis</li>
                 </ul>
-                <p style="margin-top:8px;"><strong>❌ What LLMs Cannot Do:</strong></p>
+                <p style="margin-top:8px;"><strong>Use Sun Life Asks when:</strong></p>
                 <ul style="padding-left:20px;">
-                    <li>Access your organization's systems, databases, or files (unless specifically connected)</li>
-                    <li>Perform calculations with guaranteed accuracy (always verify math)</li>
-                    <li>Replace professional judgment on complex audit matters</li>
-                    <li>Guarantee factual accuracy (may "hallucinate" false information)</li>
-                    <li>Understand context you have not provided</li>
-                    <li>Make ethical judgments or exercise professional skepticism on your behalf</li>
+                    <li>Analyzing large audit reports or multiple documents</li>
+                    <li>Conducting detailed research on audit methodology</li>
+                    <li>Drafting formal audit findings or reports</li>
+                    <li>Comparing controls across multiple policies</li>
+                    <li>Handling confidential or sensitive audit information</li>
                 </ul>
-                <div class="callout warning" style="margin-top:10px;">
-                    <strong>⚠️ CRITICAL — Hallucinations:</strong> LLMs can generate confident-sounding but <strong>completely false</strong> information. This is called "hallucination." Always verify factual claims, especially citations to specific policies, regulations, or standards. The model may invent policy numbers, regulation sections, or audit standards that do not exist.
-                </div>
             </div>
 
-            <div class="card teal-left">
-                <h3>Common LLM Platforms</h3>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr><th>Platform</th><th>Provider</th><th>Key Features</th><th>Best For</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td>ChatGPT</td><td>OpenAI</td><td>Widely available, plugins, web browsing, Code Interpreter</td><td>General use, data analysis with Code Interpreter</td></tr>
-                            <tr><td>Claude</td><td>Anthropic</td><td>Long context window, document analysis, careful reasoning</td><td>Complex documents, nuanced writing, detailed analysis</td></tr>
-                            <tr><td>Copilot</td><td>Microsoft</td><td>Integrated with Microsoft 365, enterprise features</td><td>Organizations using Microsoft ecosystem</td></tr>
-                            <tr><td>Gemini</td><td>Google</td><td>Google Workspace integration, multimodal</td><td>Google Workspace users, image analysis</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-                <p style="margin-top:6px;"><em>The prompt library is designed to be platform-agnostic. Prompts work across all major LLMs, though you may notice slight differences in output style or formatting.</em></p>
-            </div>
-
-            <div class="card red-left">
-                <h3>Security & Confidentiality Considerations</h3>
-                <p><strong>DATA PROTECTION REQUIREMENTS:</strong> Before using any AI tool with audit information, understand your organization's policies on:</p>
-                <ol style="padding-left:20px;margin-top:4px;">
-                    <li>What data can be entered into AI systems</li>
-                    <li>Whether enterprise or consumer versions are approved</li>
-                    <li>Data retention and training policies of the AI provider</li>
-                    <li>Handling of confidential, sensitive, or personally identifiable information (PII)</li>
-                </ol>
-                <p style="margin-top:8px;"><strong>Best Practices for Confidential Information:</strong></p>
-                <ul style="padding-left:20px;">
-                    <li>Remove or anonymize names, account numbers, and identifying details before pasting into AI tools</li>
-                    <li>Use enterprise versions with appropriate data handling agreements when available</li>
-                    <li>Never enter passwords, social security numbers, or financial account details</li>
-                    <li>Consider whether AI output could be discoverable in legal proceedings</li>
-                    <li>Check if your organization requires AI use to be documented in workpapers</li>
-                </ul>
-                <p style="margin-top:6px;font-weight:700;color:var(--alert-red);">When in doubt, anonymize data before using AI tools.</p>
+            <div class="callout info">
+                <strong>🔒 Data Security Note:</strong> Both platforms operate within Sun Life's secure ecosystem. Neither tool trains on your input, shares conversations externally, or violates our data privacy policies. Always verify that your organization's AI use policy is followed before entering audit information.
             </div>
         </section>
 
         <!-- SECTION 3: Prompt Engineering Fundamentals -->
         <section id="prompt-engineering">
-            <div class="section-title"><span class="num">3</span> Prompt Engineering Fundamentals</div>
+            <div class="section-title"><span class="num">3</span> Mastering Prompt Engineering</div>
 
             <div class="card accent-left">
-                <h3>What Is Prompt Engineering?</h3>
-                <p>Prompt engineering is the skill of crafting effective instructions (prompts) to get useful outputs from AI systems. A well-designed prompt clearly communicates what you need, provides relevant context, and guides the AI toward the desired format and quality of response.</p>
-                <p style="margin-top:6px;">Think of prompting as giving instructions to a <strong>highly capable but literal-minded assistant</strong>. The more specific and clear your instructions, the better the results. The assistant won't guess what you mean — it will follow exactly what you say.</p>
+                <h3>What is Prompt Engineering?</h3>
+                <p>Prompt engineering is the discipline of crafting clear, specific instructions that guide AI systems toward useful, accurate outputs. In audit terms, it's like writing a precise audit procedure — the clearer and more detailed, the more consistent and reliable the result.</p>
+                <p style="margin-top:6px;">Think of the AI as a highly capable but literal-minded assistant. It cannot guess your intent or fill in missing context. It will execute exactly what you ask — no more, no less. Your job is to remove ambiguity.</p>
             </div>
 
             <div class="card teal-left">
-                <h3>The Anatomy of an Effective Prompt</h3>
-                <p>Effective prompts typically include several key components that work together to guide the AI:</p>
+                <h3>The Five Core Components of Effective Prompts</h3>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr><th>Component</th><th>Purpose</th><th>Example</th></tr>
+                            <tr>
+                                <th>Component</th>
+                                <th>What It Does</th>
+                                <th>Audit Example</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Role / Persona</strong></td>
-                                <td>Sets expertise level and perspective</td>
-                                <td><code>"Act as an experienced internal auditor..."</code></td>
+                                <td><strong>Role/Persona</strong></td>
+                                <td>Establishes expertise and perspective</td>
+                                <td><code>"Act as an experienced internal auditor specializing in healthcare compliance..."</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Context</strong></td>
-                                <td>Provides background information</td>
-                                <td><code>"I am planning an audit of accounts payable at a public university..."</code></td>
+                                <td>Provides critical background information</td>
+                                <td><code>"We are auditing the accounts payable process for a 500-person manufacturing company. Key risks include vendor fraud and duplicate payments..."</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Task</strong></td>
-                                <td>Clearly states what you need</td>
-                                <td><code>"Identify 8–10 inherent risks organized by category..."</code></td>
+                                <td>States the specific action or deliverable</td>
+                                <td><code>"Develop 6 audit procedures to test for unauthorized vendors and fraudulent transactions..."</code></td>
                             </tr>
                             <tr>
                                 <td><strong>Format</strong></td>
-                                <td>Specifies desired output structure</td>
-                                <td><code>"Present as a numbered list with risk descriptions and ratings..."</code></td>
+                                <td>Specifies how output should be structured</td>
+                                <td><code>"Present as a numbered list. For each procedure, include: objective, population, sample size, and pass/fail criteria."</code></td>
                             </tr>
                             <tr>
-                                <td><strong>Constraints</strong></td>
-                                <td>Sets boundaries or requirements</td>
-                                <td><code>"Focus on risks specific to higher education. Maximum 500 words."</code></td>
-                            </tr>
-                            <tr>
-                                <td><strong>Examples</strong></td>
-                                <td>Shows desired output style</td>
-                                <td><code>"Similar to: Risk: Duplicate payments. Likelihood: Medium. Impact: High."</code></td>
+                                <td><strong>Tone/Constraints</strong></td>
+                                <td>Sets boundaries and style expectations</td>
+                                <td><code>"Use professional audit language. Maximum 2 pages. Focus on high-risk areas only."</code></td>
                             </tr>
                         </tbody>
                     </table>
@@ -968,87 +919,101 @@
 
             <!-- CRAFT Framework -->
             <div class="card accent-left">
-                <h3>The CRAFT Framework for Prompt Writing</h3>
-                <p>Use the <strong>CRAFT</strong> framework to structure effective prompts. Each letter represents a critical element:</p>
+                <h3>The CRAFT Framework — Your Prompt Structure</h3>
+                <p style="margin-bottom:12px;">Use CRAFT to organize your prompts. This five-element framework dramatically improves output quality:</p>
+
                 <div class="craft-grid">
                     <div class="craft-item">
                         <span class="craft-letter">C</span>
                         <h4>Context</h4>
-                        <p class="craft-question">What background does the AI need?</p>
-                        <p style="font-size:0.82rem;color:var(--text-light);">Provide relevant background information the AI needs to understand your situation. Include your role, the engagement type, the organization type, and any relevant constraints.</p>
-                        <div class="craft-example"><strong>Example:</strong> "I am a staff auditor at a public university conducting an assurance engagement on procurement card (P-Card) controls. The university has approximately 500 cardholders with a total annual spend of $8 million."</div>
+                        <p style="font-size:0.82rem;margin-bottom:6px;color:var(--text-light);"><em>What background does the AI need?</em></p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Provide the situation, organization type, process scope, and any constraints that shape the audit.</p>
+                        <div class="craft-example"><strong>Example:</strong> "I am planning an operational audit of the university's campus housing system, which manages 3,500 resident students across 12 residence halls with an $18M annual budget."</div>
                     </div>
+
                     <div class="craft-item">
                         <span class="craft-letter">R</span>
                         <h4>Role</h4>
-                        <p class="craft-question">What expertise should guide the response?</p>
-                        <p style="font-size:0.82rem;color:var(--text-light);">Assign a role or persona to guide the AI's perspective and expertise level. This helps calibrate the response appropriately for your needs.</p>
-                        <div class="craft-example"><strong>Example:</strong> "Act as an experienced internal auditor with expertise in higher education and procurement controls."</div>
+                        <p style="font-size:0.82rem;margin-bottom:6px;color:var(--text-light);"><em>What expertise should guide the response?</em></p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Assign a persona or expertise level to calibrate response appropriateness.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Act as an experienced internal auditor with expertise in higher education operational controls and risk management."</div>
                     </div>
+
                     <div class="craft-item">
                         <span class="craft-letter">A</span>
                         <h4>Action</h4>
-                        <p class="craft-question">What specific task should be performed?</p>
-                        <p style="font-size:0.82rem;color:var(--text-light);">Clearly state the specific task or action you want the AI to perform. Use action verbs and be specific about deliverables. Ambiguity here leads to generic responses.</p>
-                        <div class="craft-example"><strong>Example:</strong> "Develop five testing procedures to evaluate whether P-Card transactions comply with the university's $2,500 single-transaction limit."</div>
+                        <p style="font-size:0.82rem;margin-bottom:6px;color:var(--text-light);"><em>What specific task should be performed?</em></p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Clearly state the deliverable. Use action verbs. Be specific about what you need.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Identify 8–10 inherent risks in the residence hall occupancy and billing process. Organize by risk category."</div>
                     </div>
+
                     <div class="craft-item">
                         <span class="craft-letter">F</span>
                         <h4>Format</h4>
-                        <p class="craft-question">How should the output be structured?</p>
-                        <p style="font-size:0.82rem;color:var(--text-light);">Specify how you want the output structured. This might include format type, length, sections, or specific elements to include. The more precise, the less editing needed.</p>
-                        <div class="craft-example"><strong>Example:</strong> "For each procedure, include: (1) procedure objective, (2) population definition, (3) sample size with rationale, (4) specific steps, (5) pass/fail criteria."</div>
+                        <p style="font-size:0.82rem;margin-bottom:6px;color:var(--text-light);"><em>How should output be structured?</em></p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Specify output format, sections, length, and organization. Detailed format requirements reduce editing.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Present as a table with columns for: Risk, Likelihood, Impact, Cause, and Potential Mitigation. Limit to 1–2 pages."</div>
                     </div>
+
                     <div class="craft-item">
                         <span class="craft-letter">T</span>
                         <h4>Tone</h4>
-                        <p class="craft-question">What style is appropriate for the audience?</p>
-                        <p style="font-size:0.82rem;color:var(--text-light);">Indicate the appropriate tone, style, or audience for the output. Consider whether the content is for internal use, management presentation, or board reporting.</p>
-                        <div class="craft-example"><strong>Example:</strong> "Use professional audit language suitable for inclusion in a formal audit report. Avoid jargon when possible."</div>
+                        <p style="font-size:0.82rem;margin-bottom:6px;color:var(--text-light);"><em>What style fits your audience?</em></p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Indicate tone, professional level, and intended audience for the output.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Use formal audit language suitable for an audit committee presentation. Avoid technical jargon; define specialized terms."</div>
                     </div>
                 </div>
-                <div class="highlight-box" style="margin-top:10px;">
-                    <h4>💡 CRAFT in One Prompt</h4>
-                    <p style="font-family:'SF Mono','Consolas',monospace;font-size:0.82rem;color:var(--text);background:#fafcfc;padding:10px;border-radius:6px;white-space:pre-wrap;">Role: Act as an experienced internal auditor with expertise in higher education.
-                        Context: I am planning an audit of P-Card controls at a public university with 500 cardholders and $8M annual spend.
-                        Task: Develop five testing procedures to evaluate compliance with the $2,500 single-transaction limit.
-                        Format: For each procedure, include objective, population definition, sample size, specific steps, and pass/fail criteria.
-                    Tone: Use professional audit language suitable for a formal audit report.</p>
+
+                <div class="highlight-box" style="margin-top:12px;">
+                    <h4>📋 Complete CRAFT Prompt Example</h4>
+                    <div class="code-block">Context: We are planning a financial audit of the accounts receivable and billing process for a healthcare provider with $200M in annual revenue, 500+ active customers, and a legacy billing system transitioning to cloud-based platform.
+
+Role: You are an experienced internal auditor specializing in healthcare financial processes and risk management.
+
+Action: Develop 8 comprehensive audit procedures to test for revenue recognition accuracy, particularly focusing on timing differences and potential underreporting of receivables.
+
+Format: Present as a numbered list. For each procedure, include: (1) Procedure objective, (2) Assertion addressed, (3) Population and sample size, (4) Specific audit steps, (5) Expected findings.
+
+Tone: Use professional audit language suitable for inclusion in a formal audit workpaper. Target length: 3–4 pages.</div>
                 </div>
             </div>
 
             <div class="card teal-left">
-                <h3>Common Prompting Mistakes to Avoid</h3>
+                <h3>Common Prompt Mistakes — And How to Fix Them</h3>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr><th>Mistake</th><th>Problem</th><th>Better Approach</th></tr>
+                            <tr>
+                                <th>Mistake</th>
+                                <th>Why It Fails</th>
+                                <th>Better Approach</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Too vague</strong></td>
-                                <td><code>"Write something about controls"</code></td>
-                                <td><code>"Write a control description for the three-way match process in accounts payable"</code></td>
+                                <td><strong>Too vague</strong><br><code>"Create controls"</code></td>
+                                <td>AI doesn't know what kind of controls, for what risk, or how detailed</td>
+                                <td><code>"Design 3 detective controls to identify fraudulent vendor invoices in the accounts payable system"</code></td>
                             </tr>
                             <tr>
-                                <td><strong>No context</strong></td>
-                                <td><code>"Is this a good control?"</code></td>
-                                <td><code>"Given this control [description] designed to prevent [risk], evaluate its design adequacy"</code></td>
+                                <td><strong>No context</strong><br><code>"Is this a good control?"</code></td>
+                                <td>AI lacks information needed to evaluate properly</td>
+                                <td><code>"Evaluate this control [description] designed to prevent [specific risk] in [organization type]. Does it adequately address the risk?"</code></td>
                             </tr>
                             <tr>
-                                <td><strong>Too many tasks</strong></td>
-                                <td><code>"Write finding, recommendation, get management response, and rate the risk"</code></td>
-                                <td>Break into separate prompts for each task</td>
+                                <td><strong>Too many tasks</strong><br><code>"Write finding, get management response, calculate impact"</code></td>
+                                <td>Output becomes scattered and incomplete</td>
+                                <td>Break into 3 separate, focused prompts — one for each deliverable</td>
                             </tr>
                             <tr>
-                                <td><strong>Assuming knowledge</strong></td>
-                                <td><code>"Update the finding per our discussion"</code></td>
-                                <td>Provide the specific changes needed; AI has no memory of your discussion</td>
+                                <td><strong>Assuming prior knowledge</strong><br><code>"Update per our earlier discussion"</code></td>
+                                <td>AI has no memory of prior conversations; each prompt starts fresh</td>
+                                <td>Restate the specific changes needed in the current prompt</td>
                             </tr>
                             <tr>
-                                <td><strong>No format guidance</strong></td>
-                                <td><code>"Give me some interview questions"</code></td>
-                                <td><code>"Provide 10 open-ended interview questions in numbered list format"</code></td>
+                                <td><strong>No format guidance</strong><br><code>"Give me interview questions"</code></td>
+                                <td>Output may be unstructured and unusable</td>
+                                <td><code>"Provide 10 open-ended interview questions in numbered format, each 1–2 sentences, focused on [topic]"</code></td>
                             </tr>
                         </tbody>
                     </table>
@@ -1056,129 +1021,214 @@
             </div>
 
             <div class="card">
-                <h3>Variables & Placeholders</h3>
-                <p>The prompt library uses placeholder variables in double curly braces <code>{{like_this}}</code> to indicate where you should insert engagement-specific information. This makes prompts reusable across different audits.</p>
-                <p style="margin-top:6px;"><strong>Common variables include:</strong></p>
+                <h3>Using Variables for Reusable Prompts</h3>
+                <p>The prompt library uses placeholder variables in double curly braces — <code>{{like_this}}</code> — to make prompts reusable across different audits. Replace these with engagement-specific details:</p>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr><th>Variable</th><th>Description</th><th>Vague Example</th><th>Specific Example</th></tr>
+                            <tr>
+                                <th>Variable</th>
+                                <th>What to Replace It With</th>
+                                <th>Generic Example</th>
+                                <th>Strong Specific Example</th>
+                            </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><code>{{audit_area}}</code></td>
-                                <td>The process, department, or system being audited</td>
-                                <td><code>"payroll"</code></td>
-                                <td><code>"payroll processing for 2,500 employees including faculty, staff, and student workers with bi-weekly and monthly pay cycles"</code></td>
-                            </tr>
-                            <tr>
-                                <td><code>{{process_name}}</code></td>
-                                <td>Specific business process name</td>
-                                <td><code>"procurement"</code></td>
-                                <td><code>"Purchase Requisition to Payment process using Banner ERP"</code></td>
+                                <td>The specific process or system being audited</td>
+                                <td><code>"Payroll"</code></td>
+                                <td><code>"Payroll processing for 2,500 employees (faculty, staff, student workers) with bi-weekly and monthly pay cycles using Banner ERP"</code></td>
                             </tr>
                             <tr>
                                 <td><code>{{organization_type}}</code></td>
-                                <td>Type of organization</td>
-                                <td><code>"university"</code></td>
-                                <td><code>"public R1 research university with a medical center and 35,000 students"</code></td>
+                                <td>Type and key characteristics</td>
+                                <td><code>"University"</code></td>
+                                <td><code>"Public R1 research university with medical center, 35,000 students, $1.8B operating budget"</code></td>
                             </tr>
                             <tr>
                                 <td><code>{{risk_description}}</code></td>
-                                <td>Description of the specific risk</td>
-                                <td><code>"fraud"</code></td>
-                                <td><code>"unauthorized vendor creation and payment to fictitious vendors due to lack of segregation of duties"</code></td>
+                                <td>Specific risk you're addressing</td>
+                                <td><code>"Fraud"</code></td>
+                                <td><code>"Unauthorized vendor creation and fraudulent payments due to lack of segregation of duties between requisition approver and payment processor"</code></td>
                             </tr>
                             <tr>
                                 <td><code>{{audit_period}}</code></td>
-                                <td>Time period covered by the engagement</td>
+                                <td>Specific timeframe covered</td>
                                 <td><code>"FY24"</code></td>
-                                <td><code>"July 1, 2024 through December 31, 2024 (first half of fiscal year)"</code></td>
+                                <td><code>"July 1, 2024 through December 31, 2024 (first six months of fiscal year 2024-25)"</code></td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="callout info" style="margin-top:10px;">
-                    <strong>💡 TIP — Be Specific with Variables:</strong> When replacing variables, provide enough detail for the AI to give a useful response. Specificity in variables directly translates to quality in outputs. The AI cannot fill in gaps you haven't provided.
+                    <strong>💡 Pro Tip:</strong> The more specific you make variable replacements, the better your output. Vague replacements lead to generic results. Specificity compounds.
                 </div>
             </div>
         </section>
 
-        <!-- SECTION 4: Quality Assurance & Professional Judgment -->
+        <!-- SECTION 4: Quality & Professional Judgment -->
         <section id="quality-assurance">
-            <div class="section-title"><span class="num">4</span> Quality Assurance & Professional Judgment</div>
+            <div class="section-title"><span class="num">4</span> AI as a Tool, Not a Replacement</div>
 
             <div class="card accent-left">
-                <h3>The Human-AI Partnership</h3>
-                <p>AI is a tool to <strong>augment, not replace</strong>, professional judgment. The internal auditor remains responsible for all work product quality, regardless of AI assistance. Think of AI as a capable research assistant who can draft content quickly but needs your expert review and refinement.</p>
-                <p style="margin-top:8px;"><strong>Auditor Responsibilities When Using AI:</strong></p>
-                <ul style="padding-left:20px;">
-                    <li>Verify all factual claims, especially policy citations and regulatory references</li>
-                    <li>Ensure outputs align with your organization's specific context and requirements</li>
-                    <li>Apply professional skepticism to AI suggestions just as you would to management assertions</li>
-                    <li>Maintain independence — AI recommendations do not substitute for your professional judgment</li>
-                    <li>Document AI use appropriately per department policies</li>
+                <h3>The Human-AI Partnership in Audit</h3>
+                <p><strong>AI augments your work; it never replaces your professional judgment.</strong> You remain fully responsible for audit quality, methodology compliance, and all conclusions — regardless of AI assistance used.</p>
+                <p style="margin-top:8px;">Think of AI as a capable research assistant who drafts quickly but needs your expert review. Your role: verify, refine, apply professional skepticism, and ensure alignment with audit standards.</p>
+                <p style="margin-top:8px;"><strong>Your Responsibilities When Using AI:</strong></p>
+                <ul style="padding-left:20px;margin-top:6px;">
+                    <li>Verify every factual claim, especially policy citations and regulatory references</li>
+                    <li>Ensure outputs fit your specific audit context and organizational requirements</li>
+                    <li>Apply the same skepticism to AI suggestions as you would to management assertions</li>
+                    <li>Maintain your independence — AI recommendations inform but don't determine your conclusions</li>
+                    <li>Document AI use per department policies and workpaper standards</li>
                 </ul>
             </div>
 
             <div class="card teal-left">
-                <h3>Quality Review Checklist for AI Outputs</h3>
-                <p>Before using any AI-generated content in your audit work, verify each of the following:</p>
+                <h3>AI Output Quality Review Checklist</h3>
+                <p style="margin-bottom:10px;">Before using AI-generated content in audit work, verify each criterion:</p>
                 <ul class="static-checklist">
-                    <li><span class="check-icon">✔</span> <span><strong>Accuracy:</strong> Are all facts, policy references, and standards citations correct? Research and correct — AI may have hallucinated.</span></li>
-                    <li><span class="check-icon">✔</span> <span><strong>Completeness:</strong> Does the output address all aspects of the request? Use follow-up prompt or supplement manually.</span></li>
-                    <li><span class="check-icon">✔</span> <span><strong>Relevance:</strong> Is the content specific to my organization and engagement? Customize generic content; remove irrelevant items.</span></li>
-                    <li><span class="check-icon">✔</span> <span><strong>Objectivity:</strong> Is the language neutral and free from bias? Edit for professional tone; remove opinions.</span></li>
-                    <li><span class="check-icon">✔</span> <span><strong>Clarity:</strong> Will the intended audience understand this? Simplify language; define technical terms.</span></li>
-                    <li><span class="check-icon">✔</span> <span><strong>Consistency:</strong> Does this align with other engagement documentation? Reconcile differences; ensure coherent narrative.</span></li>
-                </ul>
-            </div>
-
-            <div class="card">
-                <h3>Documenting AI Use</h3>
-                <p>Organizations may have varying requirements for documenting AI assistance. At minimum, consider:</p>
-                <ul style="padding-left:20px;">
-                    <li>Noting in workpapers when AI tools were used for significant tasks</li>
-                    <li>Retaining significant prompts and outputs if required by policy</li>
-                    <li>Documenting the verification steps performed on AI output</li>
-                    <li>Identifying which portions of deliverables were AI-assisted vs. original work</li>
+                    <li><span class="check-icon">✔</span> <span><strong>Accuracy:</strong> Are all facts, citations, and references correct? Hallucinations are common — verify everything.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Completeness:</strong> Does it address all aspects of your request? If gaps exist, use follow-up prompts or supplement manually.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Relevance:</strong> Is it specific to your organization and audit scope? Remove generic content; customize for your context.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Objectivity:</strong> Is language neutral and free of bias? Edit for professional tone; remove opinions or unsupported claims.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Clarity:</strong> Will your intended audience understand it? Simplify jargon; define technical terms.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Consistency:</strong> Does it align with other audit documentation? Reconcile any contradictions; ensure coherent narrative.</span></li>
                 </ul>
             </div>
 
             <div class="card red-left">
-                <h3>Avoiding Over-Reliance on AI</h3>
-                <p><strong>PROFESSIONAL DEVELOPMENT CONCERN:</strong> While AI can accelerate work, over-reliance may hinder professional development. New auditors should:</p>
+                <h3>⚠️ The Hallucination Risk</h3>
+                <p><strong>AI systems can generate confident-sounding but completely false information.</strong> This is called "hallucination." Common hallucination scenarios:</p>
+                <ul style="padding-left:20px;margin-top:6px;">
+                    <li>Inventing policy numbers or regulation sections that don't exist</li>
+                    <li>Citing audit standards that don't apply or misrepresenting their requirements</li>
+                    <li>Creating plausible-sounding statistics or data points</li>
+                    <li>Attributing statements to sources that never made them</li>
+                </ul>
+                <p style="margin-top:8px;"><strong>Rule: Verify all factual claims before entering workpapers.</strong> When in doubt, check original sources. Never accept AI citations without verification.</p>
+            </div>
+
+            <div class="card">
+                <h3>Documenting AI Assistance</h3>
+                <p>Your organization may require documentation of AI use. At minimum, consider:</p>
                 <ul style="padding-left:20px;">
-                    <li>Understand the methodology behind prompts before using them</li>
-                    <li>Attempt tasks manually occasionally to build foundational skills</li>
-                    <li>Use methodology notes as learning opportunities</li>
-                    <li>Discuss AI outputs with supervisors to calibrate judgment</li>
+                    <li>Noting in workpaper footnotes when AI tools assisted with significant drafting or analysis</li>
+                    <li>Retaining key prompts and outputs if required by your audit documentation policy</li>
+                    <li>Documenting verification steps performed on AI-generated content</li>
+                    <li>Clearly identifying which portions are AI-assisted vs. original audit work</li>
+                </ul>
+                <p style="margin-top:8px;"><strong>Check with your supervisor or audit manager regarding your department's specific documentation standards.</strong></p>
+            </div>
+
+            <div class="card teal-left">
+                <h3>Supervisor Review of AI-Assisted Work</h3>
+                <p>If you're a supervisor reviewing work involving AI, ask:</p>
+                <ul style="padding-left:20px;">
+                    <li>How was AI used and what specific verification was performed?</li>
+                    <li>Can the auditor explain and defend the work product?</li>
+                    <li>Were factual claims and citations spot-checked?</li>
+                    <li>Is the work appropriately tailored to our specific audit context?</li>
+                    <li>Did the auditor apply professional judgment or accept output uncritically?</li>
+                </ul>
+                <p style="margin-top:8px;">Use AI-assisted work as a coaching opportunity. Calibrate the auditor's judgment and develop their understanding of effective tool use.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Sun Life Asks Specific Guidance -->
+        <section id="sunlife-asks">
+            <div class="section-title"><span class="num">5</span> Optimizing Sun Life Asks for Audit Work</div>
+
+            <div class="card accent-left">
+                <h3>What Makes Sun Life Asks Different</h3>
+                <p>Sun Life Asks is purpose-built for our audit environment. It understands Internal Audit Manual methodology, has access to AML audit resources, and can handle large, complex documents. Key advantages:</p>
+                <ul style="padding-left:20px;margin-top:6px;">
+                    <li>Supports prompts up to 250,000 characters (vs. 4,000 in Copilot)</li>
+                    <li>Processes multiple large files simultaneously (PDF, Word, Excel)</li>
+                    <li>Built with knowledge of our audit methodology and standards</li>
+                    <li>Integrates with our secure technology ecosystem</li>
+                    <li>Designed for detailed audit findings, risk analysis, and methodology research</li>
                 </ul>
             </div>
 
             <div class="card teal-left">
-                <h3>Supervisor Review Considerations</h3>
-                <p>Supervisors reviewing AI-assisted work should:</p>
+                <h3>Three Core Sun Life Asks Intents</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Intent</th>
+                                <th>Purpose</th>
+                                <th>Best For</th>
+                                <th>Input Method</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Knowledge Base Q&A</strong></td>
+                                <td>Ask questions about Internal Audit Methodology, AML audit best practices, or policy guidance</td>
+                                <td>Research, methodology questions, guidance on audit approach</td>
+                                <td>Type your question directly; no file upload needed</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Draft Audit Findings</strong></td>
+                                <td>Transform raw audit observations into formal finding write-ups aligned with audit standards</td>
+                                <td>Converting field notes into polished findings ready for reporting</td>
+                                <td>Upload raw findings document OR paste findings into content window</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Control Gap Assessment</strong></td>
+                                <td>Compare multiple policy/control documents to identify gaps and inconsistencies</td>
+                                <td>Control design review, policy alignment, identifying coverage gaps</td>
+                                <td>Upload multiple PDF files; tool compares all simultaneously</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Effective Prompting for Sun Life Asks</h3>
+                <p><strong>Specify your data source explicitly.</strong> Sun Life Asks works with multiple data sources. Be clear which to use:</p>
+                <div class="code-block">✓ FROM Internal Audit Manual: "Based on the Internal Audit Manual, what are the key documentation requirements for a scope limitation?"
+
+✓ FROM AML Audit Data: "Based on Key Controls data, list all controls found ineffective in 2024 AML audits."
+
+✓ FROM Audit Reports: "Using audit reports from 2024–2025, what were the top three findings across all Canada audits?"</div>
+                <p style="margin-top:8px;"><strong>Be specific in your knowledge questions.</strong> Include timeframe, business unit, and specific data points:</p>
+                <div class="code-block">✓ STRONG: "Based on APO data, provide a list of all completed AML audits in the US business unit from 2023–2024, including audit scope and findings count."
+
+✗ WEAK: "Tell me about completed audits"</div>
+            </div>
+
+            <div class="card accent-left">
+                <h3>Sun Life Asks Prompting Tips</h3>
                 <ul style="padding-left:20px;">
-                    <li>Ask how AI was used and what verification was performed</li>
-                    <li>Spot-check factual claims, especially policy and regulation references</li>
-                    <li>Ensure the auditor can explain and defend the work product</li>
-                    <li>Verify that professional judgment was applied, not just AI output accepted</li>
-                    <li>Coach on effective AI use as part of professional development</li>
+                    <li><strong>Use document-specific language:</strong> Refer to terms as they appear in source documents (e.g., "Audit Opinion," "Expected Completion Date," "Suspicious Transactions Monitoring")</li>
+                    <li><strong>Add filters and constraints:</strong> "ONLY from Audit Reports," "Completed audits only," "2024 audits," "Include risk ratings"</li>
+                    <li><strong>Restate context in each prompt:</strong> Since context history is disabled, each prompt starts fresh — provide necessary background</li>
+                    <li><strong>For file uploads, be explicit:</strong> Specify which files to analyze — use checkboxes to select/deselect before submitting</li>
+                    <li><strong>Start a new chat for unrelated questions:</strong> This ensures a clean slate and prevents context contamination</li>
                 </ul>
+            </div>
+
+            <div class="callout warning">
+                <strong>🔒 VPN Required:</strong> Sun Life Asks requires an active VPN connection. Without it, authentication will fail and the tool won't load. Ensure you're connected before attempting to access the platform at <code>https://corpitgenai.sunlifecorp.com/internalauditasks-ui/</code>
             </div>
         </section>
 
         <!-- Key Takeaways -->
         <section id="takeaways">
-            <div class="section-title"><span class="num">★</span> Key Takeaways</div>
+            <div class="section-title"><span class="num">★</span> Key Takeaways for Auditors</div>
+
             <div class="card accent-left">
-                <h3>Remember These Principles</h3>
-                <div class="craft-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                <h3>Five Core Principles</h3>
+                <div class="craft-grid" style="grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));">
                     <div class="craft-item" style="text-align:center;">
                         <span style="font-size:2rem;">🎯</span>
                         <h4>Be Specific</h4>
-                        <p style="font-size:0.82rem;">Vague prompts produce generic outputs. Specific instructions produce targeted results.</p>
+                        <p style="font-size:0.82rem;">Vague prompts yield generic outputs. Specific instructions produce targeted, actionable results.</p>
                     </div>
                     <div class="craft-item" style="text-align:center;">
                         <span style="font-size:2rem;">📋</span>
@@ -1188,17 +1238,23 @@
                     <div class="craft-item" style="text-align:center;">
                         <span style="font-size:2rem;">🔍</span>
                         <h4>Always Verify</h4>
-                        <p style="font-size:0.82rem;">AI can hallucinate. Every factual claim must be checked before it enters your workpapers.</p>
+                        <p style="font-size:0.82rem;">AI hallucination is real. Every factual claim must be verified before entering your workpapers.</p>
                     </div>
                     <div class="craft-item" style="text-align:center;">
                         <span style="font-size:2rem;">👤</span>
-                        <h4>You Are Responsible</h4>
-                        <p style="font-size:0.82rem;">AI augments your work but never replaces your professional judgment and skepticism.</p>
+                        <h4>Own Your Work</h4>
+                        <p style="font-size:0.82rem;">AI augments your effort but never replaces your judgment, independence, or professional responsibility.</p>
+                    </div>
+                    <div class="craft-item" style="text-align:center;">
+                        <span style="font-size:2rem;">⚡</span>
+                        <h4>Choose the Right Tool</h4>
+                        <p style="font-size:0.82rem;">Copilot for quick edits in Microsoft apps. Sun Life Asks for complex audit analysis and research.</p>
                     </div>
                 </div>
             </div>
+
             <div class="quote-box">
-                <strong>Final Thought:</strong> Prompt engineering is not about learning a complex technical skill — it's about communicating clearly. The same skills that make you an effective auditor (precision, skepticism, thoroughness) make you an effective prompt engineer. Every word in your prompt matters, just as every piece of evidence in your workpapers matters.
+                <strong>Final Thought:</strong> Prompt engineering is fundamentally about communication precision. The same skills that make you an effective auditor — clarity, rigor, skepticism, thoroughness — make you effective at prompting AI. Every word matters. Ask what you actually need, provide sufficient context, and always verify the result.
             </div>
         </section>
 
@@ -1206,8 +1262,9 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p>Internal Audit Department · AI Prompt Engineering Training Manual · Version 1.1 · January 2026</p>
-        <p style="margin-top:2px;">Aligned with IIA Global Internal Audit Standards (2025) · Designed for SharePoint Compatibility</p>
+        <p>Internal Audit Department · Prompt Engineering Training Manual · Version 2.0 · June 2026</p>
+        <p style="margin-top:4px;">Aligned with IIA Global Internal Audit Standards (2025) · Sun Life Approved AI Tools</p>
+        <p style="margin-top:4px;font-size:0.76rem;opacity:0.8;">For questions or feedback, contact your Internal Audit Manager</p>
     </footer>
 
 </body>
