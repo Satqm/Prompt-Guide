@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Internal Audit AI Prompt & Agent Library</title>
+    <title>Internal Audit AI Prompt Engineering – Training Manual</title>
     <style>
         :root {
             --dark-teal: #003946;
@@ -14,11 +14,15 @@
             --alert-red: #E63946;
             --card-white: #FFFFFF;
             --text: #1A2E35;
-            --shadow-sm: 0 2px 8px rgba(0, 35, 45, 0.06);
-            --shadow-md: 0 6px 20px rgba(0, 35, 45, 0.10);
-            --shadow-lg: 0 12px 32px rgba(0, 35, 45, 0.14);
+            --text-light: #2d4a54;
+            --border: #dde6ea;
+            --shadow-sm: 0 2px 8px rgba(0, 35, 45, 0.05);
+            --shadow-md: 0 6px 20px rgba(0, 35, 45, 0.08);
+            --shadow-lg: 0 12px 32px rgba(0, 35, 45, 0.10);
+            --radius-sm: 8px;
             --radius: 14px;
-            --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --radius-lg: 18px;
+            --transition: 0.25s ease;
         }
 
         * {
@@ -27,7 +31,10 @@
             box-sizing: border-box;
         }
 
-        html { scroll-behavior: smooth; }
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 20px;
+        }
 
         body {
             font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -35,482 +42,502 @@
             color: var(--text);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
-        }
-
-        /* ── Scroll Progress ── */
-        #scroll-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            height: 4px;
-            background: var(--accent-gold);
-            z-index: 10000;
-            width: 0%;
-            transition: width 0.1s linear;
+            font-size: 15px;
         }
 
         /* ── Header ── */
         .header {
-            background: linear-gradient(145deg, var(--dark-teal) 0%, #002530 60%, var(--secondary-teal) 100%);
+            background: linear-gradient(150deg, var(--dark-teal) 0%, #00232e 55%, var(--secondary-teal) 100%);
             color: #fff;
-            padding: 50px 24px 50px;
+            padding: 44px 24px 52px;
             text-align: center;
             position: relative;
             overflow: hidden;
         }
-
         .header::before {
             content: '';
             position: absolute;
-            top: -60%;
+            top: -50%;
             left: -20%;
             width: 140%;
-            height: 200%;
-            background: radial-gradient(ellipse at 30% 50%, rgba(254, 190, 16, 0.08) 0%, transparent 60%);
-            animation: headerPulse 8s ease-in-out infinite;
+            height: 180%;
+            background: radial-gradient(ellipse at 30% 50%, rgba(254, 190, 16, 0.06) 0%, transparent 60%),
+                radial-gradient(ellipse at 70% 30%, rgba(0, 95, 117, 0.20) 0%, transparent 55%);
+            pointer-events: none;
         }
-
-        @keyframes headerPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
-        }
-
         .header-content {
             position: relative;
             z-index: 1;
-            max-width: 900px;
+            max-width: 860px;
             margin: 0 auto;
         }
-
-        .header h1 {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin-bottom: 10px;
-        }
-
-        .header h1 span { color: var(--accent-gold); }
-
-        .header p {
-            font-size: 1rem;
-            opacity: 0.9;
-            margin-bottom: 6px;
-        }
-
-        /* ── Container ── */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 40px 20px 60px;
-        }
-
-        /* ── Landing Grid ── */
-        .landing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 24px;
-            margin-bottom: 40px;
-        }
-
-        .landing-card {
-            background: var(--card-white);
-            border-radius: var(--radius);
-            padding: 36px 28px;
-            box-shadow: var(--shadow-md);
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-
-        .landing-card:hover {
-            transform: translateY(-8px);
-            box-shadow: var(--shadow-lg);
-            border-color: var(--accent-gold);
-        }
-
-        .landing-card .icon {
-            font-size: 3.5rem;
-            margin-bottom: 16px;
-        }
-
-        .landing-card h3 {
-            font-size: 1.4rem;
-            color: var(--dark-teal);
-            margin-bottom: 8px;
-        }
-
-        .landing-card p {
-            font-size: 0.95rem;
-            color: #5a7079;
-            margin-bottom: 24px;
-        }
-
-        /* ── Button ── */
-        .btn {
+        .header .badge {
             display: inline-block;
-            padding: 11px 26px;
-            border-radius: 24px;
-            font-weight: 700;
-            cursor: pointer;
-            border: none;
-            font-size: 0.9rem;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-
-        .btn-gold {
             background: var(--accent-gold);
             color: var(--dark-teal);
+            font-weight: 800;
+            font-size: 0.82rem;
+            letter-spacing: 0.06em;
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+        .header h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+            margin-bottom: 8px;
+        }
+        .header h1 span {
+            color: var(--accent-gold);
+        }
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+        .header .meta {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            letter-spacing: 0.03em;
+        }
+        .header .version-pill {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.10);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            padding: 4px 13px;
+            border-radius: 16px;
+            font-size: 0.76rem;
+            margin-top: 10px;
+            letter-spacing: 0.03em;
         }
 
-        .btn-gold:hover {
-            background: #e5ab0a;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(254, 190, 16, 0.35);
+        /* ── Stats Strip ── */
+        .stats-strip {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 16px;
+            margin-top: -28px;
+            position: relative;
+            z-index: 2;
+            padding: 0 16px;
+        }
+        .stat-card {
+            background: var(--card-white);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            box-shadow: var(--shadow-md);
+            text-align: center;
+            min-width: 100px;
+            flex: 1;
+            max-width: 170px;
+            transition: var(--transition);
+            border: 1px solid #e8eff1;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        .stat-card .stat-num {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--dark-teal);
+            line-height: 1.1;
+        }
+        .stat-card .stat-label {
+            font-size: 0.72rem;
+            color: #5a7079;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+        .stat-card.accent .stat-num {
+            color: #b88600;
         }
 
-        .btn-teal {
-            background: var(--secondary-teal);
-            color: #fff;
-        }
-
-        .btn-teal:hover {
-            background: #004d5e;
-            transform: translateY(-2px);
+        /* ── Main Container ── */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 28px 18px 50px;
         }
 
         /* ── Section Title ── */
         .section-title {
-            font-size: 2rem;
+            font-size: 1.6rem;
             font-weight: 800;
             color: var(--dark-teal);
-            margin: 40px 0 24px;
+            margin: 36px 0 14px;
+            position: relative;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
-
-        .section-title .badge {
+        .section-title .num {
             background: var(--accent-gold);
             color: var(--dark-teal);
-            width: 45px;
-            height: 45px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1rem;
             font-weight: 800;
-            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, #d0dde2, transparent);
+            margin-left: 6px;
+            border-radius: 2px;
         }
 
         /* ── Card ── */
         .card {
             background: var(--card-white);
-            border-radius: var(--radius);
-            padding: 28px;
-            margin: 20px 0;
+            border-radius: var(--radius-lg);
+            padding: 24px 26px;
+            margin: 14px 0;
             box-shadow: var(--shadow-sm);
             border: 1px solid #e4ecef;
             transition: var(--transition);
+            position: relative;
+            overflow: hidden;
         }
-
         .card:hover {
             box-shadow: var(--shadow-md);
+            border-color: #d0dde2;
         }
-
         .card.accent-left {
             border-left: 5px solid var(--accent-gold);
         }
-
         .card.teal-left {
             border-left: 5px solid var(--secondary-teal);
         }
-
+        .card.red-left {
+            border-left: 5px solid var(--alert-red);
+        }
+        .card.green-left {
+            border-left: 5px solid var(--success-green);
+        }
         .card h3 {
             color: var(--dark-teal);
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
-
         .card h4 {
             color: var(--secondary-teal);
             font-weight: 700;
-            margin: 16px 0 8px;
+            margin: 10px 0 5px;
         }
-
         .card p {
-            margin-bottom: 12px;
+            margin: 5px 0;
+            color: var(--text-light);
+        }
+        .card ul,
+        .card ol {
+            padding-left: 20px;
+            color: var(--text-light);
+        }
+        .card ul li,
+        .card ol li {
+            margin: 4px 0;
         }
 
-        .card ul {
-            margin-left: 20px;
-            margin-top: 8px;
-        }
-
-        .card li {
-            margin-bottom: 6px;
-        }
-
-        /* ── Tabs ── */
-        .tabs {
-            display: flex;
-            gap: 0;
-            border-bottom: 2px solid #e4ecef;
-            margin: 28px 0 18px;
-            overflow-x: auto;
-        }
-
-        .tab-btn {
-            padding: 12px 20px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            font-weight: 700;
-            color: #5a7079;
-            border-bottom: 3px solid transparent;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .tab-btn:hover {
-            color: var(--secondary-teal);
-        }
-
-        .tab-btn.active {
-            color: var(--dark-teal);
-            border-bottom-color: var(--accent-gold);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* ── Prompt Card ── */
-        .prompt-card {
+        /* ── Details (Native Accordion) ── */
+        details.accordion {
+            margin: 6px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid #e4ecef;
             background: var(--card-white);
-            border: 1px solid #e4ecef;
-            border-radius: var(--radius);
-            padding: 18px;
-            margin-bottom: 14px;
-            transition: var(--transition);
-        }
-
-        .prompt-card:hover {
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-gold);
-        }
-
-        .prompt-title {
-            font-weight: 700;
-            color: var(--dark-teal);
-            font-size: 1.05rem;
-            margin-bottom: 6px;
-        }
-
-        .prompt-meta {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
-        }
-
-        .prompt-desc {
-            font-size: 0.9rem;
-            color: #5a7079;
-            margin-bottom: 12px;
-        }
-
-        /* ── Tags ── */
-        .tag {
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            margin: 2px 4px 2px 0;
-        }
-
-        .tag.beginner { background: #d4f0d9; color: #1a5c28; }
-        .tag.intermediate { background: #fef3c7; color: #7a5e00; }
-        .tag.advanced { background: #fde0e3; color: #8b1a24; }
-        .tag.planning { background: #d1e7f5; color: #003f87; }
-        .tag.fieldwork { background: #e3f2d1; color: #2d5a0f; }
-        .tag.reporting { background: #f5e1d1; color: #8b4513; }
-        .tag.followup { background: #f0d1f5; color: #4a1d6b; }
-
-        /* ── Accordion ── */
-        .accordion {
-            margin: 8px 0;
-            border-radius: var(--radius);
             overflow: hidden;
-            border: 1px solid #e4ecef;
         }
-
-        .accordion-header {
-            padding: 14px 16px;
+        details.accordion summary {
+            padding: 14px 18px;
             cursor: pointer;
             font-weight: 700;
+            font-size: 1rem;
             color: var(--dark-teal);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            transition: var(--transition);
             background: #fafcfc;
-            transition: var(--transition);
+            user-select: none;
+            list-style: none;
         }
-
-        .accordion-header:hover {
-            background: #f2f7f8;
+        details.accordion summary::-webkit-details-marker {
+            display: none;
         }
-
-        .accordion-header .arrow {
-            transition: var(--transition);
+        details.accordion summary::after {
+            content: '▼';
+            font-size: 0.75rem;
             color: var(--secondary-teal);
+            transition: var(--transition);
         }
-
-        .accordion.open .accordion-header .arrow {
+        details.accordion[open] summary::after {
             transform: rotate(180deg);
         }
-
-        .accordion-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.45s ease;
-            padding: 0 16px;
+        details.accordion summary:hover {
+            background: #f2f7f8;
         }
-
-        .accordion.open .accordion-body {
-            max-height: 2000px;
-            padding: 14px 16px;
+        details.accordion .accordion-body {
+            padding: 14px 18px;
+            border-top: 1px solid #eef3f5;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
         }
 
         /* ── Table ── */
         .table-wrap {
             overflow-x: auto;
-            border-radius: var(--radius);
+            margin: 10px 0;
+            border-radius: var(--radius-sm);
             border: 1px solid #e4ecef;
-            margin: 16px 0;
+            -webkit-overflow-scrolling: touch;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            min-width: 560px;
         }
-
         th {
             background: var(--dark-teal);
             color: #fff;
-            padding: 12px 14px;
+            padding: 11px 13px;
             text-align: left;
             font-weight: 700;
+            letter-spacing: 0.03em;
+            font-size: 0.76rem;
             text-transform: uppercase;
-            font-size: 0.8rem;
         }
-
         td {
-            padding: 10px 14px;
+            padding: 9px 13px;
             border-bottom: 1px solid #eef3f5;
+            vertical-align: top;
+            color: var(--text-light);
         }
-
         tr:nth-child(even) td {
             background: #f9fbfc;
         }
+        tr:last-child td {
+            border-bottom: none;
+        }
 
-        /* ── Form ── */
-        .form-group {
+        /* ── CRAFT Framework Static ── */
+        .craft-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin: 12px 0;
         }
-
-        @media (max-width: 700px) {
-            .form-group {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .form-group.full {
-            grid-column: 1 / -1;
-        }
-
-        .form-field {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        label {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: var(--secondary-teal);
-        }
-
-        input, textarea, select {
-            padding: 12px 14px;
-            border: 2px solid #dde6e9;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 0.9rem;
-            transition: var(--transition);
+        .craft-item {
             background: #fafcfc;
+            border: 2px solid #e4ecef;
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            transition: var(--transition);
         }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
+        .craft-item:hover {
             border-color: var(--accent-gold);
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.08);
+            box-shadow: 0 0 0 4px rgba(254, 190, 16, 0.05);
+        }
+        .craft-item .craft-letter {
+            display: inline-block;
+            background: var(--accent-gold);
+            color: var(--dark-teal);
+            font-weight: 800;
+            font-size: 1.1rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 34px;
+            margin-bottom: 6px;
+        }
+        .craft-item h4 {
+            color: var(--dark-teal);
+            margin: 0 0 3px;
+            font-size: 1rem;
+        }
+        .craft-item .craft-question {
+            font-size: 0.8rem;
+            color: #5a7079;
+            font-style: italic;
+            margin-bottom: 4px;
+        }
+        .craft-item .craft-example {
+            font-size: 0.8rem;
+            color: var(--secondary-teal);
+            background: #f0f7f9;
+            padding: 6px 10px;
+            border-radius: 6px;
+            margin-top: 6px;
+            line-height: 1.4;
         }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
+        /* ── Quote Box ── */
+        .quote-box {
+            background: #fefdf6;
+            border-left: 5px solid var(--accent-gold);
+            padding: 16px 20px;
+            margin: 14px 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-style: italic;
+            color: #5a4a1a;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+        .quote-box strong {
+            color: var(--dark-teal);
+            font-style: normal;
         }
 
-        /* ── Modal ── */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 11000;
+        /* ── Flow Diagram (CSS Only) ── */
+        .flow-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
             align-items: center;
             justify-content: center;
+            margin: 14px 0;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
+        .flow-step {
             background: var(--card-white);
-            border-radius: var(--radius);
-            padding: 30px;
-            max-width: 85%;
-            max-height: 85vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-            position: relative;
+            border: 2px solid #e4ecef;
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            text-align: center;
+            min-width: 120px;
+            box-shadow: var(--shadow-sm);
+        }
+        .flow-step.bad {
+            border-color: #f5c6cb;
+            background: #fff8f8;
+            color: #8b1a24;
+        }
+        .flow-step.good {
+            border-color: #c3e6cd;
+            background: #f8fdf9;
+            color: #1a5c28;
+        }
+        .flow-arrow {
+            font-size: 1.3rem;
+            color: #8899a0;
+            font-weight: 400;
+        }
+        .flow-label {
+            text-align: center;
+            font-weight: 800;
+            font-size: 0.9rem;
+            margin: 4px 0;
+            width: 100%;
+        }
+        .flow-label.bad-label {
+            color: var(--alert-red);
+        }
+        .flow-label.good-label {
+            color: var(--success-green);
+        }
+        .flow-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            margin: 8px 0;
         }
 
-        .modal-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text);
+        /* ── Tags ── */
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            margin: 2px 3px;
+            white-space: nowrap;
+        }
+        .tag.teal {
+            background: #d6eaf8;
+            color: #1a3f5c;
+        }
+        .tag.gold {
+            background: #fef3c7;
+            color: #7a5e00;
+        }
+        .tag.red {
+            background: #fde0e3;
+            color: #8b1a24;
+        }
+        .tag.green {
+            background: #d4f0d9;
+            color: #1a5c28;
+        }
+
+        /* ── Highlight Box ── */
+        .highlight-box {
+            background: #fefdf6;
+            border: 2px solid var(--accent-gold);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            margin: 12px 0;
+        }
+        .highlight-box h4 {
+            color: var(--dark-teal);
+            margin-bottom: 4px;
+        }
+        .highlight-box p {
+            color: var(--text-light);
+            margin: 3px 0;
+        }
+
+        /* ── Checklist Static ── */
+        .static-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0;
+        }
+        .static-checklist li {
+            padding: 8px 12px;
+            margin: 3px 0;
+            background: #fafcfc;
+            border-radius: var(--radius-sm);
+            border: 1px solid #eef3f5;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.88rem;
+            color: var(--text-light);
+        }
+        .static-checklist li .check-icon {
+            color: var(--success-green);
+            font-weight: 800;
+            flex-shrink: 0;
+            font-size: 1rem;
+        }
+
+        /* ── Inline Code ── */
+        code {
+            background: #f0f4f5;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-family: 'SF Mono', 'Consolas', 'Courier New', monospace;
+            font-size: 0.85em;
+            color: var(--secondary-teal);
+            letter-spacing: 0.01em;
         }
 
         /* ── Footer ── */
@@ -518,787 +545,670 @@
             background: var(--dark-teal);
             color: #fff;
             text-align: center;
-            padding: 30px 20px;
-            font-size: 0.85rem;
+            padding: 26px 18px;
+            font-size: 0.82rem;
             opacity: 0.9;
+            letter-spacing: 0.03em;
+            margin-top: 20px;
+        }
+        .footer p {
+            margin: 2px 0;
         }
 
-        /* ── Toast ── */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-teal);
-            color: #fff;
-            padding: 12px 24px;
-            border-radius: 30px;
-            font-weight: 700;
-            z-index: 10001;
-            opacity: 0;
-            transition: opacity 0.4s;
-            box-shadow: var(--shadow-lg);
+        /* ── Callout ── */
+        .callout {
+            padding: 14px 18px;
+            border-radius: var(--radius-sm);
+            margin: 10px 0;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .callout.warning {
+            background: #fff8f5;
+            border: 2px solid var(--alert-red);
+            color: #6b1a20;
+        }
+        .callout.info {
+            background: #f5fafb;
+            border: 2px solid var(--secondary-teal);
+            color: #1a3f55;
+        }
+        .callout.success {
+            background: #f8fdf9;
+            border: 2px solid var(--success-green);
+            color: #1a4a28;
+        }
+        .callout strong {
+            color: var(--dark-teal);
         }
 
-        .toast.show {
-            opacity: 1;
-        }
-
-        /* ── Page Visibility ── */
-        .page {
-            display: none;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        .reveal {
-            opacity: 0;
-            animation: revealIn 0.6s ease forwards;
-        }
-
-        @keyframes revealIn {
-            to {
-                opacity: 1;
-            }
-        }
-
-        @media (max-width: 600px) {
+        /* ── Responsive ── */
+        @media (max-width: 640px) {
             .header h1 {
-                font-size: 1.8rem;
+                font-size: 1.5rem;
             }
-
-            .landing-grid {
+            .card {
+                padding: 16px 14px;
+            }
+            .section-title {
+                font-size: 1.25rem;
+            }
+            .stats-strip {
+                gap: 8px;
+                margin-top: -20px;
+            }
+            .stat-card {
+                padding: 10px 12px;
+                min-width: 70px;
+                max-width: 110px;
+            }
+            .stat-card .stat-num {
+                font-size: 1.2rem;
+            }
+            .craft-grid {
                 grid-template-columns: 1fr;
             }
+            .flow-diagram {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .flow-arrow {
+                transform: rotate(90deg);
+                text-align: center;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            th,
+            td {
+                padding: 7px 8px;
+            }
+        }
 
-            .section-title {
-                font-size: 1.4rem;
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+            }
+            .header {
+                background: var(--dark-teal);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .card {
+                box-shadow: none;
+                border: 1px solid #ccc;
+                break-inside: avoid;
+            }
+            .stats-strip {
+                break-inside: avoid;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- Scroll Progress -->
-    <div id="scroll-progress"></div>
-
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <h1>Internal Audit <span>AI Prompt & Agent Library</span></h1>
-            <p>Your Resource for Effective Prompts, Best Practices & AI-Enhanced Auditing</p>
-            <p style="font-size: 0.9rem; opacity: 0.8;">Aligned with IIA Global Internal Audit Standards (2025)</p>
+            <div class="badge">📘 Internal Audit Training</div>
+            <h1>Prompt Engineering <span>for Auditors</span></h1>
+            <p class="subtitle">How to Write Better Prompts for More Reliable AI Outputs</p>
+            <p class="meta">A Practical Guide to Large Language Models & Effective Prompting · Internal Audit Department</p>
+            <span class="version-pill">January 2026 · Version 1.1</span>
         </div>
     </header>
+
+    <!-- Stats Strip -->
+    <div class="stats-strip">
+        <div class="stat-card">
+            <div class="stat-num">5</div>
+            <div class="stat-label">CRAFT Elements</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">4</div>
+            <div class="stat-label">Key Prompt Factors</div>
+        </div>
+        <div class="stat-card accent">
+            <div class="stat-num">8.4<span style="font-size:0.7em;">/10</span></div>
+            <div class="stat-label">Quality Score (150+ words)</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">44</div>
+            <div class="stat-label">Library Prompts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-num">IIA 2025</div>
+            <div class="stat-label">Standards Aligned</div>
+        </div>
+    </div>
 
     <!-- Main Content -->
     <main class="container">
 
-        <!-- ==================== LANDING PAGE ==================== -->
-        <div id="landing-page" class="page active reveal">
-            <div class="landing-grid">
-                <!-- Card 1: Submit -->
-                <div class="landing-card" onclick="switchPage('submit-prompt')">
-                    <div class="icon">✏️</div>
-                    <h3>Submit New Prompt</h3>
-                    <p>Contribute a prompt or AI agent to the library and help your colleagues</p>
-                    <button class="btn btn-gold">Submit →</button>
-                </div>
-
-                <!-- Card 2: Browse -->
-                <div class="landing-card" onclick="switchPage('view-prompts')">
-                    <div class="icon">📚</div>
-                    <h3>Browse Prompts & Agents</h3>
-                    <p>Explore curated prompts organized by audit phase and type</p>
-                    <button class="btn btn-gold">Browse →</button>
-                </div>
-
-                <!-- Card 3: Learn -->
-                <div class="landing-card" onclick="switchPage('best-practices')">
-                    <div class="icon">💡</div>
-                    <h3>Best Practices & Learning</h3>
-                    <p>Master prompt engineering and common mistakes to avoid</p>
-                    <button class="btn btn-gold">Learn →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== SUBMIT PROMPT PAGE ==================== -->
-        <div id="submit-prompt" class="page reveal">
-            <button class="btn btn-teal" onclick="switchPage('landing-page')">← Back</button>
-            <div class="section-title">
-                <span class="badge">✏️</span> Submit Prompt or Agent
-            </div>
+        <!-- SECTION 1: Why Prompt Quality Matters -->
+        <section id="why-quality">
+            <div class="section-title"><span class="num">1</span> Why Prompt Quality Matters</div>
 
             <div class="card accent-left">
-                <h3>Contribute to the Library</h3>
-                <p>Share prompts and AI agents that enhance internal audit work. All submissions are reviewed by the audit team before publication.</p>
-            </div>
-
-            <form id="prompt-form" style="background: var(--card-white); padding: 28px; border-radius: var(--radius); box-shadow: var(--shadow-sm);">
-                <h4 style="color: var(--dark-teal); margin-bottom: 16px; font-size: 1.1rem;">📋 Information</h4>
-
-                <div class="form-group">
-                    <div class="form-field">
-                        <label for="prompt-title">Title *</label>
-                        <input type="text" id="prompt-title" placeholder="e.g., Risk Assessment for Accounts Payable" required>
-                    </div>
-                    <div class="form-field">
-                        <label for="audit-stage">Audit Stage *</label>
-                        <select id="audit-stage" required>
-                            <option value="">-- Select --</option>
-                            <option value="planning">Planning</option>
-                            <option value="fieldwork">Fieldwork</option>
-                            <option value="reporting">Reporting</option>
-                            <option value="followup">Follow-Up</option>
-                        </select>
-                    </div>
+                <h3>The Same AI Can Produce Very Different Results</h3>
+                <p>One of the biggest misconceptions about AI is that output quality depends only on the model. In reality:</p>
+                <div class="quote-box">
+                    <strong>The same AI model can generate dramatically different outputs depending on the quality of the prompt.</strong>
                 </div>
-
-                <div class="form-group">
-                    <div class="form-field">
-                        <label for="prompt-type">Type *</label>
-                        <select id="prompt-type" required>
-                            <option value="">-- Select --</option>
-                            <option value="prompt">Prompt</option>
-                            <option value="agent">AI Agent</option>
-                        </select>
-                    </div>
-                    <div class="form-field">
-                        <label for="skill-level">Skill Level *</label>
-                        <select id="skill-level" required>
-                            <option value="">-- Select --</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advanced">Advanced</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="form-group full">
-                    <div class="form-field">
-                        <label for="prompt-description">Description (150-300 words) *</label>
-                        <textarea id="prompt-description" placeholder="What does this do? When would you use it?" required></textarea>
-                    </div>
-                </div>
-
-                <h4 style="color: var(--dark-teal); margin: 24px 0 16px; font-size: 1.1rem;">📝 Content</h4>
-
-                <div class="form-group full">
-                    <div class="form-field">
-                        <label for="prompt-text">Full Prompt Text *</label>
-                        <textarea id="prompt-text" placeholder="Paste your complete prompt. Use {{variable}} for placeholders." required></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group full">
-                    <div class="form-field">
-                        <label for="example-output">Example Output (Optional)</label>
-                        <textarea id="example-output" placeholder="Show what good output looks like..."></textarea>
-                    </div>
-                </div>
-
-                <h4 style="color: var(--dark-teal); margin: 24px 0 16px; font-size: 1.1rem;">👤 Your Info</h4>
-
-                <div class="form-group">
-                    <div class="form-field">
-                        <label for="submitter-name">Your Name *</label>
-                        <input type="text" id="submitter-name" required>
-                    </div>
-                    <div class="form-field">
-                        <label for="submitter-email">Your Email *</label>
-                        <input type="email" id="submitter-email" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-gold" style="width: 100%; padding: 14px; font-size: 1rem; margin-top: 20px;">
-                    Submit to Library
-                </button>
-            </form>
-        </div>
-
-        <!-- ==================== BROWSE PROMPTS PAGE ==================== -->
-        <div id="view-prompts" class="page reveal">
-            <button class="btn btn-teal" onclick="switchPage('landing-page')">← Back</button>
-            <div class="section-title">
-                <span class="badge">📚</span> Browse Prompts & Agents
+                <p>A prompt acts like a set of instructions given to an employee. The clearer the instructions, the more useful the result. Ambiguity is the enemy of quality output.</p>
             </div>
 
             <div class="card teal-left">
-                <h3>Explore Our Library</h3>
-                <p>All prompts are organized by audit phase. Select a phase to view available prompts.</p>
+                <h3>What Research Consistently Shows</h3>
+                <p>Industry guidance from OpenAI, Anthropic, and other AI providers repeatedly highlights <strong>four factors</strong> that improve output quality:</p>
+                <ol style="padding-left:20px;margin-top:6px;">
+                    <li><strong>Clear context</strong> — background information the AI needs</li>
+                    <li><strong>Specific instructions</strong> — precise task description</li>
+                    <li><strong>Defined output format</strong> — structure and length requirements</li>
+                    <li><strong>Examples of desired responses</strong> — models to follow</li>
+                </ol>
+                <p style="margin-top:8px;">Prompts containing these elements consistently outperform vague requests. The point is not that the AI becomes smarter — <strong>the point is that ambiguity decreases.</strong></p>
             </div>
 
-            <!-- Tabs for Phases -->
-            <div class="tabs">
-                <button class="tab-btn active" onclick="switchTab(event, 'planning-tab')">📋 Planning</button>
-                <button class="tab-btn" onclick="switchTab(event, 'fieldwork-tab')">🔍 Fieldwork</button>
-                <button class="tab-btn" onclick="switchTab(event, 'reporting-tab')">📄 Reporting</button>
-                <button class="tab-btn" onclick="switchTab(event, 'followup-tab')">✅ Follow-Up</button>
-            </div>
-
-            <!-- Planning Phase -->
-            <div id="planning-tab" class="tab-content active">
-                <div class="prompt-card">
-                    <div class="prompt-title">Risk Assessment Framework</div>
-                    <div class="prompt-meta">
-                        <span class="tag planning">Planning</span>
-                        <span class="tag beginner">Beginner</span>
-                    </div>
-                    <div class="prompt-desc">Generate comprehensive inherent risks for any audit area, organized by category with impact ratings.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('risk-assessment')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Audit Engagement Objectives</div>
-                    <div class="prompt-meta">
-                        <span class="tag planning">Planning</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Develop clear, measurable audit objectives aligned with identified risks and org context.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('audit-objectives')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Work Program Development</div>
-                    <div class="prompt-meta">
-                        <span class="tag planning">Planning</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Create structured work programs with procedures, sample sizes, and success criteria.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('work-program')">View & Copy →</button>
-                </div>
-            </div>
-
-            <!-- Fieldwork Phase -->
-            <div id="fieldwork-tab" class="tab-content">
-                <div class="prompt-card">
-                    <div class="prompt-title">Control Design Evaluation</div>
-                    <div class="prompt-meta">
-                        <span class="tag fieldwork">Fieldwork</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Assess control design adequacy and identify potential gaps or failure points.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('control-design')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Operating Effectiveness Testing</div>
-                    <div class="prompt-meta">
-                        <span class="tag fieldwork">Fieldwork</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Develop procedures to test whether controls operate effectively as designed.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('operating-eff')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Interview Questions Generator</div>
-                    <div class="prompt-meta">
-                        <span class="tag fieldwork">Fieldwork</span>
-                        <span class="tag beginner">Beginner</span>
-                    </div>
-                    <div class="prompt-desc">Generate open-ended questions for process owners to understand controls and identify issues.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('interview-q')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Root Cause Analysis</div>
-                    <div class="prompt-meta">
-                        <span class="tag fieldwork">Fieldwork</span>
-                        <span class="tag advanced">Advanced</span>
-                    </div>
-                    <div class="prompt-desc">Conduct systematic root cause analysis of control failures using structured questioning.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('root-cause')">View & Copy →</button>
-                </div>
-            </div>
-
-            <!-- Reporting Phase -->
-            <div id="reporting-tab" class="tab-content">
-                <div class="prompt-card">
-                    <div class="prompt-title">Finding Development (5-Attribute)</div>
-                    <div class="prompt-meta">
-                        <span class="tag reporting">Reporting</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Develop complete findings with condition, criteria, cause, effect, and recommendation.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('finding-dev')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Executive Summary</div>
-                    <div class="prompt-meta">
-                        <span class="tag reporting">Reporting</span>
-                        <span class="tag beginner">Beginner</span>
-                    </div>
-                    <div class="prompt-desc">Draft executive summaries highlighting key findings and overall conclusions for leadership.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('exec-summary')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Recommendation Development</div>
-                    <div class="prompt-meta">
-                        <span class="tag reporting">Reporting</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Create specific, actionable recommendations that address root causes with clear timelines.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('recommendation')">View & Copy →</button>
-                </div>
-            </div>
-
-            <!-- Follow-Up Phase -->
-            <div id="followup-tab" class="tab-content">
-                <div class="prompt-card">
-                    <div class="prompt-title">Remediation Validation Testing</div>
-                    <div class="prompt-meta">
-                        <span class="tag followup">Follow-Up</span>
-                        <span class="tag intermediate">Intermediate</span>
-                    </div>
-                    <div class="prompt-desc">Develop procedures to verify that corrective actions effectively address findings.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('remediation-val')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Status Report & Monitoring</div>
-                    <div class="prompt-meta">
-                        <span class="tag followup">Follow-Up</span>
-                        <span class="tag beginner">Beginner</span>
-                    </div>
-                    <div class="prompt-desc">Track and document the status of management corrective actions and timelines.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('status-report')">View & Copy →</button>
-                </div>
-
-                <div class="prompt-card">
-                    <div class="prompt-title">Recurring Issue Analysis</div>
-                    <div class="prompt-meta">
-                        <span class="tag followup">Follow-Up</span>
-                        <span class="tag advanced">Advanced</span>
-                    </div>
-                    <div class="prompt-desc">Analyze patterns of recurring findings to identify systemic issues and improvements.</div>
-                    <button class="btn btn-gold" onclick="showPromptDetail('recurring-issues')">View & Copy →</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- ==================== BEST PRACTICES PAGE ==================== -->
-        <div id="best-practices" class="page reveal">
-            <button class="btn btn-teal" onclick="switchPage('landing-page')">← Back</button>
-            <div class="section-title">
-                <span class="badge">💡</span> Best Practices & Prompt Engineering
-            </div>
-
-            <div class="card accent-left">
-                <h3>Master Effective Prompting</h3>
-                <p>Learn the fundamentals of writing clear, effective prompts that generate high-quality AI outputs.</p>
-            </div>
-
-            <!-- The CRAFT Framework -->
-            <div class="card teal-left">
-                <h3>The CRAFT Framework</h3>
-                <p style="margin-bottom: 14px;">Every effective prompt contains five key elements. Use <strong>CRAFT</strong> to structure your prompts:</p>
-                <div class="table-wrap">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Element</th>
-                                <th>Purpose</th>
-                                <th>Example</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>C — Context</strong></td>
-                                <td>Background information about your situation</td>
-                                <td>"I'm planning an AP audit at a healthcare organization with 150 vendors."</td>
-                            </tr>
-                            <tr>
-                                <td><strong>R — Role</strong></td>
-                                <td>The expertise the AI should adopt</td>
-                                <td>"Act as an experienced internal auditor."</td>
-                            </tr>
-                            <tr>
-                                <td><strong>A — Action</strong></td>
-                                <td>The specific task you need</td>
-                                <td>"Identify 8-10 key risks in this process."</td>
-                            </tr>
-                            <tr>
-                                <td><strong>F — Format</strong></td>
-                                <td>How you want the output structured</td>
-                                <td>"Numbered list with title, description, and impact rating."</td>
-                            </tr>
-                            <tr>
-                                <td><strong>T — Tone</strong></td>
-                                <td>The style appropriate for your audience</td>
-                                <td>"Professional, suitable for audit committee."</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-            <!-- Best Ways to Write Prompts -->
             <div class="card">
-                <h3>5 Best Ways to Write Prompts</h3>
-                <h4>1. Be Specific, Not General</h4>
-                <p><strong>❌ Weak:</strong> "Write a procedure."</p>
-                <p><strong>✅ Better:</strong> "Write a step-by-step procedure for validating vendor master data changes, including who performs each step and what system they use."</p>
-
-                <h4>2. Provide Clear Context</h4>
-                <p><strong>❌ Weak:</strong> "Is this a good control?"</p>
-                <p><strong>✅ Better:</strong> "This control requires monthly reconciliations by custodians reviewed by supervisors. Is this adequate to prevent unauthorized fund transfers?"</p>
-
-                <h4>3. Give Constraints</h4>
-                <p><strong>❌ Weak:</strong> "Generate interview questions."</p>
-                <p><strong>✅ Better:</strong> "Generate 6-8 open-ended interview questions (each under 2 sentences) for the AP manager about the three-way matching process."</p>
-
-                <h4>4. Show Examples</h4>
-                <p><strong>❌ Weak:</strong> "Write a finding."</p>
-                <p><strong>✅ Better:</strong> "Write a finding similar to this one: [good example]. Now apply the same structure to: [your situation]."</p>
-
-                <h4>5. Iterate & Refine</h4>
-                <p>First prompt rarely perfect. Follow up with: "Good start. Add more specificity to the impact section" or "Strengthen the recommendation."</p>
-            </div>
-
-            <!-- Common Mistakes -->
-            <div class="card accent-left">
-                <h3>Common Mistakes to Avoid</h3>
-
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        ❌ Vague Instructions <span class="arrow">▼</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p><strong>Problem:</strong> The AI doesn't know what you really want.</p>
-                        <p><strong>Fix:</strong> Be specific. Instead of "analyze this," try "analyze this control for design adequacy and list three potential failure points."</p>
-                    </div>
-                </div>
-
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        ❌ Missing Context <span class="arrow">▼</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p><strong>Problem:</strong> The AI can't tailor output to your organization.</p>
-                        <p><strong>Fix:</strong> Provide org type, size, industry, and situation. "This is a public university with 500 cardholders..."</p>
-                    </div>
-                </div>
-
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        ❌ Too Many Tasks <span class="arrow">▼</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p><strong>Problem:</strong> Complex outputs lose quality and focus.</p>
-                        <p><strong>Fix:</strong> Break into separate prompts. First draft the finding, then recommend actions, then justify ratings separately.</p>
-                    </div>
-                </div>
-
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        ❌ Assuming AI Memory <span class="arrow">▼</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p><strong>Problem:</strong> "Update this as we discussed" — the AI has no memory of prior conversations.</p>
-                        <p><strong>Fix:</strong> Be explicit. "Modify by adding: (1) quantification, (2) clarity on root cause, (3) stronger recommendation."</p>
-                    </div>
-                </div>
-
-                <div class="accordion">
-                    <div class="accordion-header" onclick="toggleAccordion(this)">
-                        ❌ Ignoring AI Limitations <span class="arrow">▼</span>
-                    </div>
-                    <div class="accordion-body">
-                        <p><strong>Problem:</strong> Trusting AI output without verification.</p>
-                        <p><strong>Fix:</strong> Always verify facts, policy citations, and calculations. AI can "hallucinate" (confidently state false information).</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Quality Check -->
-            <div class="card teal-left">
-                <h3>Quality Review Before Using AI Output</h3>
-                <p style="margin-bottom: 16px;">Always verify these items before using AI output:</p>
-                <ul>
-                    <li><strong>✅ Accuracy:</strong> Are all facts, policy references, and citations correct?</li>
-                    <li><strong>✅ Completeness:</strong> Does it address all aspects of your request?</li>
-                    <li><strong>✅ Relevance:</strong> Is it specific to your organization and situation?</li>
-                    <li><strong>✅ Objectivity:</strong> Is the language neutral and professional?</li>
-                    <li><strong>✅ Clarity:</strong> Will your audience understand this?</li>
-                    <li><strong>✅ Alignment:</strong> Does it match other documentation?</li>
-                </ul>
-            </div>
-
-            <!-- Prompts vs Agents -->
-            <div class="card accent-left">
-                <h3>Prompts vs. AI Agents: Key Differences</h3>
-                <p style="margin-bottom: 16px;">Understanding when to use each:</p>
+                <h3>Enterprise Observation: Prompt Length vs. Quality</h3>
+                <p>A community experiment tracking over 200 prompt-output pairs found a clear correlation between prompt length and output quality. The biggest factor was not a fancy framework — <strong>it was providing enough business context.</strong></p>
                 <div class="table-wrap">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Aspect</th>
-                                <th>Prompt</th>
-                                <th>AI Agent</th>
-                            </tr>
+                            <tr><th>Prompt Length</th><th>Average Quality Rating</th><th>Key Characteristic</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>Under 50 words</td><td><strong>5.2 / 10</strong></td><td>Vague, no context, generic output</td></tr>
+                            <tr><td>50 – 150 words</td><td><strong>7.1 / 10</strong></td><td>Some structure, partial context</td></tr>
+                            <tr><td>Over 150 words</td><td><strong>8.4 / 10</strong></td><td>Rich context, clear format, examples</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="font-size:0.8rem;color:#8899a0;margin-top:4px;"><em>Note: This was a community experiment, not a peer-reviewed study, but it aligns with enterprise prompt-engineering guidance from major AI providers.</em></p>
+            </div>
+
+            <div class="card accent-left">
+                <h3>Weak Prompt vs. Strong Prompt: A Business Example</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th style="background:var(--alert-red);">❌ Weak Prompt</th><th style="background:var(--success-green);">✅ Strong Prompt</th></tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>What It Does</strong></td>
-                                <td>You give instructions, AI responds once</td>
-                                <td>AI system works autonomously on multi-step tasks</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Complexity</strong></td>
-                                <td>Single or linear tasks</td>
-                                <td>Complex, adaptive, decision-making workflows</td>
-                            </tr>
-                            <tr>
-                                <td><strong>System Access</strong></td>
-                                <td>Only text generation</td>
-                                <td>Can integrate with APIs, databases, email, etc.</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Autonomy</strong></td>
-                                <td>Requires human prompt for each task</td>
-                                <td>Works independently once configured</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Use Case: Example</strong></td>
-                                <td>"Generate a risk assessment."</td>
-                                <td>"Daily: Extract AP transactions, flag exceptions, email report."</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Time to Execute</strong></td>
-                                <td>Seconds to minutes</td>
-                                <td>Minutes to hours</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Setup Difficulty</strong></td>
-                                <td>Easy — write text instructions</td>
-                                <td>Moderate to complex — requires configuration</td>
+                                <td style="background:#fff8f8;">
+                                    <code>Summarize this report.</code>
+                                    <p style="margin-top:6px;font-size:0.8rem;">The AI doesn't know:<br>• Who the audience is<br>• What information matters<br>• Desired output format<br>• Required level of detail</p>
+                                </td>
+                                <td style="background:#f8fdf9;">
+                                    <code>You are supporting an Internal Audit Manager. Review the attached report and provide:<br><br>1. Executive Summary<br>2. Key Risks<br>3. Control Weaknesses<br>4. Recommended Actions<br><br>Audience: Senior Management<br>Format: Bullet Points<br>Length: Maximum 1 page</code>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                <p style="margin-top: 16px;"><strong>When to Use Prompts:</strong> Drafting, analyzing documents, brainstorming, generating questions, explaining concepts.</p>
-                <p><strong>When to Use Agents:</strong> Recurring automated tasks, continuous monitoring, data quality checks, workflow automation.</p>
+                <p style="margin-top:8px;"><strong>Result:</strong> More relevant · More structured · Less rework required · Easier to use in business communication</p>
             </div>
 
-            <!-- Professional Responsibility -->
             <div class="card teal-left">
-                <h3>Your Responsibility as an Auditor</h3>
-                <p><strong>AI augments — does not replace — professional judgment.</strong></p>
-                <p style="margin-top: 12px;">You remain responsible for:</p>
-                <ul>
-                    <li>Verifying all AI output for accuracy</li>
-                    <li>Applying professional skepticism</li>
-                    <li>Ensuring organization-specific accuracy</li>
-                    <li>Maintaining audit independence</li>
-                    <li>Documenting use of AI per your organization's policy</li>
+                <h3>The Cost of Poor Prompts</h3>
+                <p>Poor prompts often lead to:</p>
+                <ul style="padding-left:20px;margin-top:4px;">
+                    <li>Multiple re-prompts and iterations</li>
+                    <li>More review time and manual editing</li>
+                    <li>Missing information and gaps</li>
+                    <li>Inconsistent outputs across requests</li>
+                    <li>Increased risk of hallucination (fabricated information)</li>
+                </ul>
+                <p style="margin-top:8px;">A good prompt reduces iterations and helps the model focus on the task at hand.</p>
+            </div>
+
+            <div class="quote-box">
+                <strong>💡 Garbage In → Garbage Out</strong><br>
+                AI models are powerful, but they cannot infer business context that was never provided. Better prompts reduce ambiguity, improve consistency, and produce more actionable outputs.
+            </div>
+
+            <!-- Flow Diagram -->
+            <div class="card">
+                <h3>Prompt Quality Flow</h3>
+                <div class="flow-row">
+                    <span class="flow-label bad-label" style="width:100%;">❌ Poor Prompt Path</span>
+                    <div class="flow-step bad">Poor Prompt</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step bad">Unclear Instructions</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step bad">Generic Output</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step bad">More Rework</div>
+                </div>
+                <div class="flow-row" style="margin-top:14px;">
+                    <span class="flow-label good-label" style="width:100%;">✅ Good Prompt Path</span>
+                    <div class="flow-step good">Good Prompt</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step good">Clear Context + Role + Task + Format</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step good">Focused Output</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step good">Less Rework</div>
+                    <span class="flow-arrow">→</span>
+                    <div class="flow-step good" style="border-color:var(--accent-gold);background:#fffdf5;">Higher Productivity</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 2: Understanding Large Language Models -->
+        <section id="understanding-llms">
+            <div class="section-title"><span class="num">2</span> Understanding Large Language Models</div>
+
+            <div class="card accent-left">
+                <h3>What Is a Large Language Model?</h3>
+                <p>A <strong>Large Language Model (LLM)</strong> is an AI system trained on vast amounts of text data to understand and generate human-like language. Popular LLMs include ChatGPT (OpenAI), Claude (Anthropic), Gemini (Google), and Copilot (Microsoft).</p>
+                <p style="margin-top:6px;">Think of an LLM as an <em>extremely well-read assistant</em> who has studied billions of documents — including books, articles, websites, and professional literature. When you ask a question or give an instruction, the model draws on patterns learned from this training to generate a relevant response.</p>
+                <p style="margin-top:6px;">The model does <strong>not</strong> search the internet in real-time (unless specifically enabled) or access your organization's systems. It generates responses based on patterns in its training data, which has a knowledge cutoff date. <strong>This is why verification of facts remains important.</strong></p>
+            </div>
+
+            <div class="card teal-left">
+                <h3>Key Characteristics of LLMs</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Characteristic</th><th>Description</th><th>Implication for Auditors</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Probabilistic Output</strong></td>
+                                <td>Responses are generated word-by-word based on probability</td>
+                                <td>Same prompt may yield slightly different outputs; always review results</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Context Window</strong></td>
+                                <td>Limited memory within a conversation (measured in tokens)</td>
+                                <td>Very long documents may need to be processed in sections</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Knowledge Cutoff</strong></td>
+                                <td>Training data has an end date; no real-time information</td>
+                                <td>Verify current policies, regulations, and organizational changes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>No True Understanding</strong></td>
+                                <td>Pattern matching, not genuine comprehension</td>
+                                <td>May produce plausible-sounding but incorrect information</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Prompt Sensitivity</strong></td>
+                                <td>Output quality depends heavily on input quality</td>
+                                <td>Well-crafted prompts yield significantly better results</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Capabilities & Limitations</h3>
+                <p><strong>✅ What LLMs Do Well:</strong></p>
+                <ul style="padding-left:20px;">
+                    <li>Drafting and editing written content (reports, memos, findings)</li>
+                    <li>Summarizing lengthy documents and extracting key points</li>
+                    <li>Brainstorming and identifying risks, controls, and test procedures</li>
+                    <li>Explaining complex concepts in plain language</li>
+                    <li>Structuring information (converting notes to organized formats)</li>
+                    <li>Generating interview questions and discussion guides</li>
+                    <li>Comparing documents against criteria or policies</li>
+                </ul>
+                <p style="margin-top:8px;"><strong>❌ What LLMs Cannot Do:</strong></p>
+                <ul style="padding-left:20px;">
+                    <li>Access your organization's systems, databases, or files (unless specifically connected)</li>
+                    <li>Perform calculations with guaranteed accuracy (always verify math)</li>
+                    <li>Replace professional judgment on complex audit matters</li>
+                    <li>Guarantee factual accuracy (may "hallucinate" false information)</li>
+                    <li>Understand context you have not provided</li>
+                    <li>Make ethical judgments or exercise professional skepticism on your behalf</li>
+                </ul>
+                <div class="callout warning" style="margin-top:10px;">
+                    <strong>⚠️ CRITICAL — Hallucinations:</strong> LLMs can generate confident-sounding but <strong>completely false</strong> information. This is called "hallucination." Always verify factual claims, especially citations to specific policies, regulations, or standards. The model may invent policy numbers, regulation sections, or audit standards that do not exist.
+                </div>
+            </div>
+
+            <div class="card teal-left">
+                <h3>Common LLM Platforms</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Platform</th><th>Provider</th><th>Key Features</th><th>Best For</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>ChatGPT</td><td>OpenAI</td><td>Widely available, plugins, web browsing, Code Interpreter</td><td>General use, data analysis with Code Interpreter</td></tr>
+                            <tr><td>Claude</td><td>Anthropic</td><td>Long context window, document analysis, careful reasoning</td><td>Complex documents, nuanced writing, detailed analysis</td></tr>
+                            <tr><td>Copilot</td><td>Microsoft</td><td>Integrated with Microsoft 365, enterprise features</td><td>Organizations using Microsoft ecosystem</td></tr>
+                            <tr><td>Gemini</td><td>Google</td><td>Google Workspace integration, multimodal</td><td>Google Workspace users, image analysis</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p style="margin-top:6px;"><em>The prompt library is designed to be platform-agnostic. Prompts work across all major LLMs, though you may notice slight differences in output style or formatting.</em></p>
+            </div>
+
+            <div class="card red-left">
+                <h3>Security & Confidentiality Considerations</h3>
+                <p><strong>DATA PROTECTION REQUIREMENTS:</strong> Before using any AI tool with audit information, understand your organization's policies on:</p>
+                <ol style="padding-left:20px;margin-top:4px;">
+                    <li>What data can be entered into AI systems</li>
+                    <li>Whether enterprise or consumer versions are approved</li>
+                    <li>Data retention and training policies of the AI provider</li>
+                    <li>Handling of confidential, sensitive, or personally identifiable information (PII)</li>
+                </ol>
+                <p style="margin-top:8px;"><strong>Best Practices for Confidential Information:</strong></p>
+                <ul style="padding-left:20px;">
+                    <li>Remove or anonymize names, account numbers, and identifying details before pasting into AI tools</li>
+                    <li>Use enterprise versions with appropriate data handling agreements when available</li>
+                    <li>Never enter passwords, social security numbers, or financial account details</li>
+                    <li>Consider whether AI output could be discoverable in legal proceedings</li>
+                    <li>Check if your organization requires AI use to be documented in workpapers</li>
+                </ul>
+                <p style="margin-top:6px;font-weight:700;color:var(--alert-red);">When in doubt, anonymize data before using AI tools.</p>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Prompt Engineering Fundamentals -->
+        <section id="prompt-engineering">
+            <div class="section-title"><span class="num">3</span> Prompt Engineering Fundamentals</div>
+
+            <div class="card accent-left">
+                <h3>What Is Prompt Engineering?</h3>
+                <p>Prompt engineering is the skill of crafting effective instructions (prompts) to get useful outputs from AI systems. A well-designed prompt clearly communicates what you need, provides relevant context, and guides the AI toward the desired format and quality of response.</p>
+                <p style="margin-top:6px;">Think of prompting as giving instructions to a <strong>highly capable but literal-minded assistant</strong>. The more specific and clear your instructions, the better the results. The assistant won't guess what you mean — it will follow exactly what you say.</p>
+            </div>
+
+            <div class="card teal-left">
+                <h3>The Anatomy of an Effective Prompt</h3>
+                <p>Effective prompts typically include several key components that work together to guide the AI:</p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Component</th><th>Purpose</th><th>Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Role / Persona</strong></td>
+                                <td>Sets expertise level and perspective</td>
+                                <td><code>"Act as an experienced internal auditor..."</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Context</strong></td>
+                                <td>Provides background information</td>
+                                <td><code>"I am planning an audit of accounts payable at a public university..."</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Task</strong></td>
+                                <td>Clearly states what you need</td>
+                                <td><code>"Identify 8–10 inherent risks organized by category..."</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Format</strong></td>
+                                <td>Specifies desired output structure</td>
+                                <td><code>"Present as a numbered list with risk descriptions and ratings..."</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Constraints</strong></td>
+                                <td>Sets boundaries or requirements</td>
+                                <td><code>"Focus on risks specific to higher education. Maximum 500 words."</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Examples</strong></td>
+                                <td>Shows desired output style</td>
+                                <td><code>"Similar to: Risk: Duplicate payments. Likelihood: Medium. Impact: High."</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- CRAFT Framework -->
+            <div class="card accent-left">
+                <h3>The CRAFT Framework for Prompt Writing</h3>
+                <p>Use the <strong>CRAFT</strong> framework to structure effective prompts. Each letter represents a critical element:</p>
+                <div class="craft-grid">
+                    <div class="craft-item">
+                        <span class="craft-letter">C</span>
+                        <h4>Context</h4>
+                        <p class="craft-question">What background does the AI need?</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Provide relevant background information the AI needs to understand your situation. Include your role, the engagement type, the organization type, and any relevant constraints.</p>
+                        <div class="craft-example"><strong>Example:</strong> "I am a staff auditor at a public university conducting an assurance engagement on procurement card (P-Card) controls. The university has approximately 500 cardholders with a total annual spend of $8 million."</div>
+                    </div>
+                    <div class="craft-item">
+                        <span class="craft-letter">R</span>
+                        <h4>Role</h4>
+                        <p class="craft-question">What expertise should guide the response?</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Assign a role or persona to guide the AI's perspective and expertise level. This helps calibrate the response appropriately for your needs.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Act as an experienced internal auditor with expertise in higher education and procurement controls."</div>
+                    </div>
+                    <div class="craft-item">
+                        <span class="craft-letter">A</span>
+                        <h4>Action</h4>
+                        <p class="craft-question">What specific task should be performed?</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Clearly state the specific task or action you want the AI to perform. Use action verbs and be specific about deliverables. Ambiguity here leads to generic responses.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Develop five testing procedures to evaluate whether P-Card transactions comply with the university's $2,500 single-transaction limit."</div>
+                    </div>
+                    <div class="craft-item">
+                        <span class="craft-letter">F</span>
+                        <h4>Format</h4>
+                        <p class="craft-question">How should the output be structured?</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Specify how you want the output structured. This might include format type, length, sections, or specific elements to include. The more precise, the less editing needed.</p>
+                        <div class="craft-example"><strong>Example:</strong> "For each procedure, include: (1) procedure objective, (2) population definition, (3) sample size with rationale, (4) specific steps, (5) pass/fail criteria."</div>
+                    </div>
+                    <div class="craft-item">
+                        <span class="craft-letter">T</span>
+                        <h4>Tone</h4>
+                        <p class="craft-question">What style is appropriate for the audience?</p>
+                        <p style="font-size:0.82rem;color:var(--text-light);">Indicate the appropriate tone, style, or audience for the output. Consider whether the content is for internal use, management presentation, or board reporting.</p>
+                        <div class="craft-example"><strong>Example:</strong> "Use professional audit language suitable for inclusion in a formal audit report. Avoid jargon when possible."</div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top:10px;">
+                    <h4>💡 CRAFT in One Prompt</h4>
+                    <p style="font-family:'SF Mono','Consolas',monospace;font-size:0.82rem;color:var(--text);background:#fafcfc;padding:10px;border-radius:6px;white-space:pre-wrap;">Role: Act as an experienced internal auditor with expertise in higher education.
+                        Context: I am planning an audit of P-Card controls at a public university with 500 cardholders and $8M annual spend.
+                        Task: Develop five testing procedures to evaluate compliance with the $2,500 single-transaction limit.
+                        Format: For each procedure, include objective, population definition, sample size, specific steps, and pass/fail criteria.
+                    Tone: Use professional audit language suitable for a formal audit report.</p>
+                </div>
+            </div>
+
+            <div class="card teal-left">
+                <h3>Common Prompting Mistakes to Avoid</h3>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Mistake</th><th>Problem</th><th>Better Approach</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Too vague</strong></td>
+                                <td><code>"Write something about controls"</code></td>
+                                <td><code>"Write a control description for the three-way match process in accounts payable"</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>No context</strong></td>
+                                <td><code>"Is this a good control?"</code></td>
+                                <td><code>"Given this control [description] designed to prevent [risk], evaluate its design adequacy"</code></td>
+                            </tr>
+                            <tr>
+                                <td><strong>Too many tasks</strong></td>
+                                <td><code>"Write finding, recommendation, get management response, and rate the risk"</code></td>
+                                <td>Break into separate prompts for each task</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Assuming knowledge</strong></td>
+                                <td><code>"Update the finding per our discussion"</code></td>
+                                <td>Provide the specific changes needed; AI has no memory of your discussion</td>
+                            </tr>
+                            <tr>
+                                <td><strong>No format guidance</strong></td>
+                                <td><code>"Give me some interview questions"</code></td>
+                                <td><code>"Provide 10 open-ended interview questions in numbered list format"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Variables & Placeholders</h3>
+                <p>The prompt library uses placeholder variables in double curly braces <code>{{like_this}}</code> to indicate where you should insert engagement-specific information. This makes prompts reusable across different audits.</p>
+                <p style="margin-top:6px;"><strong>Common variables include:</strong></p>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr><th>Variable</th><th>Description</th><th>Vague Example</th><th>Specific Example</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>{{audit_area}}</code></td>
+                                <td>The process, department, or system being audited</td>
+                                <td><code>"payroll"</code></td>
+                                <td><code>"payroll processing for 2,500 employees including faculty, staff, and student workers with bi-weekly and monthly pay cycles"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>{{process_name}}</code></td>
+                                <td>Specific business process name</td>
+                                <td><code>"procurement"</code></td>
+                                <td><code>"Purchase Requisition to Payment process using Banner ERP"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>{{organization_type}}</code></td>
+                                <td>Type of organization</td>
+                                <td><code>"university"</code></td>
+                                <td><code>"public R1 research university with a medical center and 35,000 students"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>{{risk_description}}</code></td>
+                                <td>Description of the specific risk</td>
+                                <td><code>"fraud"</code></td>
+                                <td><code>"unauthorized vendor creation and payment to fictitious vendors due to lack of segregation of duties"</code></td>
+                            </tr>
+                            <tr>
+                                <td><code>{{audit_period}}</code></td>
+                                <td>Time period covered by the engagement</td>
+                                <td><code>"FY24"</code></td>
+                                <td><code>"July 1, 2024 through December 31, 2024 (first half of fiscal year)"</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="callout info" style="margin-top:10px;">
+                    <strong>💡 TIP — Be Specific with Variables:</strong> When replacing variables, provide enough detail for the AI to give a useful response. Specificity in variables directly translates to quality in outputs. The AI cannot fill in gaps you haven't provided.
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Quality Assurance & Professional Judgment -->
+        <section id="quality-assurance">
+            <div class="section-title"><span class="num">4</span> Quality Assurance & Professional Judgment</div>
+
+            <div class="card accent-left">
+                <h3>The Human-AI Partnership</h3>
+                <p>AI is a tool to <strong>augment, not replace</strong>, professional judgment. The internal auditor remains responsible for all work product quality, regardless of AI assistance. Think of AI as a capable research assistant who can draft content quickly but needs your expert review and refinement.</p>
+                <p style="margin-top:8px;"><strong>Auditor Responsibilities When Using AI:</strong></p>
+                <ul style="padding-left:20px;">
+                    <li>Verify all factual claims, especially policy citations and regulatory references</li>
+                    <li>Ensure outputs align with your organization's specific context and requirements</li>
+                    <li>Apply professional skepticism to AI suggestions just as you would to management assertions</li>
+                    <li>Maintain independence — AI recommendations do not substitute for your professional judgment</li>
+                    <li>Document AI use appropriately per department policies</li>
                 </ul>
             </div>
-        </div>
+
+            <div class="card teal-left">
+                <h3>Quality Review Checklist for AI Outputs</h3>
+                <p>Before using any AI-generated content in your audit work, verify each of the following:</p>
+                <ul class="static-checklist">
+                    <li><span class="check-icon">✔</span> <span><strong>Accuracy:</strong> Are all facts, policy references, and standards citations correct? Research and correct — AI may have hallucinated.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Completeness:</strong> Does the output address all aspects of the request? Use follow-up prompt or supplement manually.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Relevance:</strong> Is the content specific to my organization and engagement? Customize generic content; remove irrelevant items.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Objectivity:</strong> Is the language neutral and free from bias? Edit for professional tone; remove opinions.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Clarity:</strong> Will the intended audience understand this? Simplify language; define technical terms.</span></li>
+                    <li><span class="check-icon">✔</span> <span><strong>Consistency:</strong> Does this align with other engagement documentation? Reconcile differences; ensure coherent narrative.</span></li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Documenting AI Use</h3>
+                <p>Organizations may have varying requirements for documenting AI assistance. At minimum, consider:</p>
+                <ul style="padding-left:20px;">
+                    <li>Noting in workpapers when AI tools were used for significant tasks</li>
+                    <li>Retaining significant prompts and outputs if required by policy</li>
+                    <li>Documenting the verification steps performed on AI output</li>
+                    <li>Identifying which portions of deliverables were AI-assisted vs. original work</li>
+                </ul>
+            </div>
+
+            <div class="card red-left">
+                <h3>Avoiding Over-Reliance on AI</h3>
+                <p><strong>PROFESSIONAL DEVELOPMENT CONCERN:</strong> While AI can accelerate work, over-reliance may hinder professional development. New auditors should:</p>
+                <ul style="padding-left:20px;">
+                    <li>Understand the methodology behind prompts before using them</li>
+                    <li>Attempt tasks manually occasionally to build foundational skills</li>
+                    <li>Use methodology notes as learning opportunities</li>
+                    <li>Discuss AI outputs with supervisors to calibrate judgment</li>
+                </ul>
+            </div>
+
+            <div class="card teal-left">
+                <h3>Supervisor Review Considerations</h3>
+                <p>Supervisors reviewing AI-assisted work should:</p>
+                <ul style="padding-left:20px;">
+                    <li>Ask how AI was used and what verification was performed</li>
+                    <li>Spot-check factual claims, especially policy and regulation references</li>
+                    <li>Ensure the auditor can explain and defend the work product</li>
+                    <li>Verify that professional judgment was applied, not just AI output accepted</li>
+                    <li>Coach on effective AI use as part of professional development</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Key Takeaways -->
+        <section id="takeaways">
+            <div class="section-title"><span class="num">★</span> Key Takeaways</div>
+            <div class="card accent-left">
+                <h3>Remember These Principles</h3>
+                <div class="craft-grid" style="grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));">
+                    <div class="craft-item" style="text-align:center;">
+                        <span style="font-size:2rem;">🎯</span>
+                        <h4>Be Specific</h4>
+                        <p style="font-size:0.82rem;">Vague prompts produce generic outputs. Specific instructions produce targeted results.</p>
+                    </div>
+                    <div class="craft-item" style="text-align:center;">
+                        <span style="font-size:2rem;">📋</span>
+                        <h4>Use CRAFT</h4>
+                        <p style="font-size:0.82rem;">Context, Role, Action, Format, Tone — five elements that transform average prompts into excellent ones.</p>
+                    </div>
+                    <div class="craft-item" style="text-align:center;">
+                        <span style="font-size:2rem;">🔍</span>
+                        <h4>Always Verify</h4>
+                        <p style="font-size:0.82rem;">AI can hallucinate. Every factual claim must be checked before it enters your workpapers.</p>
+                    </div>
+                    <div class="craft-item" style="text-align:center;">
+                        <span style="font-size:2rem;">👤</span>
+                        <h4>You Are Responsible</h4>
+                        <p style="font-size:0.82rem;">AI augments your work but never replaces your professional judgment and skepticism.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="quote-box">
+                <strong>Final Thought:</strong> Prompt engineering is not about learning a complex technical skill — it's about communicating clearly. The same skills that make you an effective auditor (precision, skepticism, thoroughness) make you an effective prompt engineer. Every word in your prompt matters, just as every piece of evidence in your workpapers matters.
+            </div>
+        </section>
 
     </main>
 
-    <!-- Prompt Detail Modal -->
-    <div class="modal" id="prompt-modal">
-        <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">✕</button>
-            <div id="modal-body"></div>
-            <button class="btn btn-gold" onclick="copyPromptText()" style="margin-top: 20px; width: 100%;">📋 Copy to Clipboard</button>
-        </div>
-    </div>
-
     <!-- Footer -->
     <footer class="footer">
-        <p>Internal Audit Department · AI Prompt & Agent Library · 2026</p>
-        <p style="margin-top: 4px;">Aligned with IIA Global Internal Audit Standards (2025)</p>
+        <p>Internal Audit Department · AI Prompt Engineering Training Manual · Version 1.1 · January 2026</p>
+        <p style="margin-top:2px;">Aligned with IIA Global Internal Audit Standards (2025) · Designed for SharePoint Compatibility</p>
     </footer>
 
-    <script>
-        // ── Scroll Progress ──
-        const progressBar = document.getElementById('scroll-progress');
-        window.addEventListener('scroll', () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-            progressBar.style.width = progress + '%';
-        });
-
-        // ── Toast ──
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            toast.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 2500);
-        }
-
-        // ── Page Navigation ──
-        function switchPage(pageId) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const page = document.getElementById(pageId);
-            if (page) {
-                page.classList.add('active');
-                window.scrollTo(0, 0);
-            }
-        }
-
-        // ── Tab Switching ──
-        function switchTab(event, tabId) {
-            event.preventDefault();
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId)?.classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        // ── Accordion ──
-        function toggleAccordion(header) {
-            const accordion = header.parentElement;
-            accordion.classList.toggle('open');
-        }
-
-        // ── Prompt Details ──
-        const prompts = {
-            'risk-assessment': {
-                title: 'Risk Assessment Framework',
-                content: `<h3>Risk Assessment Framework</h3>
-<p><strong>Prompt:</strong></p>
-<p>You are an experienced internal auditor. Analyze the {{audit_area}} and generate 8-10 inherent risks, organized by risk category. For each risk, provide: title, description, potential impact (High/Medium/Low), and one key control consideration.</p>
-<p><strong>Variables to Replace:</strong></p>
-<ul>
-<li>{{audit_area}} = e.g., "Accounts Payable process at a public university with 500+ vendors"</li>
-</ul>
-<p><strong>Expected Output:</strong> Numbered list with risk categories, descriptions, and impact ratings.</p>`
-            },
-            'audit-objectives': {
-                title: 'Audit Engagement Objectives',
-                content: `<h3>Audit Engagement Objectives</h3>
-<p><strong>Prompt:</strong></p>
-<p>Based on the identified risks below, develop 4-5 clear, measurable audit objectives. Each objective should specify what the audit will assess and align with the identified risks.</p>
-<p><strong>Key Risks:</strong> {{key_risks}}</p>
-<p><strong>Organization Context:</strong> {{org_context}}</p>`
-            },
-            'work-program': {
-                title: 'Work Program Development',
-                content: `<h3>Work Program Development</h3>
-<p><strong>Prompt:</strong></p>
-<p>Create a work program for {{process_name}} with testing procedures. For each procedure, include: Objective, Population, Sample Approach, Testing Steps, and Pass/Fail Criteria.</p>
-<p><strong>Key Controls to Test:</strong> {{controls}}</p>`
-            },
-            'control-design': {
-                title: 'Control Design Evaluation',
-                content: `<h3>Control Design Evaluation</h3>
-<p><strong>Prompt:</strong></p>
-<p>Evaluate whether the following control is adequately designed to address the identified risk. Provide: (1) Design Adequacy Assessment, (2) Design Gaps (if any), (3) Failure Points to Monitor.</p>
-<p><strong>Risk:</strong> {{risk_description}}</p>
-<p><strong>Control:</strong> {{control_description}}</p>`
-            },
-            'operating-eff': {
-                title: 'Operating Effectiveness Testing',
-                content: `<h3>Operating Effectiveness Testing</h3>
-<p><strong>Prompt:</strong></p>
-<p>Develop 5-7 testing procedures to verify that {{control_name}} operates effectively as designed. Include: Test Objective, Population, Sample Size Rationale, Detailed Steps, and Evaluation Criteria.</p>`
-            },
-            'interview-q': {
-                title: 'Interview Questions Generator',
-                content: `<h3>Interview Questions Generator</h3>
-<p><strong>Prompt:</strong></p>
-<p>Generate 6-8 open-ended interview questions (each under 2 sentences) for {{role}} about the {{process_name}} process. Questions should probe for understanding, control activities, and potential issues.</p>`
-            },
-            'root-cause': {
-                title: 'Root Cause Analysis',
-                content: `<h3>Root Cause Analysis</h3>
-<p><strong>Prompt:</strong></p>
-<p>Conduct a structured root cause analysis for the following control failure using the Five Whys technique. Identify: Immediate Cause, Contributing Factors, Root Cause, and Systemic Implications.</p>
-<p><strong>Failure Observed:</strong> {{failure_description}}</p>`
-            },
-            'finding-dev': {
-                title: 'Finding Development (5-Attribute)',
-                content: `<h3>Finding Development (5-Attribute)</h3>
-<p><strong>Prompt:</strong></p>
-<p>Develop a complete audit finding with all five attributes: Condition (what was observed), Criteria (what should be), Cause (why the gap exists), Effect (business impact), and Recommendation (how to fix it).</p>
-<p><strong>The Finding Must Be:</strong> Specific, quantifiable, and actionable.</p>`
-            },
-            'exec-summary': {
-                title: 'Executive Summary',
-                content: `<h3>Executive Summary</h3>
-<p><strong>Prompt:</strong></p>
-<p>Draft an executive summary (250-350 words) for {{audit_area}} highlighting key findings, overall assessment, and principal recommendations. Write for C-level leadership.</p>`
-            },
-            'recommendation': {
-                title: 'Recommendation Development',
-                content: `<h3>Recommendation Development</h3>
-<p><strong>Prompt:</strong></p>
-<p>Develop 2-3 specific, actionable recommendations to address the root causes. Each must include: Action, Responsible Party, Target Timeline, and Success Measures.</p>`
-            },
-            'remediation-val': {
-                title: 'Remediation Validation Testing',
-                content: `<h3>Remediation Validation Testing</h3>
-<p><strong>Prompt:</strong></p>
-<p>Develop procedures to validate that management's corrective actions effectively address the original finding. Include: Validation Objective, Testing Steps, Sample Size, Success Criteria.</p>
-<p><strong>Original Finding:</strong> {{finding_title}}</p>
-<p><strong>Corrective Action:</strong> {{corrective_action}}</p>`
-            },
-            'status-report': {
-                title: 'Status Report & Monitoring',
-                content: `<h3>Status Report & Monitoring</h3>
-<p><strong>Prompt:</strong></p>
-<p>Create a template for tracking corrective action progress. Include fields for: Finding Title, Original Target Date, Current Status (On Track/At Risk/Overdue/Completed), Responsible Party, and Key Milestones.</p>`
-            },
-            'recurring-issues': {
-                title: 'Recurring Issue Analysis',
-                content: `<h3>Recurring Issue Analysis</h3>
-<p><strong>Prompt:</strong></p>
-<p>Analyze patterns in recurring findings across multiple audits. Identify: Common Themes, Root Causes, Systemic vs. Isolated Issues, and Recommended Enterprise-Wide Improvements.</p>
-<p><strong>Recurring Findings:</strong> {{recurring_findings}}</p>`
-            }
-        };
-
-        function showPromptDetail(promptKey) {
-            const prompt = prompts[promptKey];
-            if (prompt) {
-                document.getElementById('modal-body').innerHTML = prompt.content;
-                document.getElementById('prompt-modal').classList.add('show');
-                window.currentPromptKey = promptKey;
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('prompt-modal').classList.remove('show');
-        }
-
-        function copyPromptText() {
-            const text = document.getElementById('modal-body').innerText;
-            navigator.clipboard.writeText(text).then(() => {
-                showToast('✅ Copied to clipboard!');
-            });
-        }
-
-        // ── Form Submission ──
-        document.getElementById('prompt-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            showToast('✅ Prompt submitted! Thank you for contributing.');
-            this.reset();
-            setTimeout(() => switchPage('landing-page'), 2000);
-        });
-
-        // ── Close Modal on Outside Click ──
-        window.addEventListener('click', function(e) {
-            const modal = document.getElementById('prompt-modal');
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // ── Initialize ──
-        console.log('%c🎯 Internal Audit AI Prompt & Agent Library%c | Ready to Use', 'color:#FEBE10;font-weight:bold;', 'color:#005F75;');
-    </script>
 </body>
 </html>
